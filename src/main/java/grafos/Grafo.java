@@ -1,13 +1,13 @@
-package Grafos;
+package grafos;
 import estructuras.lineales.dinamicas.Lista;
 
-public class Digrafo {
+public class Grafo {
     
     // Atributos
     private NodoVert inicio;
     
     // Constructor
-    public Digrafo(){
+    public Grafo(){
         this.inicio = null;
     }
     

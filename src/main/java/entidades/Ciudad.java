@@ -1,4 +1,4 @@
-package entity;
+package entidades;
 
 public class Ciudad {
 
@@ -7,6 +7,15 @@ public class Ciudad {
     private String nomenclatura;
     private int superficie;
     private int cantM3Persona;
+
+
+    public Ciudad(String nombre, int habitantes, String nomenclatura, int superficie, int cantM3Persona){
+        this.nombre = nombre;
+        this.habitantes = habitantes;
+        this.nomenclatura = nomenclatura;
+        this.superficie = superficie;
+        this.cantM3Persona = cantM3Persona;
+    }
 
 
     public String getNombre() {
