@@ -1,4 +1,5 @@
-package Grafos;
+package grafos;
+
 import estructuras.lineales.dinamicas.Lista;
 
 public class Grafo {

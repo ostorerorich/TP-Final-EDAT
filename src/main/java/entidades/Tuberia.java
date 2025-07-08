@@ -1,10 +1,19 @@
-package entity;
+package entidades;
 
 public class Tuberia {
     private String nomenclatura;
     private int caudalMax;
     private int caudalMin;
     private double diametro;
+    private String estado;
+
+    public Tuberia(String nomenclatura, int caudalMax, int caudalMin, double diametro, String estado){
+        this.nomenclatura = nomenclatura;
+        this.caudalMax = caudalMax;
+        this.caudalMin = caudalMin;
+        this.diametro = diametro;
+        this.estado = estado;
+    }
 
     public String getNomenclatura() {
         return nomenclatura;
@@ -46,5 +55,5 @@ public class Tuberia {
         this.estado = estado;
     }
 
-    private String estado;
+
 }
