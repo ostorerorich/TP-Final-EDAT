@@ -72,42 +72,32 @@ public class ArbolAVL {
 
     private NodoAVL rotacionDerecha(NodoAVL nodo) {
 
-        // 24
+        NodoAVL hi = nodo.getIzquierdo();
+        NodoAVL temp = hi.getDerecho();
 
-        NodoAVL hi = nodo.getIzquierdo(); // hi: 22
-        NodoAVL temp = hi.getDerecho(); // hd: null
-
-        hi.setDerecho(nodo); // 22.setDer(24)
-        nodo.setIzquierdo(temp); // 24.setIz(null)
+        hi.setDerecho(nodo);
+        nodo.setIzquierdo(temp);
 
         nodo.recalcularAltura();
         hi.recalcularAltura();
 
-        // hi: 22 hi:18 hd: 24
-
-        // 22
-        // / \
-        // 18 24
 
         return hi;
     }
 
     private NodoAVL rotacionIzquierda(NodoAVL nodo) {
-        // nodo: 18
 
-        NodoAVL hd = nodo.getDerecho(); // hd: 22
-        NodoAVL temp = hd.getIzquierdo(); // temp: null
+        NodoAVL hd = nodo.getDerecho();
+        NodoAVL temp = hd.getIzquierdo();
 
-        hd.setIzquierdo(nodo); // 22.setIzq(18)
-        nodo.setDerecho(temp); // 18.setDer(null)
+        hd.setIzquierdo(nodo);
+        nodo.setDerecho(temp);
 
-        nodo.recalcularAltura(); //
-        hd.recalcularAltura(); //
+        nodo.recalcularAltura();
+        hd.recalcularAltura();
 
-        return hd; // 22 hi: 18 hd: null
-        // 22
-        // / \
-        // 18 null
+        return hd;
+
     }
 
     private NodoAVL rotacionIzqDer(NodoAVL nodo) {
