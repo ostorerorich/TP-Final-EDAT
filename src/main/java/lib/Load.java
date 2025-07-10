@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 public class Load {
 
@@ -28,7 +27,7 @@ public class Load {
     }
 
 
-    public static File cargarArchivos(){
+    public static File cargarArchivo(){
         File res = null;
         try{
             int diag = fileChooser.showOpenDialog(null);

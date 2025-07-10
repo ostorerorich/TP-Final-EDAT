@@ -10,7 +10,10 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
+// Clase log para guardar los mensajes en un archivo.
 public class Log {
+
     private String mes;
     private static final String LOG_DIR = System.getProperty("user.home") + File.separator  + "Documents" + File.separator + "logs_edat";
     private static final String LOG_FILE = "edat.log";
@@ -24,23 +27,46 @@ public class Log {
         return new Log(mes);
     }
 
-    public void guardar() throws IOException {
-        crearDir();
 
-        String hora = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
-        String log = String.format("[%s] %s", hora, mes);
-
-        if (writer ==null){
-            iniWriter();
+    // Guarda el mensaje en el log, si no se pudo guardar, imprime un error en consola.
+    // Se utiliza aparte de guardarAux para manejar exepciones de IO y evitar cortar el flujo del programa.
+    public void guardar() {
+        try {
+            guardarAux();
+        } catch (IOException e) {
+            System.err.println("Error al guardar log: " + e.getMessage());
         }
-        writer.println(log);
-        writer.flush();
+    }
+
+    public void guardarAux() throws IOException {
+
+
+            crearDir();
+
+            // Obtiene la fecha y hora actual en formato ISO_DATE_TIME.
+            String hora = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+            String log = String.format("[%s] %s", hora, mes);
+
+            // Si el PrintWriter no está inicializado, lo inicializa.
+            if (writer ==null){
+                iniWriter();
+            }
+            writer.println(log);
+            writer.flush();
+
 
     }
 
+    // Inicializa el PrintWriter para escribir en el archivo de log.
     private static void iniWriter() throws IOException{
+        // Verifica que el directorio y el archivo exista, en caso contrario se los crea.
+
         verificarLogFile();
 
+        // Crea el PrintWriter para escribir en el archivo de log, en modo append.
+        // Utiliza UTF-8 para la codificación de caracteres.
+        // El segundo parámetro de PrintWriter es true para habilitar el modo append.
+        // Esto significa que los nuevos mensajes se agregarán al final del archivo en lugar de sobrescribirlo.
             writer = new PrintWriter(
                     new OutputStreamWriter(
                             new FileOutputStream(LOG_DIR + File.separator + LOG_FILE, true), // Modo append
@@ -51,6 +77,8 @@ public class Log {
 
     }
 
+    // Crea el directorio y el archivo de log si no existen.
+    // Si no se puede crear, lanza una IOException.
     private static void crearDir() throws IOException {
         File dir = new File(LOG_DIR);
         if (!dir.exists() && !dir.mkdirs()) {
@@ -60,10 +88,13 @@ public class Log {
 
         File logFile = new File(LOG_DIR + File.separator + LOG_FILE);
         if(!logFile.exists() && !logFile.createNewFile() && !logFile.canWrite()){
+            System.out.println("PASO ALGO");
+
             throw new IOException("No se pudo crear.");
         }
     }
 
+    // Verifica que el archivo de log exista y sea escribible.
     private static void verificarLogFile() throws IOException{
         File log = new File(LOG_DIR + File.separator + LOG_FILE);
 
@@ -76,6 +107,7 @@ public class Log {
         }
     }
 
+    // Cierra el PrintWriter si está abierto.
     public static void cerrar(){
         if(writer != null){
             writer.close();

@@ -1,6 +1,10 @@
 package estructuras.conjuntistas.dinamicas;
+import estructuras.lineales.dinamicas.Lista;
 
+@SuppressWarnings({"all"})
 public class ArbolAVL {
+
+    //TODO: Eliminar
 
     private NodoAVL raiz;
 
@@ -118,5 +122,40 @@ public class ArbolAVL {
     private int balance(NodoAVL nodo) {
         return (nodo.getIzquierdo() != null ? nodo.getIzquierdo().getAltura() : -1) -
                 (nodo.getDerecho() != null ? nodo.getDerecho().getAltura() : -1);
+    }
+
+    @Override
+    public String toString(){
+        String res = toStringAux(this.raiz);
+        return res;
+    }
+
+    private String toStringAux(NodoAVL nodo){
+        String res = "";
+
+        if (nodo != null){
+            res += "Nodo: " + nodo.getElem() + " HI: "  + (nodo.getIzquierdo() != null ? nodo.getIzquierdo().getElem() : " ") +
+                    " HD: " + (nodo.getDerecho() != null ? nodo.getDerecho().getElem() : " ") + "\n";
+            res += toStringAux(nodo.getIzquierdo());
+            res += toStringAux(nodo.getDerecho());
+        }
+
+        return res;
+    }
+
+
+    //TODO: Listar ciudades en orden alfabetico
+    public Lista listarInOrden() {
+        Lista lis = new Lista();
+        listarInOrdenAux(this.raiz, lis);
+        return lis;
+    }
+
+    private void listarInOrdenAux(NodoAVL nodoArbol, Lista lis) {
+        if (nodoArbol != null) {
+            listarInOrdenAux(nodoArbol.getIzquierdo(), lis);
+            lis.insertar(nodoArbol.getElem(), lis.longitud() + 1);
+            listarInOrdenAux(nodoArbol.getDerecho(), lis);
+        }
     }
 }

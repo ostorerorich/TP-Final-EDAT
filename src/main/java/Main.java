@@ -2,6 +2,7 @@ import entidades.TuberiaKey;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
 import grafos.Grafo;
 import lib.Log;
+import lib.Metodos;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,68 +16,83 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
 
 
-    public static void main(String[] args) {
-        try {
+    public static void main(String[] args) throws IOException{
+/*        try {
             Log.mensaje("Test").guardar();
         } catch (IOException e) {
             System.out.println(e.getMessage());
             throw new RuntimeException(e);
-        }
-        finally {
-          Log.cerrar();
-        }
-    }
+        } finally {
+            Log.cerrar();
 
+            System.out.println("bruh");
+            System.out.println(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "logs_edat");
+        }*/
+        menu();
+    }
 
 
     private static void menu(){
         boolean fin = false;
 
         while(!fin){
-            System.out.println("---MENU---- /n 1- Modificacion Ciudades" +
-                    "/n 2 - Modificacion Tuberia" +
-                    "/n 3 - Alta cantidad Habitantes /n" +
-                    "/n 4 - Consulta Ciudad" +
-                    "/n 5 - Consulta Transporte" +
-                    "/n 6 - Listado de ciudades" +
-                    "/n 7 - Mostrar sistema (Debug)" +
-                    "/n 0 - Terminar");
+            System.out.println("""
+                1 - Menu Ciudades
+                2 - Modificacion Tuberia
+                3 - Alta cantidad Habitantes
+                4 - Consulta Ciudad
+                5 - Consulta Transporte
+                6 - Listado de ciudades
+                7 - Mostrar sistema (Debug)
+                0 - Salir del programa"""
+            );
 
             // next line es para que no se quede en memoria el enter y lea la linea de manera correcta
 
             int res =  Integer.parseInt(sc.nextLine());
             switch (res){
-                case 1:
-                    // Alta, baja y mod ciudades
-                    break;
-                case 2:
-                    // Alta baja y mod tuberias
-                    break;
-                case 3:
-                    // Alta de informacion de la cantidad de habitantes
-                    break;
-                case 4:
-                    // Consulta de ciudades
-                    break;
-                case 5:
-                    // Consulta de transporte
-                    break;
-                case 6:
-                    // Listado de Ciudades en ordenaadas por el consumo de agua anual de mayor a menor
-                    break;
-                case 7:
-                    // Debug del sistema
-                    break;
-                case 0:
-                    // Termina el menu
+                case 1 -> menuCiudades();
+                case 2 -> System.out.println("Modificacion Tuberia");
+                case 3 -> System.out.println("Alta cantidad Habitantes");
+                case 4 -> System.out.println("Consulta Ciudad");
+                case 5 -> System.out.println("Consulta Transporte");
+                case 6 -> System.out.println("Listado de ciudades: " + ciudades.listarInOrden());
+                case 7 -> System.out.println("Mostrar sistema (Debug)");
+                case 0 -> {
                     fin = true;
-                    break;
-                default:
-                    System.out.println("Opcion invalida");
-                    break;
+                    System.out.println("Saliendo del programa...");
+                }
+                default -> System.out.println("Opcion invalida, intente nuevamente.");
             }
 
 
+        }
+    }
+
+    private static void menuCiudades(){
+        System.out.println("""
+                1 - Alta Ciudad
+                2 - Baja Ciudad
+                3 - Modificacion Ciudad
+                4 - Listar Ciudades
+                5 - Buscar Ciudad
+                6 - Volver al menu principal"""
+        );
+        int res = Integer.parseInt(sc.nextLine());
+        switch (res) {
+            case 1 -> {
+                if (Metodos.agregarCiudad(ciudades)) {
+                    System.out.println("Ciudad agregada correctamente.");
+                } else {
+                    System.out.println("Error al agregar la ciudad.");
+                }
+            }
+            case 2 -> System.out.println("Baja Ciudad");
+            case 3 -> System.out.println("Modificacion Ciudad");
+            case 4 -> System.out.println("Listar Ciudades: " + ciudades.listarInOrden());
+            case 5 -> System.out.println("Buscar Ciudad");
+            case 6 -> System.out.println("Volver al menu principal");
+            default -> System.out.println("Opcion invalida");
         }
     }
 }
