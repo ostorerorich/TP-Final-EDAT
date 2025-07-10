@@ -91,14 +91,15 @@ public class Grafo {
         NodoAdy nodoAdyAux, nodoAdyAnterior;
         boolean arcoEliminado;
         
-        nodoAdyAnterior = null;
         
         while (nodoVertAux != null) {
             // Busca en cada vertice del grafo si tienen un arco desde ellos al nodo eliminado. Como el dominio en el
-            // que está siendo implementado el Grafo, cada par de vértices solo puede tener un arco entre ellos, si en
-            // un vertice encuentra el que tiene que eliminar, deja de revisar los demás arcos del vertice y pasa al siguiente
+            // que está siendo implementado el Grafo, cada par de vértices solo puede tener un arco entre ellos con el
+            // mismo sentido, si en un vertice encuentra el que tiene que eliminar, deja de revisar los demás arcos
+            // del vertice y pasa al siguiente
             arcoEliminado = false;
             nodoAdyAux = nodoVertAux.getPrimerAdy();
+            nodoAdyAnterior = null;
                  
             while (nodoAdyAux != null && !arcoEliminado) {
                 if (nodoAdyAux.getVertice() == nodo) {
@@ -232,8 +233,8 @@ public class Grafo {
         
         while (nodoAdyAux != null && !arcoEliminado) {
             // Busca el arco desde el nodo origen al nodo destino para eliminarlo. Como el dominio en el que está siendo
-            // implementado el Grafo, cada par de vértices solo puede tener un arco entre ellos, si en un vertice
-            // encuentra el que tiene que eliminar, deja de revisar los demás arcos del vertice
+            // implementado el Grafo, cada par de vértices solo puede tener un arco entre ellos con el mismo sentido,
+            // si en un vertice encuentra el que tiene que eliminar, deja de revisar los demás arcos del vertice
             if (nodoAdyAux.getVertice().getElem().equals(destino)) {
                 // Elimina el arco dependiendo si es el primero en la lista o no
                 if (nodoAdyAnterior == null) {
