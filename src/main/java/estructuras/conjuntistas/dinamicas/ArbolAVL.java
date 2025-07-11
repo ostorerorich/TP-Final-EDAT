@@ -54,6 +54,118 @@ public class ArbolAVL {
         return nodo;
     }
 
+    public boolean eliminar (Comparable elem){
+        // elem elemento a eliminar, se envía raíz y un nodo padre nulo
+        boolean res = false;
+        if (this.raiz != null) {
+            res = eliminarAux(this.raiz, null, elem);
+            this.raiz = eliminarRebalancear(this.raiz, elem);
+        }
+        return res;
+    }
+
+    private boolean eliminarAux (NodoAVL nodo, NodoAVL padre, Comparable elem){
+         // nodo es el nodo actual
+        // padre es el padre del nodo actual
+        // elem elemento a eliminar
+        boolean res = false;
+        if (nodo != null) {
+            if (elem.compareTo(nodo.getElem()) < 0) {
+                // si X es menor al elemento actual
+                res = eliminarAux(nodo.getIzquierdo(), nodo, elem);
+            } else if (elem.compareTo(nodo.getElem()) > 0) {
+                // si X es mayor al elemento actual
+                res = eliminarAux(nodo.getDerecho(), nodo, elem);
+            } else {
+                // X es el elemento actual
+                res = eliminarCasos(nodo, padre);
+            }
+        }
+        return res;
+    }
+
+    private boolean eliminarCasos(NodoAVL nodo, NodoAVL padre) {
+        // nodo es el nodo a eliminar y padre es el padre de este.
+        boolean res = false;
+        NodoAVL hi = nodo.getIzquierdo();
+        NodoAVL hd = nodo.getDerecho();
+        if (hi == null && hd == null) {
+            // Caso 1, sin hijos
+            if (padre == null) {
+                // la raiz no tiene hijos
+                this.raiz = null;
+            } else if (padre.getIzquierdo() == nodo) {
+                // borra el HI del padre
+                padre.setIzquierdo(null);
+            } else {
+                // borra el HD del padre
+                padre.setDerecho(null);
+            }
+            res = true;
+        } else if (hi == null || hd == null) {
+            // Caso 2, 1 hijo
+            NodoAVL hijoExistente = (hi != null) ? hi : hd;
+            if (padre == null){
+                this.raiz = hijoExistente;
+            } else if (padre.getIzquierdo() == nodo) {
+                // Si el nodo a eliminar es el HI del padre, lo reemplazamos con su HI.
+                padre.setIzquierdo(hijoExistente);
+            } else {
+                // si el nodo a eliminar es el HD del padre, lo reemplazamos con su HD.
+                padre.setDerecho(hijoExistente);
+            }
+            res = true;
+        } else {
+            // Caso 3, 2 hijos.
+            // Candidato A, máximo de la rama izquierda.
+            NodoAVL candidato = nodo.getIzquierdo();
+            NodoAVL padreCandidato = nodo;
+            while (candidato.getDerecho() != null) {
+                // se busca el nodo más a la derecha del subárbol izquierdo de nodo.
+                padreCandidato = candidato;
+                candidato = candidato.getDerecho();
+            }
+            if (padre == null) {
+                // Si el nodo a eliminar es la raiz, la nueva raíz será candidato.
+                this.raiz = candidato;
+            } else if (padre.getIzquierdo() == nodo) {
+                // Si el nodo a eliminar es el hijo izquierdo del padre, lo reemplazamos con el
+                // candidato
+                padre.setIzquierdo(candidato);
+            } else {
+                // Si el nodo a eliminar es el hijo derecho del padre, lo reemplazamos con el
+                // candidato
+                padre.setDerecho(candidato);
+            }
+            candidato.setDerecho(nodo.getDerecho());
+            // Establece el HD del candidato como el hijo derecho del nodo a eliminar.
+            if (padreCandidato != nodo) {
+                padreCandidato.setDerecho(candidato.getIzquierdo());
+
+                candidato.setIzquierdo(nodo.getIzquierdo());
+            }
+            res = true;
+        }
+        return res;
+    }
+
+     private NodoAVL eliminarRebalancear(NodoAVL nodo, Comparable x) {
+        if (nodo != null) {
+            int cmp = x.compareTo(nodo.getElem());
+            if (cmp < 0) {
+                nodo.setIzquierdo(eliminarRebalancear(nodo.getIzquierdo(), x));
+            } else if (cmp > 0) {
+                nodo.setDerecho(eliminarRebalancear(nodo.getDerecho(), x));
+            }
+            nodo.recalcularAltura();
+            int balance = balance(nodo);
+            if (Math.abs(balance) > 1) {
+                nodo = balancear(nodo, balance);
+            }
+        }
+        return nodo;
+    }
+
     private NodoAVL balancear(NodoAVL nodo, int balance) {
         if (balance > 1) {
             if (balance(nodo.getIzquierdo()) >= 0) {
