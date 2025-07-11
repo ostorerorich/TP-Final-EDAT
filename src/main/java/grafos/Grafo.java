@@ -88,35 +88,10 @@ public class Grafo {
     private void eliminarArcosAdy(NodoVert nodo){
         
         NodoVert nodoVertAux = this.inicio;
-        NodoAdy nodoAdyAux, nodoAdyAnterior;
-        boolean arcoEliminado;
-        
         
         while (nodoVertAux != null) {
-            // Busca en cada vertice del grafo si tienen un arco desde ellos al nodo eliminado. Como el dominio en el
-            // que está siendo implementado el Grafo, cada par de vértices solo puede tener un arco entre ellos con el
-            // mismo sentido, si en un vertice encuentra el que tiene que eliminar, deja de revisar los demás arcos
-            // del vertice y pasa al siguiente
-            arcoEliminado = false;
-            nodoAdyAux = nodoVertAux.getPrimerAdy();
-            nodoAdyAnterior = null;
-                 
-            while (nodoAdyAux != null && !arcoEliminado) {
-                if (nodoAdyAux.getVertice() == nodo) {
-                    // Se elimina el vertice eliminado de la lista de nodos adyacentes del vertice actual, dependiendo
-                    // de si está primero o no
-                    if (nodoAdyAnterior == null) {
-                        nodoVertAux.setPrimerAdy(nodoAdyAux.getSigAdyacente());
-                    } else {
-                        nodoAdyAnterior.setSigAdyacente(nodoAdyAux.getSigAdyacente());
-                    }
-                         
-                    arcoEliminado = true;
-                }
-                     
-                nodoAdyAnterior = nodoAdyAux;
-                nodoAdyAux = nodoAdyAux.getSigAdyacente();   
-            }
+            // Busca en cada vertice del grafo si tienen un arco desde ellos al nodo eliminado
+            eliminarArcoAux(nodoVertAux, nodo.getElem());
             
             nodoVertAux = nodoVertAux.getSigVertice();
         }
@@ -232,17 +207,17 @@ public class Grafo {
         nodoAdyAnterior = null;
         
         while (nodoAdyAux != null && !arcoEliminado) {
-            // Busca el arco desde el nodo origen al nodo destino para eliminarlo. Como el dominio en el que está siendo
-            // implementado el Grafo, cada par de vértices solo puede tener un arco entre ellos con el mismo sentido,
-            // si en un vertice encuentra el que tiene que eliminar, deja de revisar los demás arcos del vertice
+            // Busca el arco desde el nodo origen al nodo destino para eliminarlo
             if (nodoAdyAux.getVertice().getElem().equals(destino)) {
-                // Elimina el arco dependiendo si es el primero en la lista o no
+                // Elimina el arco dependiendo de si es el primero en la lista o no
                 if (nodoAdyAnterior == null) {
                     origen.setPrimerAdy(nodoAdyAux.getSigAdyacente());
                 } else {
                     nodoAdyAnterior.setSigAdyacente(nodoAdyAux.getSigAdyacente());
                 }
                 
+                // Como cada par de vertices solo puede tener un arco entre ellos con el mismo sentido, si se
+                // encontró el que tiene que eliminar, deja de revisar los demás arcos del vertice
                 arcoEliminado = true;
             }
             
@@ -388,6 +363,98 @@ public class Grafo {
         
         return caminoEncontrado;
         
+    }
+    
+    ///////////////////////////////////////
+    
+    public Lista caminoMasCorto(Object origen, Object destino){
+        
+        Lista caminoActual, caminoMasCorto;
+        NodoVert nodoOrigen, nodoDestino, nodoVertAux;
+        
+        caminoMasCorto = new Lista();
+        caminoActual = new Lista();
+        nodoOrigen = null;
+        nodoDestino = null;
+        nodoVertAux = this.inicio;
+        
+        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+            // Busca el nodo origen y el nodo destino en el grafo
+            if (nodoVertAux.getElem().equals(origen)) {
+                nodoOrigen = nodoVertAux;
+            }
+            
+            if (nodoVertAux.getElem().equals(destino)){
+                nodoDestino = nodoVertAux;
+            }
+            
+            nodoVertAux = nodoVertAux.getSigVertice();
+        }
+        
+        if (nodoOrigen != null && nodoDestino != null) {
+            // Si ambos nodos existen, verifica cual (si hay) es el camino más corto entre ambos
+            caminoMasCorto = buscarCaminoMasCorto(nodoOrigen, destino, caminoActual, caminoMasCorto);
+            
+        }
+        
+        return caminoMasCorto;
+        
+    }
+    
+    private Lista buscarCaminoMasCorto(NodoVert origen, Object destino, Lista caminoActual, Lista caminoMasCorto){
+        
+        NodoVert nodoVertAux;
+        NodoAdy nodoAdyAux;
+        boolean buscar = true;
+        
+        // Ingresa el elemento del nodo en la lista para ir formando el camino
+        caminoActual.insertar(origen.getElem(), caminoActual.longitud()+1);
+        
+        if (origen.getElem().equals(destino)) {
+            // Caso base: se encontró un camino entre el nodo origen y el nodo destino
+            if (caminoActual.longitud() < caminoMasCorto.longitud() || caminoMasCorto.longitud() <= 0) {
+                // El nuevo camino es más corto que el último camino más corto encontrado o es el primero
+                caminoMasCorto = caminoActual.clone();
+            }
+        } else {
+            nodoAdyAux = origen.getPrimerAdy();
+            
+            while (nodoAdyAux != null && buscar) {
+                // Caso recursivo: busca entre los nodos adyacentes del nodo origen y sus derivados si existe un
+                // camino entre él y el nodo destino
+                nodoVertAux = nodoAdyAux.getVertice();
+                
+                if (caminoActual.localizar(nodoVertAux.getElem()) < 0) {
+                    // Si el nuevo nodo a visitar no fue visitado antes, se hace una llamada recursiva
+                    caminoMasCorto = buscarCaminoMasCorto(nodoVertAux, destino, caminoActual, caminoMasCorto);
+                    caminoActual.eliminar(caminoActual.longitud()); // Elimina el último elemento de la lista
+                }
+                
+                // Verifica si sigue buscando por ese nodo
+                buscar = seguirBuscandoCamino(caminoActual.longitud(), caminoMasCorto.longitud());
+                
+                nodoAdyAux = nodoAdyAux.getSigAdyacente();
+            }
+            
+        }
+        
+        return caminoMasCorto;
+        
+    }
+    
+    private boolean seguirBuscandoCamino(int longCaminoActual, int longCaminoMasCorto){
+        
+        boolean buscar = true;
+
+        // Si se encontró al menos un camino del nodo origen al nodo destino y el camino actual tiene al menos un nodo
+        // menos que el camino más corto encontrado, entonces deja de buscar un camino por ese nodo ya que la lista
+        // quedará igual o más larga que el camino más corto encontrado actualmente
+        if (longCaminoMasCorto >= 1 && longCaminoActual+1 >= longCaminoMasCorto) {
+            buscar = false;
+        }
+        
+        return buscar;
+                
     }
     
     ///////////////////////////////////////
