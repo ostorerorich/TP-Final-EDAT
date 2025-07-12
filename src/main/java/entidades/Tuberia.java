@@ -55,5 +55,10 @@ public class Tuberia {
         this.estado = estado;
     }
 
+    @Override
+    public String toString(){
+        return this.nomenclatura;
+    }
+
 
 }

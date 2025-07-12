@@ -1,7 +1,8 @@
+import entidades.Tuberia;
 import entidades.TuberiaKey;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
 import grafos.Grafo;
-import lib.Log;
+
 import lib.Metodos;
 
 import java.io.IOException;
@@ -11,8 +12,8 @@ import java.util.Scanner;
 public class Main {
 
     private static ArbolAVL ciudades = new ArbolAVL();
-    private static Grafo tuberias = new Grafo();
-    private static HashMap<TuberiaKey, Integer> hash = new HashMap();
+    private static Grafo recorrido = new Grafo();
+    private static HashMap<TuberiaKey, Tuberia> listadoTuberias = new HashMap();
     private static Scanner sc = new Scanner(System.in);
 
 
@@ -28,7 +29,9 @@ public class Main {
             System.out.println("bruh");
             System.out.println(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "logs_edat");
         }*/
-        menu();
+        //menu();
+
+
     }
 
 

@@ -1,26 +1,26 @@
 package entidades;
 
 public class TuberiaKey {
-    private Tuberia tub1;
-    private Tuberia tub2;
+    private Ciudad origen;
+    private Ciudad hasta;
 
 
-    public TuberiaKey(Tuberia tub1, Tuberia tub2){
-        this.tub1 = tub1;
-        this.tub2 = tub2;
+    public TuberiaKey(Ciudad origen, Ciudad hasta){
+        this.origen = origen;
+        this.hasta = hasta;
     }
 
-    public Tuberia getTub1(){
-        return tub1;
+    public Ciudad getOrigen(){
+        return origen;
     }
 
-    public Tuberia getTub2(){
-        return tub2;
+    public Ciudad getHasta(){
+        return hasta;
     }
 
     @Override
     public int hashCode(){
-        return this.tub1.hashCode() + this.tub2.hashCode();
+        return this.origen.hashCode() + this.hasta.hashCode();
     }
 
 
@@ -32,7 +32,7 @@ public class TuberiaKey {
         }else if(obj != null && obj.getClass() != getClass()){
             TuberiaKey o = (TuberiaKey) obj;
 
-            res = this.tub1.equals(o.tub1) && this.tub2.equals(o.tub2);
+            res = this.origen.equals(o.origen) && this.hasta.equals(o.hasta);
         }
 
         return res;

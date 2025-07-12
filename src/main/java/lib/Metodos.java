@@ -15,6 +15,7 @@ public class Metodos {
     private static final Scanner sc = new Scanner(System.in);
 
     // TODO: agregar validaciones del archivo.
+    // TODO: Simplificar el codigo, crear un metodo generico para cargar los datos desde un archivo.
     public static void cargarCiudadesDesde(ArbolAVL arbol) throws IOException {
 
         System.out.println("Cargando ciudades...");
@@ -29,7 +30,7 @@ public class Metodos {
                 lineas.skip(1)
                         .map(l -> l.split(";"))
                         .forEach(l -> {
-                            if(l.length == 5){
+                            if(l.length == 4){
                                 arbol.insertar(
                                         new Ciudad(
                                                 l[0].trim(),
@@ -50,6 +51,7 @@ public class Metodos {
         }
 
     }
+
 
 
     //TODO: Agregar validaciones, comprobar que no exista una ciudad con el mismo nombre o nomenclatura.
@@ -79,5 +81,31 @@ public class Metodos {
         return res;
 
     }
+
+
+
+    private static boolean validarNomclatura(String nombre, String nomenclatura) {
+        boolean res = false;
+        StringBuilder sb = new StringBuilder();
+        String nombreMayus = nombre.toUpperCase().trim();
+        int numero  = Integer.parseInt(nomenclatura.substring(2,nomenclatura.length()));
+
+        if(numero > 3000 && numero < 4000){
+                String[] partes = nombreMayus.split("[\\\\s-]");
+                if(partes.length == 2){
+                    sb.append(partes[0].substring(0,1)).append(partes[1].substring(0,1));
+                }else{
+                    sb.append(partes[0].substring(0,2));
+                }
+                sb.append(numero);
+                if(sb.toString().equals(nomenclatura)) {
+                    res = true;
+                }
+
+        }
+
+        return res;
+    }
+
 
 }
