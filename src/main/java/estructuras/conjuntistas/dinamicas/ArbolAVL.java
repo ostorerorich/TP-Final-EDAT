@@ -270,4 +270,46 @@ public class ArbolAVL {
             listarInOrdenAux(nodoArbol.getDerecho(), lis);
         }
     }
+
+    public boolean pertenece(Comparable elem) {
+        return this.raiz != null ? perteneceAux(this.raiz, elem) : false;
+    }
+
+    private boolean perteneceAux(NodoAVL nodo, Comparable elem) {
+        boolean exito = false;
+        if (nodo != null) {
+            if (elem.compareTo(nodo.getElem()) == 0) {
+                exito = true;
+            } else {
+                if (elem.compareTo(nodo.getElem()) < 0) {
+                    if (nodo.getIzquierdo() != null)
+                        exito = perteneceAux(nodo.getIzquierdo(), elem);
+                } else {
+                    if (nodo.getDerecho() != null)
+                        exito = perteneceAux(nodo.getDerecho(), elem);
+                }
+            }
+        }
+        return exito;
+    }
+
+    public Comparable obtener(Comparable elem) {
+        return obtenerAux(this.raiz, elem);
+    }
+
+    private Comparable obtenerAux(NodoAVL nodo, Comparable elem) {
+        Comparable res = null;
+        if (nodo != null) {
+            if (elem.compareTo(nodo.getElem()) == 0) {
+                res = nodo.getElem();
+            } else if (elem.compareTo(nodo.getElem()) < 0) {
+                if (nodo.getIzquierdo() != null)
+                    res = obtenerAux(nodo.getIzquierdo(), elem);
+            } else {
+                if (nodo.getDerecho() != null)
+                    res = obtenerAux(nodo.getDerecho(), elem);
+            }
+        }
+        return res;
+    }
 }

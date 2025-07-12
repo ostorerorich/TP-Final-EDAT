@@ -17,6 +17,10 @@ public class Ciudad implements Comparable<Ciudad> {
         this.cantM3Persona = cantM3Persona;
     }
 
+    public Ciudad(String nombre){
+        this.nombre = nombre;
+    }
+
 
     public String getNombre() {
         return nombre;

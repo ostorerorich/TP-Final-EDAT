@@ -13,9 +13,13 @@ public class Metodos {
 
     private static final String REG = "^[A-Z]{2}\\d{4}$";
     private static final Scanner sc = new Scanner(System.in);
+    private static final String letras = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\-\\s]+$";
+    private static final String numeros = "^\\d+$";
+    private static final String decimales = "^\\d+\\.\\d{2}$";
 
     // TODO: agregar validaciones del archivo.
     // TODO: Simplificar el codigo, crear un metodo generico para cargar los datos desde un archivo.
+    // TODO: Simplificar Log/Sout sucesivos.
     public static void cargarCiudadesDesde(ArbolAVL arbol) throws IOException {
 
         System.out.println("Cargando ciudades...");
@@ -31,16 +35,14 @@ public class Metodos {
                         .map(l -> l.split(";"))
                         .forEach(l -> {
                             if(l.length == 4){
-                                if(validarNomclatura(l[0], l[1])){
-                                    arbol.insertar(
-                                            new Ciudad(
-                                                    l[0].trim(),
-                                                    l[1].trim(),
-                                                    Integer.parseInt(l[2].trim()),
-                                                    Double.parseDouble(l[3].trim())
-                                            )
-                                    );
-                                }
+                                    if(validar(l[0],l[1], l[2], l[3])) {
+                                        Ciudad ciudad = new Ciudad(l[0], l[1], Integer.parseInt(l[2]), Double.parseDouble(l[3]));
+                                        agregarCiudad(arbol, ciudad);
+                                        Log.mensaje("Ciudad cargada: " + ciudad.getNombre() + " con nomenclatura: " + ciudad.getNomenclatura()).guardar();
+                                    }else{
+                                        Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.").guardar();
+                                        System.out.println("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.");
+                                    }
                             }else {
                                 Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.").guardar();
                             }
@@ -55,28 +57,24 @@ public class Metodos {
     }
 
 
-
-    //TODO: Agregar validaciones, comprobar que no exista una ciudad con el mismo nombre o nomenclatura.
-    public static boolean agregarCiudad(ArbolAVL arbol){
+    // Checkear todo lo que es input validaciones y agregar ciudades.
+    //TODO: this
+    private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona){
+        return nombre.matches(letras) && validarNomenclatura(nombre, nomenclatura) && superficie.matches(numeros) && cantM3Persona.matches(decimales);
+    }
+    //TODO: this
+    public static boolean agregarCiudad(ArbolAVL arbol, Ciudad ciudad) {
         boolean res = false;
-        Ciudad ciudad = null;
-        System.out.println("Ingresar nombre de la ciudad:");
-        String nombre = sc.nextLine();
-        System.out.println("Ingresar nomenclatura de la ciudad (Formato: AA0000):");
-        String nomenclatura = sc.nextLine();
-        System.out.println("Ingresar superficie de la ciudad (en m2):");
-        int superficie = Integer.parseInt(sc.nextLine());
-        System.out.println("Ingresar cantidad de m3 por persona:");
-        double cantM3Persona = Double.parseDouble(sc.nextLine());
-        if(validarNomclatura(nombre, nomenclatura)) {
-            try {
-                ciudad = new Ciudad(nombre, nomenclatura, superficie, cantM3Persona);
+
+        if(ciudad !=null){
+            if(arbol.pertenece(ciudad)){
+                Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.").guardar();
+                System.out.println("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.");
+            }else{
                 arbol.insertar(ciudad);
+                Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.").guardar();
+                System.out.println("Ciudad " + ciudad.getNombre() + " agregada al sistema.");
                 res = true;
-                Log.mensaje("Ciudad agregada: " + ciudad.getNombre()).guardar();
-            }catch (NumberFormatException e){
-                Log.mensaje("Error al agregar la ciudad: " + e.getMessage()).guardar();
-                System.out.println("Error al agregar la ciudad: " + e.getMessage());
             }
         }
 
@@ -85,12 +83,48 @@ public class Metodos {
     }
 
 
+    //TODO: this
+    public static void agregarCiudadInput(ArbolAVL arbol) {
+        Ciudad ciudad = null;
+        boolean res = false;
+        String nombre, nomenclatura, superficie, cantM3Persona;
 
-    private static boolean validarNomclatura(String nombre, String nomenclatura) {
+        System.out.println("Ingresar nombre de la ciudad:");
+        nombre = sc.nextLine();
+        System.out.print("Ingresar nomenclatura de la ciudad (Formato: AA0000): ");
+        nomenclatura = sc.nextLine();
+        System.out.println();
+        System.out.print("Ingresar superficie de la ciudad (en m2): ");
+        superficie = sc.nextLine();
+        System.out.println();
+        System.out.print("Ingresar cantidad de m3 por persona: ");
+        cantM3Persona = sc.nextLine();
+        System.out.println();
+        if (validar(nombre, nomenclatura, superficie, cantM3Persona)) {
+            try {
+                ciudad = new Ciudad(nombre, nomenclatura, Integer.parseInt(superficie), Double.parseDouble(cantM3Persona));
+                res = agregarCiudad(arbol, ciudad);
+                if(res) {
+                    Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.").guardar();
+                    System.out.println("Ciudad " + ciudad.getNombre() + " agregada al sistema.");
+                } else {
+                    Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.").guardar();
+                    System.out.println("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.");
+                }
+            } catch (NumberFormatException e) {
+                Log.mensaje("Error al agregar la ciudad: " + e.getMessage()).guardar();
+                System.out.println("Error al agregar la ciudad: " + e.getMessage());
+            }
+
+        }
+    }
+
+    //TODO: this
+    private static boolean validarNomenclatura(String nombre, String nomenclatura) {
         boolean res = false;
         StringBuilder sb = new StringBuilder();
         String nombreMayus = nombre.toUpperCase().trim();
-        int numero  = Integer.parseInt(nomenclatura.substring(2,nomenclatura.length()));
+        int numero  = Integer.parseInt(nomenclatura.substring(2));
 
         if(numero > 3000 && numero < 4000 && nomenclatura.matches(REG)){
                 String[] partes = nombreMayus.split("[\\\\s-]");
@@ -109,5 +143,41 @@ public class Metodos {
         return res;
     }
 
+    public static void eliminarCiudad(ArbolAVL arbol){
+        System.out.println("Ingrese el nombre de la ciudad a eliminar:");
+        String nombre = sc.nextLine().trim();
+        if(nombre.isEmpty() || !nombre.matches(letras)){
+            Log.mensaje("El nombre de la ciudad no puede estar vacío.").guardar();
+            System.out.println("El nombre de la ciudad no puede estar vacío.");
+        }else{
+            Ciudad ciudad = new Ciudad(nombre);
+            if(arbol.eliminar(ciudad)){
+                Log.mensaje("Ciudad " + ciudad.getNombre() + " eliminada del sistema.").guardar();
+                System.out.println("Ciudad " + ciudad.getNombre() + " eliminada del sistema.");
+            } else {
+                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.").guardar();
+                System.out.println("La ciudad " + ciudad.getNombre() + " no existe en el sistema.");
+            }
+        }
+    }
+
+    public static void buscarCiudad(ArbolAVL arbol) {
+        System.out.println("Ingrese el nombre de la ciudad a buscar:");
+        String nombre = sc.nextLine().trim();
+        if(nombre.isEmpty() || !nombre.matches(letras)){
+            Log.mensaje("El nombre de la ciudad no puede estar vacío.").guardar();
+            System.out.println("El nombre de la ciudad no puede estar vacío.");
+        }else{
+            Ciudad ciudad = new Ciudad(nombre);
+            Ciudad res = (Ciudad) arbol.obtener(ciudad);
+            if(res != null){
+                Log.mensaje("Ciudad encontrada: " + res.getNombre()).guardar();
+                System.out.println("Ciudad encontrada: " + res.getNombre());
+            } else {
+                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.").guardar();
+                System.out.println("La ciudad " + ciudad.getNombre() + " no existe en el sistema.");
+            }
+        }
+    }
 
 }

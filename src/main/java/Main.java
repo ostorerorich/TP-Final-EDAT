@@ -13,7 +13,7 @@ public class Main {
 
     private static ArbolAVL ciudades = new ArbolAVL();
     private static Grafo recorrido = new Grafo();
-    private static HashMap<TuberiaKey, Tuberia> listadoTuberias = new HashMap();
+    private static HashMap<TuberiaKey, Integer> listadoTuberias = new HashMap<TuberiaKey, Integer>();
     private static Scanner sc = new Scanner(System.in);
 
 
@@ -29,7 +29,8 @@ public class Main {
             System.out.println("bruh");
             System.out.println(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "logs_edat");
         }*/
-        //menu();
+        menu();
+
 
 
     }
@@ -84,17 +85,13 @@ public class Main {
         int res = Integer.parseInt(sc.nextLine());
         switch (res) {
             case 1 -> {
-                if (Metodos.agregarCiudad(ciudades)) {
-                    System.out.println("Ciudad agregada correctamente.");
-                } else {
-                    System.out.println("Error al agregar la ciudad.");
-                }
+                    Metodos.agregarCiudadInput(ciudades);
             }
-            case 2 -> System.out.println("Baja Ciudad");
+            case 2 -> Metodos.eliminarCiudad(ciudades);
             case 3 -> System.out.println("Modificacion Ciudad");
             case 4 -> System.out.println("Listar Ciudades: " + ciudades.listarInOrden());
-            case 5 -> System.out.println("Buscar Ciudad");
-            case 6 -> System.out.println("Volver al menu principal");
+            case 5 -> Metodos.buscarCiudad(ciudades);
+            case 6 -> {}
             default -> System.out.println("Opcion invalida");
         }
     }
