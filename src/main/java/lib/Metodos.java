@@ -31,14 +31,16 @@ public class Metodos {
                         .map(l -> l.split(";"))
                         .forEach(l -> {
                             if(l.length == 4){
-                                arbol.insertar(
-                                        new Ciudad(
-                                                l[0].trim(),
-                                                l[1].trim(),
-                                                Integer.parseInt(l[2].trim()),
-                                                Double.parseDouble(l[3].trim())
-                                        )
-                                );
+                                if(validarNomclatura(l[0], l[1])){
+                                    arbol.insertar(
+                                            new Ciudad(
+                                                    l[0].trim(),
+                                                    l[1].trim(),
+                                                    Integer.parseInt(l[2].trim()),
+                                                    Double.parseDouble(l[3].trim())
+                                            )
+                                    );
+                                }
                             }else {
                                 Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.").guardar();
                             }
@@ -66,7 +68,7 @@ public class Metodos {
         int superficie = Integer.parseInt(sc.nextLine());
         System.out.println("Ingresar cantidad de m3 por persona:");
         double cantM3Persona = Double.parseDouble(sc.nextLine());
-        if(nomenclatura.matches(REG)){
+        if(validarNomclatura(nombre, nomenclatura)) {
             try {
                 ciudad = new Ciudad(nombre, nomenclatura, superficie, cantM3Persona);
                 arbol.insertar(ciudad);
@@ -90,7 +92,7 @@ public class Metodos {
         String nombreMayus = nombre.toUpperCase().trim();
         int numero  = Integer.parseInt(nomenclatura.substring(2,nomenclatura.length()));
 
-        if(numero > 3000 && numero < 4000){
+        if(numero > 3000 && numero < 4000 && nomenclatura.matches(REG)){
                 String[] partes = nombreMayus.split("[\\\\s-]");
                 if(partes.length == 2){
                     sb.append(partes[0].substring(0,1)).append(partes[1].substring(0,1));
