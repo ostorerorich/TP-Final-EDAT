@@ -1,4 +1,4 @@
-package grafos;
+package estructuras.grafos;
 
 import estructuras.lineales.dinamicas.Lista;
 

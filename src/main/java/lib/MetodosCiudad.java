@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-public class Metodos {
+public class MetodosCiudad {
 
     private static final String REG = "^[A-Z]{2}\\d{4}$";
     private static final Scanner sc = new Scanner(System.in);
@@ -19,13 +19,13 @@ public class Metodos {
 
     // TODO: agregar validaciones del archivo.
     // TODO: Simplificar el codigo, crear un metodo generico para cargar los datos desde un archivo.
-    // TODO: Simplificar Log/Sout sucesivos.
     public static void cargarCiudadesDesde(ArbolAVL arbol) throws IOException {
 
         System.out.println("Cargando ciudades...");
         File archivo = Load.cargarArchivo();
         if(archivo != null){
-            Log.mensaje("Cargando ciudades desde: " + archivo.getAbsolutePath()).guardar();
+            Log.mensaje("Cargando ciudades desde: " + archivo.getAbsolutePath())
+                    .print().guardar();
 
             // Pone el archivo en una lista(stream) para luego poder recorrerla eficientemente, separando cada linea por ";"
             // y luego se valida que tenga la cantidad de campos necesarios para crear una ciudad.
@@ -38,18 +38,21 @@ public class Metodos {
                                     if(validar(l[0],l[1], l[2], l[3])) {
                                         Ciudad ciudad = new Ciudad(l[0], l[1], Integer.parseInt(l[2]), Double.parseDouble(l[3]));
                                         agregarCiudad(arbol, ciudad);
-                                        Log.mensaje("Ciudad cargada: " + ciudad.getNombre() + " con nomenclatura: " + ciudad.getNomenclatura()).guardar();
+                                        Log.mensaje("Ciudad cargada: " + ciudad.getNombre() + " con nomenclatura: " + ciudad.getNomenclatura())
+                                                .print().guardar();
                                     }else{
-                                        Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.").guardar();
-                                        System.out.println("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.");
+                                        Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.")
+                                                .print().guardar();
+
                                     }
                             }else {
                                 Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.").guardar();
                             }
                         });
             }catch(NumberFormatException e){
-                Log.mensaje("Error al cargar las ciudades: " + e.getMessage()).guardar();
-                System.out.println("Error al cargar las ciudades: " + e.getMessage());
+                Log.mensaje("Error al cargar las ciudades: " + e.getMessage())
+                        .print().guardar();
+
 
             }
         }
@@ -68,12 +71,13 @@ public class Metodos {
 
         if(ciudad !=null){
             if(arbol.pertenece(ciudad)){
-                Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.").guardar();
-                System.out.println("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.");
+                Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.")
+                        .print().guardar();
+
             }else{
                 arbol.insertar(ciudad);
-                Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.").guardar();
-                System.out.println("Ciudad " + ciudad.getNombre() + " agregada al sistema.");
+                Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")
+                        .print().guardar();
                 res = true;
             }
         }
@@ -105,15 +109,17 @@ public class Metodos {
                 ciudad = new Ciudad(nombre, nomenclatura, Integer.parseInt(superficie), Double.parseDouble(cantM3Persona));
                 res = agregarCiudad(arbol, ciudad);
                 if(res) {
-                    Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.").guardar();
-                    System.out.println("Ciudad " + ciudad.getNombre() + " agregada al sistema.");
+                    Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")
+                            .print().guardar();
+
                 } else {
-                    Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.").guardar();
-                    System.out.println("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.");
+                    Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.")
+                            .print().guardar();
+
                 }
             } catch (NumberFormatException e) {
-                Log.mensaje("Error al agregar la ciudad: " + e.getMessage()).guardar();
-                System.out.println("Error al agregar la ciudad: " + e.getMessage());
+                Log.mensaje("Error al agregar la ciudad: " + e.getMessage())
+                        .print().guardar();
             }
 
         }
@@ -147,16 +153,17 @@ public class Metodos {
         System.out.println("Ingrese el nombre de la ciudad a eliminar:");
         String nombre = sc.nextLine().trim();
         if(nombre.isEmpty() || !nombre.matches(letras)){
-            Log.mensaje("El nombre de la ciudad no puede estar vacío.").guardar();
-            System.out.println("El nombre de la ciudad no puede estar vacío.");
+            Log.mensaje("El nombre de la ciudad no puede estar vacío.")
+                    .print().guardar();
         }else{
             Ciudad ciudad = new Ciudad(nombre);
             if(arbol.eliminar(ciudad)){
-                Log.mensaje("Ciudad " + ciudad.getNombre() + " eliminada del sistema.").guardar();
-                System.out.println("Ciudad " + ciudad.getNombre() + " eliminada del sistema.");
+                Log.mensaje("Ciudad " + ciudad.getNombre() + " eliminada del sistema.")
+                        .print().guardar();
             } else {
-                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.").guardar();
-                System.out.println("La ciudad " + ciudad.getNombre() + " no existe en el sistema.");
+                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
+                        .print().guardar();
+
             }
         }
     }
@@ -165,17 +172,17 @@ public class Metodos {
         System.out.println("Ingrese el nombre de la ciudad a buscar:");
         String nombre = sc.nextLine().trim();
         if(nombre.isEmpty() || !nombre.matches(letras)){
-            Log.mensaje("El nombre de la ciudad no puede estar vacío.").guardar();
-            System.out.println("El nombre de la ciudad no puede estar vacío.");
+            Log.mensaje("El nombre de la ciudad no puede estar vacío.")
+                    .print().guardar();
         }else{
             Ciudad ciudad = new Ciudad(nombre);
             Ciudad res = (Ciudad) arbol.obtener(ciudad);
             if(res != null){
-                Log.mensaje("Ciudad encontrada: " + res.getNombre()).guardar();
-                System.out.println("Ciudad encontrada: " + res.getNombre());
+                Log.mensaje("Ciudad encontrada: " + res.getNombre())
+                        .print().guardar();
             } else {
-                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.").guardar();
-                System.out.println("La ciudad " + ciudad.getNombre() + " no existe en el sistema.");
+                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
+                        .print().guardar();
             }
         }
     }

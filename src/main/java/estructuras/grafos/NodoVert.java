@@ -1,4 +1,4 @@
-package grafos;
+package estructuras.grafos;
 
 public class NodoVert {
     

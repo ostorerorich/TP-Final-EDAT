@@ -1,5 +1,7 @@
 package entidades;
 
+import java.util.Objects;
+
 public class Ciudad implements Comparable<Ciudad> {
 
     private String nombre;
@@ -71,14 +73,14 @@ public class Ciudad implements Comparable<Ciudad> {
     @Override
     public boolean equals(Object obj){
         boolean res = false;
-        if(obj == this){
-            res = true;
-        }else if(obj != null && obj.getClass() != getClass()){
-            Ciudad o = (Ciudad) obj;
-
-            res = this.nombre.equals(o.nombre) && this.nomenclatura.equals(o.nomenclatura);
+        if(obj!=null && obj.getClass() == getClass()){
+            if(obj == this){
+                res = true;
+            }else{
+                Ciudad o = (Ciudad) obj;
+                res = this.nombre.equals(o.nombre) && this.nomenclatura.equals(o.nomenclatura);
+            }
         }
-
         return res;
     }
 
@@ -87,4 +89,9 @@ public class Ciudad implements Comparable<Ciudad> {
         return this.getNombre();
     }
 
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(nombre, nomenclatura);
+    }
 }

@@ -107,6 +107,14 @@ public class Log {
         }
     }
 
+    //Ahorro poner la cantidad Log + sout.
+
+    public Log print(){
+        System.out.println(this.mes);
+        return this;
+    }
+
+
     // Cierra el PrintWriter si está abierto.
     public static void cerrar(){
         if(writer != null){

@@ -29,6 +29,10 @@ public class ArbolAVL {
         return res;
     }
 
+    public boolean esVacio() {
+        return this.raiz == null;
+    }
+
     private NodoAVL insertarAux(NodoAVL nodo, Comparable elem) {
 
         if (elem.compareTo(nodo.getElem()) < 0) {

@@ -1,9 +1,9 @@
-import entidades.Tuberia;
 import entidades.TuberiaKey;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
-import grafos.Grafo;
+import estructuras.grafos.Grafo;
 
-import lib.Metodos;
+import lib.MetodosCiudad;
+import lib.MetodosTuberia;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,8 +29,10 @@ public class Main {
             System.out.println("bruh");
             System.out.println(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "logs_edat");
         }*/
-        menu();
+        MetodosCiudad.cargarCiudadesDesde(ciudades);
+        MetodosTuberia.cargarTuberiasDesde(ciudades, listadoTuberias);
 
+        listadoTuberias.forEach((k, v) -> System.out.println(k + " = " + v + " metros"));
 
 
     }
@@ -85,12 +87,12 @@ public class Main {
         int res = Integer.parseInt(sc.nextLine());
         switch (res) {
             case 1 -> {
-                    Metodos.agregarCiudadInput(ciudades);
+                    MetodosCiudad.agregarCiudadInput(ciudades);
             }
-            case 2 -> Metodos.eliminarCiudad(ciudades);
+            case 2 -> MetodosCiudad.eliminarCiudad(ciudades);
             case 3 -> System.out.println("Modificacion Ciudad");
             case 4 -> System.out.println("Listar Ciudades: " + ciudades.listarInOrden());
-            case 5 -> Metodos.buscarCiudad(ciudades);
+            case 5 -> MetodosCiudad.buscarCiudad(ciudades);
             case 6 -> {}
             default -> System.out.println("Opcion invalida");
         }
