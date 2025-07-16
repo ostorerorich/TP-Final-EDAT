@@ -3,26 +3,34 @@ package entidades;
 import java.util.Objects;
 
 public class TuberiaKey {
-    private Ciudad origen;
-    private Ciudad hasta;
+    private String nomenclaturaOrigen;
+    private String nomenclaturaDestino;
 
 
-    public TuberiaKey(Ciudad origen, Ciudad hasta){
-        this.origen = origen;
-        this.hasta = hasta;
+    public TuberiaKey(String nomenclaturaOrigen, String nomenclaturaDestino) {
+        this.nomenclaturaOrigen = nomenclaturaOrigen;
+        this.nomenclaturaDestino = nomenclaturaDestino;
     }
 
-    public Ciudad getOrigen(){
-        return origen;
+    public String getNomenclaturaOrigen() {
+        return nomenclaturaOrigen;
     }
 
-    public Ciudad getHasta(){
-        return hasta;
+    public void setNomenclaturaOrigen(String nomenclaturaOrigen) {
+        this.nomenclaturaOrigen = nomenclaturaOrigen;
+    }
+
+    public String getNomenclaturaDestino() {
+        return nomenclaturaDestino;
+    }
+
+    public void setNomenclaturaDestino(String nomenclaturaDestino) {
+        this.nomenclaturaDestino = nomenclaturaDestino;
     }
 
     @Override
     public int hashCode(){
-        return Objects.hash(origen, hasta);
+        return Objects.hash(nomenclaturaOrigen, nomenclaturaDestino);
     }
 
 
@@ -34,7 +42,8 @@ public class TuberiaKey {
                 res = true;
             }else{
                 TuberiaKey o = (TuberiaKey) obj;
-                res = this.origen.equals(o.origen) && this.hasta.equals(o.hasta);
+                res = this.nomenclaturaOrigen.equals(o.nomenclaturaDestino)
+                        && this.nomenclaturaDestino.equals(o.nomenclaturaDestino);
             }
         }
         return res;
@@ -43,8 +52,8 @@ public class TuberiaKey {
     @Override
     public String toString(){
         return "TuberiaKey{" +
-                "origen=" + origen +
-                ", hasta=" + hasta +
+                "origen=" + nomenclaturaOrigen +
+                ", hasta=" + nomenclaturaDestino +
                 '}';
     }
 

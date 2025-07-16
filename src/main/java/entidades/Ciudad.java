@@ -10,8 +10,7 @@ public class Ciudad implements Comparable<Ciudad> {
     private int superficie;
     private double cantM3Persona;
 
-
-    public Ciudad(String nombre, String nomenclatura, int superficie, double cantM3Persona){
+    public Ciudad(String nombre, String nomenclatura, int superficie, double cantM3Persona) {
         this.nombre = nombre;
         this.habitantes = 0;
         this.nomenclatura = nomenclatura;
@@ -19,10 +18,9 @@ public class Ciudad implements Comparable<Ciudad> {
         this.cantM3Persona = cantM3Persona;
     }
 
-    public Ciudad(String nombre){
+    public Ciudad(String nombre) {
         this.nombre = nombre;
     }
-
 
     public String getNombre() {
         return nombre;
@@ -60,23 +58,24 @@ public class Ciudad implements Comparable<Ciudad> {
         return cantM3Persona;
     }
 
-    public void setCantM3Persona(int cantM3Persona) {
+    public void setCantM3Persona(double cantM3Persona) {
         this.cantM3Persona = cantM3Persona;
     }
 
-
     @Override
-    public int compareTo(Ciudad o){
+    public int compareTo(Ciudad o) {
         return this.nombre.compareTo(o.getNombre());
     }
 
     @Override
-    public boolean equals(Object obj){
+    public boolean equals(Object obj) {
         boolean res = false;
-        if(obj!=null && obj.getClass() == getClass()){
-            if(obj == this){
+        if (obj != null && obj.getClass() == getClass()) {
+            if (obj == this) {
                 res = true;
-            }else{
+            } else {
+                // Error al comparar nombre y nom, cuando el constructor es solo nombre, nom es
+                // null
                 Ciudad o = (Ciudad) obj;
                 res = this.nombre.equals(o.nombre) && this.nomenclatura.equals(o.nomenclatura);
             }
@@ -85,13 +84,12 @@ public class Ciudad implements Comparable<Ciudad> {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.getNombre();
     }
 
-
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Objects.hash(nombre, nomenclatura);
     }
 }
