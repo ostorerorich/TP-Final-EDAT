@@ -98,4 +98,26 @@ public class Main {
             default -> System.out.println("Opcion invalida");
         }
     }
+
+
+    private static void menuTuberias(){
+        System.out.println("""
+                1 - Alta Tuberia
+                2 - Baja Tuberia
+                3 - Modificacion Tuberia
+                4 - Listar Tuberias
+                5 - Buscar Tuberia
+                6 - Volver al menu principal"""
+        );
+        int res = Integer.parseInt(sc.nextLine());
+        switch (res) {
+            case 1 -> MetodosTuberia.agregarTuberia(listadoTuberias, ciudades);
+            case 2 -> MetodosTuberia.eliminarTuberia(listadoTuberias);
+            case 3 -> MetodosTuberia.modificarTuberia(listadoTuberias);
+            case 4 -> MetodosTuberia.mostrarTuberias(listadoTuberias);
+            case 5 -> MetodosTuberia.buscarTuberia(listadoTuberias);
+            case 6 -> {}
+            default -> System.out.println("Opcion invalida");
+        }
+    }
 }

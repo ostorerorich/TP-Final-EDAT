@@ -149,6 +149,12 @@ public class MetodosCiudad {
         return res;
     }
 
+    public static boolean validarNomenclatura(String nomenclatura) {
+        return nomenclatura.matches(REG) &&
+               Integer.parseInt(nomenclatura.substring(2)) > 3000 &&
+               Integer.parseInt(nomenclatura.substring(2)) < 4000;
+    }
+
     public static void eliminarCiudad(ArbolAVL arbol){
         System.out.println("Ingrese el nombre de la ciudad a eliminar:");
         String nombre = sc.nextLine().trim();
