@@ -77,7 +77,17 @@ public class Tuberia {
         this.estado = estado;
     }
 
-
+    @Override
+    public String toString() {
+        return "Tuberia{" +
+                "nomOrigen='" + nomOrigen + '\'' +
+                ", nomDestino='" + nomDestino + '\'' +
+                ", diametro=" + diametro +
+                ", caudalMax=" + caudalMax +
+                ", caudalMin=" + caudalMin +
+                ", estado=" + estado +
+                '}';
+    }
 }
 
 

@@ -1,6 +1,8 @@
 package lib;
 
 import entidades.Ciudad;
+import entidades.Estado;
+import entidades.Tuberia;
 import entidades.TuberiaKey;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
 
@@ -8,13 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.Scanner;
+
 import java.util.stream.Stream;
 
 public class MetodosTuberia {
-    //private static final Scanner sc = new Scanner(System.in);
 
-    public static void cargarTuberiasDesde(ArbolAVL arbol, HashMap<TuberiaKey, Integer> tuberias) throws IOException {
+    public static void cargarTuberiasDesde(ArbolAVL arbol, HashMap<TuberiaKey, Tuberia> tuberias) throws IOException {
 
         if(arbol.esVacio()){
             Log
@@ -31,19 +32,23 @@ public class MetodosTuberia {
                             .map(l -> l.split(";"))
                             .forEach(l ->{
                                 if(l.length == 3){
-                                    Ciudad origen = new Ciudad(l[0].trim());
-                                    Ciudad destino = new Ciudad(l[1].trim());
-                                    int metros = Integer.parseInt(l[2].trim());
+                                    Ciudad origen = (Ciudad) arbol.obtener(new Ciudad(l[0].trim()));
+                                    Ciudad destino = (Ciudad) arbol.obtener(new Ciudad(l[1].trim()));
+                                    int diametro = Integer.parseInt(l[2].trim());
+                                    int caudalMax = 0;
+                                    int caudalMin = 0;
 
-                                    if(!arbol.pertenece(origen) || !arbol.pertenece(destino)){
+
+                                    if(origen == null || destino == null){
                                         Log.mensaje("Error al cargar la tubería: Ciudad no encontrada.").print().guardar();
                                     }else {
-                                        TuberiaKey key = new TuberiaKey((Ciudad) arbol.obtener(origen), (Ciudad) arbol.obtener(destino));
+                                        TuberiaKey key = new TuberiaKey(origen.getNomenclatura(), destino.getNomenclatura());
                                         if(tuberias.containsKey(key)){
                                             Log.mensaje("Error al cargar la tubería: Ya existe una tubería entre estas ciudades.").print().guardar();
                                         }else{
-                                            tuberias.put(key, metros);
-                                            Log.mensaje("Tubería cargada: " + origen + " - " + destino + " (" + metros + " metros)").print().guardar();
+                                            Tuberia tuberia = new Tuberia(origen.getNomenclatura(), destino.getNomenclatura(), diametro, caudalMax, caudalMin, Estado.ACTIVO);
+                                            tuberias.put(key, tuberia);
+                                            Log.mensaje("Tubería cargada: " + tuberia).print().guardar();
                                         }
                                     }
                                 }else{

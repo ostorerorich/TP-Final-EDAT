@@ -1,3 +1,4 @@
+import entidades.Tuberia;
 import entidades.TuberiaKey;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
 import estructuras.grafos.Grafo;
@@ -13,7 +14,7 @@ public class Main {
 
     private static ArbolAVL ciudades = new ArbolAVL();
     private static Grafo recorrido = new Grafo();
-    private static HashMap<TuberiaKey, Integer> listadoTuberias = new HashMap<TuberiaKey, Integer>();
+    private static HashMap<TuberiaKey, Tuberia> listadoTuberias = new HashMap<TuberiaKey, Tuberia>();
     private static Scanner sc = new Scanner(System.in);
 
 

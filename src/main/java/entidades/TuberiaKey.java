@@ -42,7 +42,7 @@ public class TuberiaKey {
                 res = true;
             }else{
                 TuberiaKey o = (TuberiaKey) obj;
-                res = this.nomenclaturaOrigen.equals(o.nomenclaturaDestino)
+                res = this.nomenclaturaOrigen.equals(o.nomenclaturaOrigen)
                         && this.nomenclaturaDestino.equals(o.nomenclaturaDestino);
             }
         }
