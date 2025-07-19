@@ -459,6 +459,76 @@ public class Grafo {
     
     ///////////////////////////////////////
     
+    public Lista todosLosCaminos(Object origen, Object destino){
+        
+        Lista caminoActual, caminos;
+        NodoVert nodoOrigen, nodoDestino, nodoVertAux;
+        
+        caminos = new Lista();
+        caminoActual = new Lista();
+        nodoOrigen = null;
+        nodoDestino = null;
+        nodoVertAux = this.inicio;
+        
+        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+            // Busca el nodo origen y el nodo destino en el grafo
+            if (nodoVertAux.getElem().equals(origen)) {
+                nodoOrigen = nodoVertAux;
+            }
+            
+            if (nodoVertAux.getElem().equals(destino)){
+                nodoDestino = nodoVertAux;
+            }
+            
+            nodoVertAux = nodoVertAux.getSigVertice();
+        }
+        
+        if (nodoOrigen != null && nodoDestino != null) {
+            // Si ambos nodos existen, busca todos los caminos posibles entre ambos
+            caminos = buscarTodosLosCaminos(nodoOrigen, destino, caminos, caminoActual);
+            
+        }
+        
+        return caminos;
+        
+    }
+    
+    private Lista buscarTodosLosCaminos(NodoVert origen, Object destino, Lista caminos, Lista caminoActual){
+        
+        NodoVert nodoVertAux;
+        NodoAdy nodoAdyAux;
+        
+        // Ingresa el elemento del nodo en la lista para ir formando el camino
+        caminoActual.insertar(origen.getElem(), caminoActual.longitud()+1);
+        
+        if (origen.getElem().equals(destino)) {
+            // Caso base: se encontró un camino entre el nodo origen y el nodo destino
+            caminos.insertar(caminoActual.clone(), caminos.longitud()+1);
+        } else {
+            nodoAdyAux = origen.getPrimerAdy();
+            
+            while (nodoAdyAux != null) {
+                // Caso recursivo: busca entre los nodos adyacentes del nodo origen y sus derivados si existe un
+                // camino entre él y el nodo destino
+                nodoVertAux = nodoAdyAux.getVertice();
+                
+                if (caminoActual.localizar(nodoVertAux.getElem()) < 0) {
+                    // Si el nuevo nodo a visitar no fue visitado antes, se hace una llamada recursiva
+                    caminos = buscarTodosLosCaminos(nodoVertAux, destino, caminos, caminoActual);
+                    caminoActual.eliminar(caminoActual.longitud()); // Elimina el último elemento de la lista
+                }
+                
+                nodoAdyAux = nodoAdyAux.getSigAdyacente();
+            }
+            
+        }
+        
+        return caminos;
+        
+    }
+    
+    ///////////////////////////////////////
+    
     public boolean esVacio(){
         // El grafo está vacío
         return this.inicio == null;

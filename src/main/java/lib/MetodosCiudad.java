@@ -2,6 +2,7 @@ package lib;
 
 import entidades.Ciudad;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
+import estructuras.grafos.Grafo;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class MetodosCiudad {
 
     // TODO: agregar validaciones del archivo.
     // TODO: Simplificar el codigo, crear un metodo generico para cargar los datos desde un archivo.
-    public static void cargarCiudadesDesde(ArbolAVL arbol) throws IOException {
+    public static void cargarCiudadesDesde(ArbolAVL arbol, Grafo caminos) throws IOException {
 
         System.out.println("Cargando ciudades...");
         File archivo = Load.cargarArchivo();
@@ -37,7 +38,7 @@ public class MetodosCiudad {
                             if(l.length == 4){
                                     if(validar(l[0],l[1], l[2], l[3])) {
                                         Ciudad ciudad = new Ciudad(l[0], l[1], Integer.parseInt(l[2]), Double.parseDouble(l[3]));
-                                        agregarCiudad(arbol, ciudad);
+                                        agregarCiudad(arbol, caminos, ciudad);
                                         Log.mensaje("Ciudad cargada: " + ciudad.getNombre() + " con nomenclatura: " + ciudad.getNomenclatura())
                                                 .print().guardar();
                                     }else{
@@ -66,7 +67,7 @@ public class MetodosCiudad {
         return nombre.matches(letras) && validarNomenclatura(nombre, nomenclatura) && superficie.matches(numeros) && cantM3Persona.matches(decimales);
     }
     //TODO: this
-    public static boolean agregarCiudad(ArbolAVL arbol, Ciudad ciudad) {
+    public static boolean agregarCiudad(ArbolAVL arbol, Grafo caminos, Ciudad ciudad) {
         boolean res = false;
 
         if(ciudad !=null){
@@ -76,6 +77,7 @@ public class MetodosCiudad {
 
             }else{
                 arbol.insertar(ciudad);
+                caminos.insertarVertice(ciudad);
                 Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")
                         .print().guardar();
                 res = true;
@@ -88,7 +90,7 @@ public class MetodosCiudad {
 
 
     //TODO: this
-    public static void agregarCiudadInput(ArbolAVL arbol) {
+    public static void agregarCiudadInput(ArbolAVL arbol, Grafo caminos) {
         Ciudad ciudad = null;
         boolean res = false;
         String nombre, nomenclatura, superficie, cantM3Persona;
@@ -107,7 +109,7 @@ public class MetodosCiudad {
         if (validar(nombre, nomenclatura, superficie, cantM3Persona)) {
             try {
                 ciudad = new Ciudad(nombre, nomenclatura, Integer.parseInt(superficie), Double.parseDouble(cantM3Persona));
-                res = agregarCiudad(arbol, ciudad);
+                res = agregarCiudad(arbol, caminos, ciudad);
                 if(res) {
                     Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")
                             .print().guardar();
