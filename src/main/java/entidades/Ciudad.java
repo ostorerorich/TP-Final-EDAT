@@ -1,18 +1,21 @@
 package entidades;
 
+import java.time.Year;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class Ciudad implements Comparable<Ciudad> {
 
     private String nombre;
-    private int habitantes;
+    private Map<Integer, Integer[]> habitantes;
     private String nomenclatura;
     private int superficie;
     private double cantM3Persona;
 
     public Ciudad(String nombre, String nomenclatura, int superficie, double cantM3Persona) {
         this.nombre = nombre;
-        this.habitantes = 0;
+        this.habitantes = this.generarAnios();
         this.nomenclatura = nomenclatura;
         this.superficie = superficie;
         this.cantM3Persona = cantM3Persona;
@@ -28,14 +31,6 @@ public class Ciudad implements Comparable<Ciudad> {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public int getHabitantes() {
-        return habitantes;
-    }
-
-    public void setHabitantes(int habitantes) {
-        this.habitantes = habitantes;
     }
 
     public String getNomenclatura() {
@@ -77,8 +72,47 @@ public class Ciudad implements Comparable<Ciudad> {
                 // Error al comparar nombre y nom, cuando el constructor es solo nombre, nom es
                 // null
                 Ciudad o = (Ciudad) obj;
-                res = this.nombre.equals(o.nombre) && this.nomenclatura.equals(o.nomenclatura);
+                res = this.nombre.equals(o.nombre);
             }
+        }
+        return res;
+    }
+
+    private Map<Integer, Integer[]> generarAnios() {
+        Map<Integer, Integer[]> res = new HashMap<>();
+        Integer anio = Year.now().getValue();
+
+        for (int i = 0; i < 10; i++) {
+            res.put(anio - i, new Integer[12]);
+        }
+        return res;
+    }
+
+    public boolean agregarCantHabitantes(Integer anio, Integer mes, Integer cant) {
+        Integer[] yearArr = habitantes.getOrDefault(anio, null);
+        boolean res = false;
+        if (yearArr != null && mes >= 1 && mes <= 12) {
+            yearArr[mes - 1] = cant;
+            res = true;
+        }
+        return res;
+    }
+
+    public Integer getCantHabitantes(Integer anio, Integer mes) {
+        Integer[] yearArr = habitantes.getOrDefault(anio, null);
+        Integer res = null;
+        if (yearArr != null && mes >= 1 && mes <= 12) {
+            res = yearArr[mes - 1];
+        }
+        return res;
+    }
+
+    public boolean setHabitantes(int anio, int mes, int cant) {
+        Integer[] yearArr = habitantes.getOrDefault(anio, null);
+        boolean res = false;
+        if (yearArr != null && mes >= 1 && mes <= 12) {
+            yearArr[mes - 1] = cant;
+            res = true;
         }
         return res;
     }
@@ -90,6 +124,6 @@ public class Ciudad implements Comparable<Ciudad> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(nombre, nomenclatura);
+        return Objects.hash(nombre);
     }
 }
