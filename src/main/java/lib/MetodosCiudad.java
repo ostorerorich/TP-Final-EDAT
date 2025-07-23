@@ -60,6 +60,38 @@ public class MetodosCiudad {
 
     }
 
+    public static void agregarHabitantesCiudad(ArbolAVL arbol){
+        System.out.println("Ingrese el nombre de la ciudad a la que desea agregar habitantes:");
+        String nombre = sc.nextLine().trim();
+
+        if(nombre.isEmpty() || !nombre.matches(letras)) {
+            Log.mensaje("El nombre de la ciudad no puede estar vacío.")
+                    .print().guardar();
+        } else{
+            Ciudad ciudad = new Ciudad(nombre);
+            Ciudad res = (Ciudad) arbol.obtener(ciudad);
+            if(res != null){
+                System.out.println("Ingrese el año:");
+                int anio = Integer.parseInt(sc.nextLine().trim());
+                System.out.println("Ingrese el mes (1-12):");
+                int mes = Integer.parseInt(sc.nextLine().trim());
+                System.out.println("Ingrese la cantidad de habitantes:");
+                int cantHabitantes = Integer.parseInt(sc.nextLine().trim());
+
+                if(res.agregarCantHabitantes(anio, mes, cantHabitantes)){
+                    Log.mensaje("Cantidad de habitantes agregada a la ciudad " + res.getNombre() + " para el año " + anio + " y mes " + mes)
+                            .print().guardar();
+                }else{
+                    Log.mensaje("Error al agregar habitantes a la ciudad " + res.getNombre() + ". Verifique los datos ingresados.")
+                            .print().guardar();
+                }
+            } else {
+                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
+                        .print().guardar();
+            }
+        }
+    }
+
 
     // Checkear todo lo que es input validaciones y agregar ciudades.
     //TODO: this
@@ -195,4 +227,43 @@ public class MetodosCiudad {
         }
     }
 
+
+    public static void mostrarHabitantesCiudad(ArbolAVL arbol) {
+        System.out.println("Ingrese el nombre de la ciudad para mostrar sus habitantes:");
+        String nombre = sc.nextLine().trim();
+        if(nombre.isEmpty() || !nombre.matches(letras)){
+            Log.mensaje("El nombre de la ciudad no puede estar vacío.")
+                    .print().guardar();
+        }else{
+            Ciudad ciudad = new Ciudad(nombre);
+            Ciudad res = (Ciudad) arbol.obtener(ciudad);
+            if(res != null){
+                String habitantes = res.obtenerTodosLosHabitantes();
+                Log.mensaje("Habitantes de la ciudad " + res + ":\n" + habitantes)
+                        .print().guardar();
+            } else {
+                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
+                        .print().guardar();
+            }
+        }
+    }
+
+    public static void mostrarDatosCiudad(ArbolAVL arbol){
+        System.out.println("Ingrese el nombre de la ciudad para mostrar sus datos:");
+        String nombre = sc.nextLine().trim();
+        if(nombre.isEmpty() || !nombre.matches(letras)){
+            Log.mensaje("El nombre de la ciudad no puede estar vacío.")
+                    .print().guardar();
+        }else{
+            Ciudad ciudad = new Ciudad(nombre);
+            Ciudad res = (Ciudad) arbol.obtener(ciudad);
+            if(res != null){
+                Log.mensaje("Datos de la ciudad " + res.getNombre() + ":\n" + res.toString())
+                        .print().guardar();
+            } else {
+                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
+                        .print().guardar();
+            }
+        }
+    }
 }

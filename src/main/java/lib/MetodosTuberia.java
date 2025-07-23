@@ -43,7 +43,7 @@ public class MetodosTuberia {
                                     int caudalMax = Integer.parseInt(l[2].trim());
                                     int caudalMin = Integer.parseInt(l[3].trim());
                                     int diametro = Integer.parseInt(l[4].trim());
-
+                                    // Asumimos que los datos son correctos
                                     if (origen == null || destino == null) {
                                         Log.mensaje("Error al cargar la tubería: Ciudad no encontrada.").print()
                                                 .guardar();
@@ -81,7 +81,8 @@ public class MetodosTuberia {
             System.out.print("Ingrese la nomenclatura de origen y destino (ej: AB-CD): ");
             String input = sc.nextLine().trim();
             String[] partes = input.split("-");
-            if (partes.length == 2) {
+            if (partes.length == 2 && MetodosCiudad.validarNomenclatura(partes[0])
+                    && MetodosCiudad.validarNomenclatura(partes[1])) {
                 String origen = partes[0].trim();
                 String destino = partes[1].trim();
                 TuberiaKey key = new TuberiaKey(origen, destino);
@@ -124,6 +125,8 @@ public class MetodosTuberia {
                     Log.mensaje("Error: Tubería no encontrada.").print().guardar();
                 }
 
+            } else {
+                Log.mensaje("Error: Formato de entrada inválido.").print().guardar();
             }
         } else {
             Log.mensaje("No hay tuberías cargadas.").print().guardar();
@@ -417,6 +420,7 @@ public class MetodosTuberia {
                         estado = "EN REPARACION";
                     }
                 }
+                
             }
 
             pos1 += 1;

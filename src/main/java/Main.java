@@ -19,17 +19,7 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException{
-/*        try {
-            Log.mensaje("Test").guardar();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
-        } finally {
-            Log.cerrar();
 
-            System.out.println("bruh");
-            System.out.println(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "logs_edat");
-        }*/
         MetodosCiudad.cargarCiudadesDesde(ciudades, recorrido);
         MetodosTuberia.cargarTuberiasDesde(ciudades, recorrido, listadoTuberias);
 
@@ -41,9 +31,9 @@ public class Main {
 
     private static void menu(){
         boolean fin = false;
-
-        while(!fin){
-            System.out.println("""
+        try {
+            while(!fin){
+                System.out.println("""
                 1 - Menu Ciudades
                 2 - Modificacion Tuberia
                 3 - Alta cantidad Habitantes
@@ -52,29 +42,35 @@ public class Main {
                 6 - Listado de ciudades
                 7 - Mostrar sistema (Debug)
                 0 - Salir del programa"""
-            );
+                );
 
-            // next line es para que no se quede en memoria el enter y lea la linea de manera correcta
+                // next line es para que no se quede en memoria el enter y lea la linea de manera correcta
 
-            int res =  Integer.parseInt(sc.nextLine());
-            switch (res){
-                case 1 -> menuCiudades();
-                case 2 -> menuTuberias();
-                case 3 -> System.out.println("Alta cantidad Habitantes");
-                case 4 -> System.out.println("Consulta Ciudad");
-                case 5 -> consultasTransporte();
-                case 6 -> System.out.println("Listado de ciudades: " + ciudades.listarInOrden());
-                case 7 -> System.out.println("Mostrar sistema (Debug)");
-                case 0 -> {
-                    fin = true;
-                    System.out.println("Saliendo del programa...");
+                int res =  Integer.parseInt(sc.nextLine());
+                switch (res){
+                    case 1 -> menuCiudades();
+                    case 2 -> menuTuberias();
+                    case 3 -> MetodosCiudad.agregarHabitantesCiudad(ciudades);
+                    case 4 -> MetodosCiudad.mostrarDatosCiudad(ciudades);
+                    case 5 -> consultasTransporte();
+                    case 6 -> System.out.println("Listado de ciudades: " + ciudades.listarInOrden());
+                    case 7 -> System.out.println("Mostrar sistema (Debug)");
+                    case 0 -> {
+                        fin = true;
+                        System.out.println("Saliendo del programa...");
+                    }
+                    default -> System.out.println("Opcion invalida, intente nuevamente.");
                 }
-                default -> System.out.println("Opcion invalida, intente nuevamente.");
+
+
             }
-
-
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Entrada invalida. Por favor, ingrese un numero.");
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
         }
     }
+
 
     private static void menuCiudades(){
         System.out.println("""
@@ -83,7 +79,8 @@ public class Main {
                 3 - Modificacion Ciudad
                 4 - Listar Ciudades
                 5 - Buscar Ciudad
-                6 - Volver al menu principal"""
+                6 - Mostrar habitantes de una ciudad
+                7 - Volver al menu principal"""
         );
         int res = Integer.parseInt(sc.nextLine());
         switch (res) {
@@ -94,7 +91,10 @@ public class Main {
             case 3 -> System.out.println("Modificacion Ciudad");
             case 4 -> System.out.println("Listar Ciudades: " + ciudades.listarInOrden());
             case 5 -> MetodosCiudad.buscarCiudad(ciudades);
-            case 6 -> {}
+            case 6 -> {
+                MetodosCiudad.mostrarHabitantesCiudad(ciudades);
+            }
+            case 7 -> {}
             default -> System.out.println("Opcion invalida");
         }
     }
