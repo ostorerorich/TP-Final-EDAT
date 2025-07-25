@@ -59,7 +59,7 @@ public class MetodosTuberia {
                                                     destino.getNomenclatura(), diametro, caudalMax, caudalMin,
                                                     Estado.ACTIVO);
                                             tuberias.put(key, tuberia);
-                                            caminos.insertarArco(origen, destino, tuberia.getCaudalMax());
+                                            caminos.insertarArco(origen.getNomenclatura(), destino.getNomenclatura(), tuberia.getCaudalMax());
                                             Log.mensaje("Tubería cargada: " + tuberia).print().guardar();
                                         }
                                     }
@@ -103,7 +103,7 @@ public class MetodosTuberia {
     }
 
 
-    public static void modificarTuberia(HashMap<TuberiaKey, Tuberia> tuberias) {
+    public static void modificarTuberia(HashMap<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
 
         if (!tuberias.isEmpty()) {
             System.out.println("Seleccione la tubería a modificar:");
@@ -136,6 +136,7 @@ public class MetodosTuberia {
                         tuberia.setDiametro(diametro);
                         tuberia.setCaudalMax(caudalMax);
                         tuberia.setCaudalMin(caudalMin);
+                        caminos.modificarEtiqueta(origen, destino, caudalMax);
                         Log.mensaje("Tubería modificada: " + tuberia).print().guardar();
                     }
                 } else {
@@ -151,7 +152,7 @@ public class MetodosTuberia {
 
     }
 
-    public static void eliminarTuberia(HashMap<TuberiaKey, Tuberia> tuberias) {
+    public static void eliminarTuberia(HashMap<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
         if (!tuberias.isEmpty()) {
             System.out.println("Seleccione la tubería a eliminar:");
             mostrarTuberias(tuberias);
@@ -166,6 +167,7 @@ public class MetodosTuberia {
                 TuberiaKey key = new TuberiaKey(origen, destino);
                 if (tuberias.containsKey(key)) {
                     tuberias.remove(key);
+                    caminos.eliminarArco(origen, destino);
                     Log.mensaje("Tubería eliminada: " + key).print().guardar();
                 } else {
                     Log.mensaje("Error: Tubería no encontrada.").print().guardar();
@@ -217,7 +219,7 @@ public class MetodosTuberia {
 
                     tuberias.put(key, tuberia);
 
-                    caminos.insertarArco(ciudadOrigen, ciudadDestino, tuberia.getCaudalMax());
+                    caminos.insertarArco(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura(), tuberia.getCaudalMax());
 
                     Log.mensaje("Tubería agregada: " + tuberia).print().guardar();
                 }
@@ -251,45 +253,41 @@ public class MetodosTuberia {
             HashMap<TuberiaKey, Tuberia> tuberias) {
 
         Ciudad ciudadOrigen, ciudadDestino;
-        Lista todosLosCaminos, unCamino, caminoElegido;
-        String estadoCamino;
+        String ciudadOrigenNombre, ciudadDestinoNombre, nomenclaturaOrigen, nomenclaturaDestino, estadoCamino;
+        Lista caminoCaudalPlenoMinimo;
 
         System.out.println("Por favor, ingrese el nombre de la ciudad origen");
-        String ciudadOrigenNombre = sc.nextLine().trim();
+        ciudadOrigenNombre = sc.nextLine().trim();
         ciudadOrigen = MetodosCiudad.obtenerCiudad(ciudades, ciudadOrigenNombre);
 
         if (ciudadOrigen != null) {
             System.out.println("Por favor, ingrese el nombre de la ciudad destino");
-            String ciudadDestinoNombre = sc.nextLine().trim();
+            ciudadDestinoNombre = sc.nextLine().trim();
             ciudadDestino = MetodosCiudad.obtenerCiudad(ciudades, ciudadDestinoNombre);
 
             if (ciudadDestino != null) {
-                todosLosCaminos = caminos.todosLosCaminos(ciudadOrigen, ciudadDestino);
+                nomenclaturaOrigen = ciudadOrigen.getNomenclatura();
+                nomenclaturaDestino = ciudadDestino.getNomenclatura();
+                
+                // Verifica que la nomenclatura de ambas ciudades no sean las mismas
+                if (!nomenclaturaOrigen.equals(nomenclaturaDestino)) {
+                    caminoCaudalPlenoMinimo = caminos.caminoCaudalPlenoMinimo(nomenclaturaOrigen, nomenclaturaDestino);
 
-                // Verifica que exista un camino entre la ciudad origen y destino
-                if (!todosLosCaminos.esVacia()) {
-                    // Verifica que la ciudad origen y destino no sea la misma. Si la primer lista
-                    // de los caminos tiene
-                    // una sola ciudad, significa que la ciudad origen y destino son las mismas y no
-                    // hay ningún camino
-                    unCamino = (Lista) todosLosCaminos.recuperar(1);
-
-                    if (unCamino.longitud() > 1) {
-                        caminoElegido = buscarCaminoDeCaudalPlenoMinimo(todosLosCaminos, tuberias);
-                        estadoCamino = obtenerEstadoCamino(caminoElegido, tuberias); // Obtiene el estado del camino
+                    // Verifica que exista un camino entre la ciudad origen y destino
+                    if (!caminoCaudalPlenoMinimo.esVacia()) {
+                        estadoCamino = obtenerEstadoCamino(caminoCaudalPlenoMinimo, tuberias); // Obtiene el estado del camino
 
                         // Resultados
-                        System.out.println("Camino desde " + ciudadOrigen.getNombre() + " hasta " +
-                                ciudadDestino.getNombre() + " con el caudal pleno minimo entre todos los "
-                                + "caminos posibles: " + caminoElegido.toString());
-                        System.out.println("Estado del camino: " + estadoCamino);
+                        Log.mensaje("Camino desde " + nomenclaturaOrigen + " hasta " +
+                                nomenclaturaDestino + " con el caudal pleno minimo entre todos los "
+                                + "caminos posibles: " + caminoCaudalPlenoMinimo.toString()).print().guardar();
+                        Log.mensaje("Estado del camino: " + estadoCamino).print().guardar();
                     } else {
-                        System.out.println("No hay caminos porque la ciudad origen y destino es la misma");
+                        System.out.println("No existe un camino desde " + nomenclaturaOrigen + " hasta " +
+                                nomenclaturaDestino);
                     }
-
                 } else {
-                    System.out.println("No existe un camino desde " + ciudadOrigen.getNombre() + " hasta " +
-                            ciudadDestino.getNombre());
+                    System.out.println("No hay caminos porque la ciudad origen y destino es la misma");
                 }
             } else {
                 System.out.println("La ciudad destino ingresada no existe en el sistema");
@@ -299,88 +297,7 @@ public class MetodosTuberia {
         }
     }
 
-
-    private static Lista buscarCaminoDeCaudalPlenoMinimo(Lista caminos, HashMap<TuberiaKey, Tuberia> tuberias) {
-
-        Lista unCamino, caminoElegido;
-        int pos, longitud;
-        Tuberia tuberia, tuberiaCaudalMinimo;
-
-        caminoElegido = new Lista();
-        pos = 1;
-        longitud = caminos.longitud();
-        tuberiaCaudalMinimo = null;
-
-        while (pos <= longitud) {
-            unCamino = (Lista) caminos.recuperar(pos);
-
-            tuberia = tuberiaDiametroMasPequenio(unCamino, tuberias);
-
-            // Verifica que el caudal de la tubería con el diametro más pequeño del camino,
-            // sea más pequeño que el
-            // caudal de la tubería con el diametro más pequeño de un camino encontrado
-            // hasta ahora
-            if (tuberiaCaudalMinimo == null || tuberia.getCaudalMax() < tuberiaCaudalMinimo.getCaudalMax()) {
-                tuberiaCaudalMinimo = tuberia;
-                caminoElegido = unCamino;
-            }
-
-            pos += 1;
-        }
-
-        return caminoElegido;
-
-    }
-
-    private static Tuberia tuberiaDiametroMasPequenio(Lista camino, HashMap<TuberiaKey, Tuberia> tuberias) {
-
-        int pos1, pos2, longitud, diametroMasPequenio;
-        Tuberia tuberia, tuberiaElegida;
-
-        pos1 = 1;
-        pos2 = 2;
-        longitud = camino.longitud();
-        diametroMasPequenio = 0;
-        tuberiaElegida = null;
-
-        while (pos2 <= longitud) {
-            tuberia = obtenerTuberia(camino, pos1, pos2, tuberias);
-
-            // Verifica que el diametro de la tuberia sea más pequeño que el diametro más
-            // pequeño encontrado hasta ahora o
-            // si es la primer tuberia que se revisa
-            if (tuberia.getDiametro() < diametroMasPequenio || diametroMasPequenio <= 0) {
-                diametroMasPequenio = tuberia.getDiametro();
-                tuberiaElegida = tuberia;
-            }
-
-            pos1 += 1;
-            pos2 += 1;
-        }
-
-        return tuberiaElegida;
-
-    }
-
-    private static Tuberia obtenerTuberia(Lista camino, int pos1, int pos2, HashMap<TuberiaKey, Tuberia> tuberias) {
-
-        String nomenclaturaCiudad1, nomenclaturaCiudad2;
-        TuberiaKey key;
-        Tuberia tuberia;
-
-        // Se obtienen las nomenclaturas de las ciudades para obtener la tubería que las
-        // conecta en el HashMap
-        nomenclaturaCiudad1 = (String) ((Ciudad) camino.recuperar(pos1)).getNomenclatura();
-        nomenclaturaCiudad2 = (String) ((Ciudad) camino.recuperar(pos2)).getNomenclatura();
-
-        key = new TuberiaKey(nomenclaturaCiudad1, nomenclaturaCiudad2);
-        tuberia = (Tuberia) tuberias.get(key);
-
-        return tuberia;
-
-    }
-
-    private static String obtenerEstadoCamino(Lista caminoMasCorto, HashMap<TuberiaKey, Tuberia> tuberias) {
+    private static String obtenerEstadoCamino(Lista camino, HashMap<TuberiaKey, Tuberia> tuberias) {
 
         int pos1, pos2, longitud;
         String estado;
@@ -389,30 +306,30 @@ public class MetodosTuberia {
 
         pos1 = 1; // Posicion de la ciudad1
         pos2 = 2; // Posicion de la ciudad2
-        longitud = caminoMasCorto.longitud(); // Se guarda la longitud para no estar calculandola constantemente en el
+        longitud = camino.longitud(); // Se guarda la longitud para no estar calculandola constantemente en el
                                               // while
-        estado = "ACTIVO"; // Estado por defecto
+        estado = "Activo"; // Estado por defecto
 
         while (pos2 <= longitud && !terminar) {
-            tuberia = obtenerTuberia(caminoMasCorto, pos1, pos2, tuberias);
+            tuberia = obtenerTuberia((String) camino.recuperar(pos1), (String) camino.recuperar(2), tuberias);
 
-            switch (tuberia.getEstado()) {
-                case Estado.DISENIO -> {
+            switch (tuberia.getEstado().getNombre()) {
+                case "Diseño" -> {
                     // Si una tubería está en diseño, todo el camino está en diseño y se termina el
                     // bucle
-                    estado = "EN DISENIO";
+                    estado = "Diseño";
                     terminar = true;
                 }
 
-                case Estado.INACTIVO -> {
-                    estado = "INACTIVO";
+                case "Inactivo" -> {
+                    estado = "Inactivo";
                 }
 
-                case Estado.REPARACION -> {
+                case "Reparación" -> {
                     // El estado actual del camino está en reparación, siempre y cuando no se haya
                     // encontrado una tubería inactiva
-                    if (!estado.equals("INACTIVO")) {
-                        estado = "EN REPARACION";
+                    if (!estado.equals("Reparación")) {
+                        estado = "Reparación";
                     }
                 }
                 
@@ -426,41 +343,57 @@ public class MetodosTuberia {
 
     }
 
+    private static Tuberia obtenerTuberia(String nomenclaturaCiudad1, String nomenclaturaCiudad2,
+            HashMap<TuberiaKey, Tuberia> tuberias) {
+
+        TuberiaKey key;
+        Tuberia tuberia;
+
+        // Se obtiene la tubería que conecta ambas ciudades en el HashMap
+        key = new TuberiaKey(nomenclaturaCiudad1, nomenclaturaCiudad2);
+        tuberia = (Tuberia) tuberias.get(key);
+
+        return tuberia;
+
+    }
+    
     public static void obtenerCaminoMasCorto(ArbolAVL ciudades, Grafo caminos, HashMap<TuberiaKey, Tuberia> tuberias) {
 
         Ciudad ciudadOrigen, ciudadDestino;
+        String ciudadOrigenNombre, ciudadDestinoNombre, nomenclaturaOrigen, nomenclaturaDestino, estadoCamino;
         Lista caminoMasCorto;
-        String estadoCamino;
 
         System.out.println("Por favor, ingrese el nombre de la ciudad origen");
-        String ciudadOrigenNombre = sc.nextLine().trim();
+        ciudadOrigenNombre = sc.nextLine().trim();
         ciudadOrigen = MetodosCiudad.obtenerCiudad(ciudades, ciudadOrigenNombre);
 
         if (ciudadOrigen != null) {
             System.out.println("Por favor, ingrese el nombre de la ciudad destino");
-            String ciudadDestinoNombre = sc.nextLine().trim();
+            ciudadDestinoNombre = sc.nextLine().trim();
             ciudadDestino = MetodosCiudad.obtenerCiudad(ciudades, ciudadDestinoNombre);
 
             if (ciudadDestino != null) {
-                caminoMasCorto = caminos.caminoMasCorto(ciudadOrigen, ciudadDestino);
-
-                // Verifica que exista un camino entre la ciudad origen y destino
-                if (!caminoMasCorto.esVacia()) {
-                    // Verifica que la ciudad origen y destino no sea la misma
-                    if (caminoMasCorto.longitud() > 1) {
+                nomenclaturaOrigen = ciudadOrigen.getNomenclatura();
+                nomenclaturaDestino = ciudadDestino.getNomenclatura();
+                
+                // Verifica que la nomenclatura de ambas ciudades no sean las mismas
+                if (!nomenclaturaOrigen.equals(nomenclaturaDestino)) {
+                    caminoMasCorto = caminos.caminoMasCorto(nomenclaturaOrigen, nomenclaturaDestino);
+                    
+                    // Verifica que exista un camino entre la ciudad origen y destino
+                    if (!caminoMasCorto.esVacia()) {
                         estadoCamino = obtenerEstadoCamino(caminoMasCorto, tuberias); // Obtiene el estado del camino
 
                         // Resultados
-                        System.out.println("Camino mas corto desde " + ciudadOrigen.getNombre() + " hasta " +
-                                ciudadDestino.getNombre() + ": " + caminoMasCorto.toString());
-                        System.out.println("Estado del camino: " + estadoCamino);
+                        Log.mensaje("Camino mas corto desde " + nomenclaturaOrigen + " hasta " +
+                                nomenclaturaDestino + ": " + caminoMasCorto.toString()).print().guardar();
+                        Log.mensaje("Estado del camino: " + estadoCamino).print().guardar();
                     } else {
-                        System.out.println("No hay camino porque la ciudad origen y destino es la misma");
+                        System.out.println("No existe un camino desde " + nomenclaturaOrigen + " hasta " +
+                                nomenclaturaDestino);
                     }
-
                 } else {
-                    System.out.println("No existe un camino desde " + ciudadOrigen.getNombre() + " hasta " +
-                            ciudadDestino.getNombre());
+                    System.out.println("No hay caminos porque la ciudad origen y destino es la misma");
                 }
             } else {
                 System.out.println("La ciudad destino ingresada no existe en el sistema");

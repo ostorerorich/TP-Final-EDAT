@@ -111,7 +111,7 @@ public class MetodosCiudad {
 
             }else{
                 arbol.insertar(ciudad);
-                caminos.insertarVertice(ciudad);
+                caminos.insertarVertice(ciudad.getNomenclatura());
                 Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")
                         .print().guardar();
                 res = true;
@@ -193,7 +193,7 @@ public class MetodosCiudad {
                Integer.parseInt(nomenclatura.substring(2)) < 4000;
     }
 
-    public static void eliminarCiudad(ArbolAVL arbol){
+    public static void eliminarCiudad(ArbolAVL arbol, Grafo caminos){
         System.out.println("Ingrese el nombre de la ciudad a eliminar:");
         String nombre = sc.nextLine().trim();
         if(nombre.isEmpty() || !nombre.matches(letras)){
@@ -201,7 +201,10 @@ public class MetodosCiudad {
                     .print().guardar();
         }else{
             Ciudad ciudad = new Ciudad(nombre);
-            if(arbol.eliminar(ciudad)){
+            Ciudad ciudadEncontrada = (Ciudad) arbol.obtener(ciudad);
+            if(ciudadEncontrada != null){
+                arbol.eliminar(ciudad);
+                caminos.eliminarVertice(ciudadEncontrada.getNomenclatura());
                 Log.mensaje("Ciudad " + ciudad.getNombre() + " eliminada del sistema.")
                         .print().guardar();
             } else {
@@ -272,6 +275,7 @@ public class MetodosCiudad {
 
         Ciudad ciudadEncontrada = null;
 
+        // Si el nombre no está vacío y tiene los caracteres correctos, entonces verifica si la ciudad esta en el árbol
         if(!nombreCiudad.isEmpty() && nombreCiudad.matches(letras)) {
 
             Ciudad ciudad = new Ciudad(nombreCiudad);
@@ -281,5 +285,100 @@ public class MetodosCiudad {
 
         return ciudadEncontrada;
 
+    }
+    
+    public static void mostrarCantHabitantesYConsumo(ArbolAVL ciudades){
+        
+        String nombreCiudad, nombreMes;
+        Ciudad ciudad, ciudadEncontrada;
+        int anio, mes;
+        Integer cantHabitantes;
+        double volumenAgua;
+        
+        System.out.println("Por favor, ingrese el nombre de la ciudad");
+        nombreCiudad = sc.nextLine().trim();
+        
+        // Verifica que el nombre ingresado no esté vacío y tenga los caracteres correctos
+        if(!nombreCiudad.isEmpty() && nombreCiudad.matches(letras)){
+            ciudad = new Ciudad(nombreCiudad);
+            ciudadEncontrada = (Ciudad) ciudades.obtener(ciudad);
+        
+            if (ciudadEncontrada != null) {
+                System.out.println("Por favor, ingrese el anio");
+                anio = Integer.parseInt(sc.nextLine().trim());
+
+                System.out.println("Por favor, ingrese el numero del mes (1-12)");
+                mes = Integer.parseInt(sc.nextLine().trim());
+
+                cantHabitantes = ciudadEncontrada.getCantHabitantes(anio, mes); // Obtiene la cantidad de habitantes
+                
+                if (cantHabitantes != null) {
+                    volumenAgua = calcularVolumenAgua(ciudadEncontrada, cantHabitantes, mes); // Calcula el volumen de agua
+                    nombreMes = obtenerNombreMes(mes); // Obtiene el nombre del mes por su número
+
+                    Log.mensaje("Cantidad de habitantes en " + nombreCiudad + " en " + nombreMes + " de " + anio + ": " +
+                            cantHabitantes).print().guardar();
+                    Log.mensaje("Volumen de agua que se habria distribuido en " + nombreCiudad + " en " + nombreMes +
+                            " de " + anio + ": " + volumenAgua).print().guardar();
+                } else {
+                    System.out.println("El anio o mes ingresado es incorrecto");
+                }
+            } else {
+                System.out.println("La ciudad ingresada no existe en el sistema");
+            }
+        } else {
+            System.out.println("El nombre de la ciudad no puede estar vacio o tiene caracteres incorrectos");
+        }
+        
+    }
+    
+    private static double calcularVolumenAgua(Ciudad ciudad, int cantHabitantes, int mes) {
+        
+        double consumoPromedio = ciudad.getCantM3Persona();
+        int cantDias = obtenerCantDias(mes);
+        
+        return cantHabitantes * consumoPromedio * cantDias;
+        
+    }
+    
+    private static String obtenerNombreMes(int numeroMes) {
+        
+        String nombreMes = "";
+        
+        switch (numeroMes) {
+            case 1 -> nombreMes = "Eenero";
+            case 2 -> nombreMes = "Febrero";
+            case 3 -> nombreMes = "Marzo";
+            case 4 -> nombreMes = "Abril";
+            case 5 -> nombreMes = "Mayo";
+            case 6 -> nombreMes = "Junio";
+            case 7 -> nombreMes = "Julio";
+            case 8 -> nombreMes = "Agosto";
+            case 9 -> nombreMes = "Septiembre";
+            case 10 -> nombreMes = "Octubre";
+            case 11 -> nombreMes = "Noviembre";
+            case 12 -> nombreMes = "Diciembre";
+        }
+        
+        return nombreMes;
+    }
+    
+    private static int obtenerCantDias(int numeroMes) {
+        
+        int cantDias;
+        
+        if (numeroMes == 1 || numeroMes == 3 || numeroMes == 5 || numeroMes == 7 || numeroMes == 8 || numeroMes == 10 ||
+                numeroMes == 12) {
+            cantDias = 31;
+        } else {
+            if (numeroMes == 4 || numeroMes == 6 || numeroMes == 9 || numeroMes == 11) {
+                cantDias = 30;
+            } else {
+                cantDias = 28;
+            }
+        }
+        
+        return cantDias;
+        
     }
 }

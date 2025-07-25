@@ -51,10 +51,10 @@ public class Main {
                     case 1 -> menuCiudades();
                     case 2 -> menuTuberias();
                     case 3 -> MetodosCiudad.agregarHabitantesCiudad(ciudades);
-                    case 4 -> MetodosCiudad.mostrarDatosCiudad(ciudades);
+                    case 4 -> consultasCiudad();
                     case 5 -> consultasTransporte();
                     case 6 -> System.out.println("Listado de ciudades: " + ciudades.listar());
-                    case 7 -> System.out.println("Mostrar sistema (Debug)");
+                    case 7 -> mostrarSistema();
                     case 0 -> {
                         fin = true;
                         System.out.println("Saliendo del programa...");
@@ -87,7 +87,7 @@ public class Main {
             case 1 -> {
                     MetodosCiudad.agregarCiudadInput(ciudades, recorrido);
             }
-            case 2 -> MetodosCiudad.eliminarCiudad(ciudades);
+            case 2 -> MetodosCiudad.eliminarCiudad(ciudades, recorrido);
             case 3 -> System.out.println("Modificacion Ciudad");
             case 4 -> System.out.println("Listar Ciudades: " + ciudades.listar());
             case 5 -> MetodosCiudad.buscarCiudad(ciudades);
@@ -112,8 +112,8 @@ public class Main {
         int res = Integer.parseInt(sc.nextLine());
         switch (res) {
             case 1 -> MetodosTuberia.agregarTuberia(listadoTuberias, ciudades, recorrido);
-            case 2 -> MetodosTuberia.eliminarTuberia(listadoTuberias);
-            case 3 -> MetodosTuberia.modificarTuberia(listadoTuberias);
+            case 2 -> MetodosTuberia.eliminarTuberia(listadoTuberias, recorrido);
+            case 3 -> MetodosTuberia.modificarTuberia(listadoTuberias, recorrido);
             case 4 -> MetodosTuberia.mostrarTuberias(listadoTuberias);
             case 5 -> MetodosTuberia.buscarTuberia(listadoTuberias);
             case 6 -> {}
@@ -121,11 +121,35 @@ public class Main {
         }
     }
     
+    private static void consultasCiudad(){
+                
+        System.out.println("1 - Obtener la cantidad de habitantes y el volumen de agua que se habria distribuido"
+                + " en una ciudad en un mes y anio");
+        System.out.println("2 - Obtener todas las ciudades cuyo nombre este en un rango que en un mes y anio hayan"
+                + " consumido un volumen de agua en un rango");
+        System.out.println("3 - Volver al menu principal");
+        
+        int resultado = Integer.parseInt(sc.nextLine());
+        
+        switch (resultado) {
+            case 1 -> {
+                MetodosCiudad.mostrarCantHabitantesYConsumo(ciudades);
+            }
+            case 2 -> {
+                // --
+            }
+            case 3 -> {}
+            default -> System.out.println("Opcion invalida");
+        }
+        
+    }
+    
     private static void consultasTransporte(){
                 
         System.out.println("1 - Obtener camino que llegue de una ciudad A a una ciudad B tal que el caudal pleno del " +
                            "camino completo sea el minimo entre todos los caminos posibles");
         System.out.println("2 - Obtener el camino que llegue de una ciudad A a una ciudad B pasando por la minima cantidad de ciudades");
+        System.out.println("3 - Volver al menu principal");
         
         int resultado = Integer.parseInt(sc.nextLine());
         
@@ -136,8 +160,19 @@ public class Main {
             case 2 -> {
                 MetodosTuberia.obtenerCaminoMasCorto(ciudades, recorrido, listadoTuberias);
             }
+            case 3 -> {}
             default -> System.out.println("Opcion invalida");
         }
+        
+    }
+    
+    private static void mostrarSistema(){
+        
+        System.out.println("Arbol AVL: ");
+        System.out.println(ciudades.toString());
+        
+        System.out.println("Grafo: ");
+        System.out.println(recorrido.toString());
         
     }
     

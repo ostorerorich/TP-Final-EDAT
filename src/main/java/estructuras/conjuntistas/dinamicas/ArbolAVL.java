@@ -250,8 +250,8 @@ public class ArbolAVL {
         String res = "";
 
         if (nodo != null){
-            res += "Nodo: " + nodo.getElem() + " HI: "  + (nodo.getIzquierdo() != null ? nodo.getIzquierdo().getElem() : " ") +
-                    " HD: " + (nodo.getDerecho() != null ? nodo.getDerecho().getElem() : " ") + "\n";
+            res += nodo.getElem() + "(alt: " + nodo.getAltura() + ")" + " HI: "  + (nodo.getIzquierdo() != null ? nodo.getIzquierdo().getElem() : "-") +
+                    " HD: " + (nodo.getDerecho() != null ? nodo.getDerecho().getElem() : "-") + "\n";
             res += toStringAux(nodo.getIzquierdo());
             res += toStringAux(nodo.getDerecho());
         }

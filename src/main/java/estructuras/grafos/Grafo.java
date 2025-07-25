@@ -100,7 +100,7 @@ public class Grafo {
     
     ///////////////////////////////////////
     
-    public boolean insertarArco(Object origen, Object destino, Object etiqueta){
+    public boolean insertarArco(Object origen, Object destino, int etiqueta){
         
         boolean arcoInsertado = false;
         NodoVert nodoOrigen, nodoDestino, nodoVertAux;
@@ -131,7 +131,7 @@ public class Grafo {
         
     }
     
-    private boolean ubicarArco(NodoVert nodoOrigen, NodoVert nodoDestino, Object etiqueta) {
+    private boolean ubicarArco(NodoVert nodoOrigen, NodoVert nodoDestino, int etiqueta) {
         
         boolean arcoInsertado, verticeRepetido;
         NodoAdy nodoAdyAux;
@@ -226,6 +226,61 @@ public class Grafo {
         }
         
         return arcoEliminado;
+        
+    }
+    
+    ///////////////////////////////////////
+    
+    public boolean modificarEtiqueta(Object origen, Object destino, int valor){
+        
+        NodoVert nodoOrigen, nodoDestino, nodoVertAux;
+        boolean etiquetaModificada = false;
+        
+        nodoOrigen = null;
+        nodoDestino = null;
+        nodoVertAux = this.inicio;
+        
+        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+            // Busca el nodo origen y el nodo destino en el grafo
+            if (nodoVertAux.getElem().equals(origen)) {
+                nodoOrigen = nodoVertAux;
+            }
+            
+            if (nodoVertAux.getElem().equals(destino)){
+                nodoDestino = nodoVertAux;
+            }
+            
+            nodoVertAux = nodoVertAux.getSigVertice();
+        }
+        
+        if (nodoOrigen != null && nodoDestino != null) {
+            etiquetaModificada = modificarEtiquetaAux(nodoOrigen, destino, valor);
+        }
+        
+        return etiquetaModificada;
+        
+    }
+    
+    private boolean modificarEtiquetaAux(NodoVert origen, Object destino, int valor){
+        
+        NodoAdy nodoAdyAux = origen.getPrimerAdy();
+        boolean etiquetaModificada = false;
+        
+         while (nodoAdyAux != null && !etiquetaModificada) {
+            // Busca el arco desde el nodo origen al nodo destino para modificar su etiqueta
+            if (nodoAdyAux.getVertice().getElem().equals(destino)) {
+                // Modifica la etiqueta del arco
+                nodoAdyAux.setEtiqueta(valor);
+                
+                // Como cada par de vertices solo puede tener un arco entre ellos con el mismo sentido, si se
+                // encontró el que tiene que modificar su etiqueta, deja de revisar los demás arcos del vertice
+                etiquetaModificada = true;
+            }
+            
+            nodoAdyAux = nodoAdyAux.getSigAdyacente();
+        }
+         
+        return etiquetaModificada;
         
     }
     
@@ -459,16 +514,20 @@ public class Grafo {
     
     ///////////////////////////////////////
     
-    public Lista todosLosCaminos(Object origen, Object destino){
+    public Lista caminoCaudalPlenoMinimo(Object origen, Object destino){
         
-        Lista caminoActual, caminos;
+        Lista caminoElegido, camino;
         NodoVert nodoOrigen, nodoDestino, nodoVertAux;
+        int[] caudalMinimoElegido = new int[1];
+        int caudalMinimo = 0;
         
-        caminos = new Lista();
-        caminoActual = new Lista();
+        camino = new Lista();
+        caminoElegido = new Lista();
         nodoOrigen = null;
         nodoDestino = null;
         nodoVertAux = this.inicio;
+        caudalMinimoElegido[0] = 0; // Almacena el caudal pleno del camino elegido hasta ahora
+        caudalMinimo = 0; // Almacena el caudal pleno actual de un posible camino a elegir
         
         while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
             // Busca el nodo origen y el nodo destino en el grafo
@@ -484,38 +543,52 @@ public class Grafo {
         }
         
         if (nodoOrigen != null && nodoDestino != null) {
-            // Si ambos nodos existen, busca todos los caminos posibles entre ambos
-            caminos = buscarTodosLosCaminos(nodoOrigen, destino, caminos, caminoActual);
+            // Si ambos nodos existen, busca el camino con el caudal pleno más pequeño entre todos los caminos posibles
+            // entre ambos nodos
+            caminoElegido = buscarCaminoCaudalPlenoMinimo(nodoOrigen, destino, camino, caminoElegido, caudalMinimoElegido,
+                    caudalMinimo);
             
         }
         
-        return caminos;
+        return caminoElegido;
         
     }
     
-    private Lista buscarTodosLosCaminos(NodoVert origen, Object destino, Lista caminos, Lista caminoActual){
+    private Lista buscarCaminoCaudalPlenoMinimo(NodoVert origen, Object destino, Lista caminoElegido, Lista camino,
+            int[] caudalMinimoElegido, int caudalMinimo){
         
         NodoVert nodoVertAux;
         NodoAdy nodoAdyAux;
         
         // Ingresa el elemento del nodo en la lista para ir formando el camino
-        caminoActual.insertar(origen.getElem(), caminoActual.longitud()+1);
+        camino.insertar(origen.getElem(), camino.longitud()+1);
         
         if (origen.getElem().equals(destino)) {
             // Caso base: se encontró un camino entre el nodo origen y el nodo destino
-            caminos.insertar(caminoActual.clone(), caminos.longitud()+1);
+            if (caudalMinimo < caudalMinimoElegido[0] || caudalMinimoElegido[0] <= 0) {
+                // El nuevo camino tiene un caudal pleno más pequeño que el último camino elegido
+                caminoElegido = camino.clone();
+                caudalMinimoElegido[0] = caudalMinimo;
+            }
         } else {
             nodoAdyAux = origen.getPrimerAdy();
             
             while (nodoAdyAux != null) {
                 // Caso recursivo: busca entre los nodos adyacentes del nodo origen y sus derivados si existe un
-                // camino entre él y el nodo destino
+                // camino entre él y el nodo destino y va comparándo los caudales de cada tubería a ver cual es el
+                // más pequeño
                 nodoVertAux = nodoAdyAux.getVertice();
                 
-                if (caminoActual.localizar(nodoVertAux.getElem()) < 0) {
-                    // Si el nuevo nodo a visitar no fue visitado antes, se hace una llamada recursiva
-                    caminos = buscarTodosLosCaminos(nodoVertAux, destino, caminos, caminoActual);
-                    caminoActual.eliminar(caminoActual.longitud()); // Elimina el último elemento de la lista
+                if (camino.localizar(nodoVertAux.getElem()) < 0) {
+                    // Si el nuevo nodo a visitar no fue visitado antes, compara el caudal de la tubería que conecta
+                    // ambos nodos con el caudal mínimo actual y se hace una llamada recursiva
+                    if (nodoAdyAux.getEtiqueta() < caudalMinimo || caudalMinimo <= 0) {
+                        caudalMinimo = nodoAdyAux.getEtiqueta();
+                    }
+                    
+                    caminoElegido = buscarCaminoCaudalPlenoMinimo(nodoVertAux, destino, caminoElegido, camino,
+                            caudalMinimoElegido, caudalMinimo);
+                    camino.eliminar(camino.longitud()); // Elimina el último elemento de la lista
                 }
                 
                 nodoAdyAux = nodoAdyAux.getSigAdyacente();
@@ -523,7 +596,7 @@ public class Grafo {
             
         }
         
-        return caminos;
+        return caminoElegido;
         
     }
     
@@ -558,18 +631,20 @@ public class Grafo {
                 // Ingresa el elemento del nodo vertice a la cadena
                 elementos += nodoVertAux.getElem().toString();
                 nodoAdyAux = nodoVertAux.getPrimerAdy();
-            
+                elementos += " -> ";
+                
                 if (nodoAdyAux != null) {
                     // Ingresa todos los nodos adyacentes del nodo vertice actual a la cadena
-                    elementos += ": ";
-                
                     while (nodoAdyAux != null) {
-                        elementos += nodoAdyAux.getVertice().getElem().toString() + " ";
+                        elementos += nodoAdyAux.getVertice().getElem().toString()
+                                + " (" + nodoAdyAux.getEtiqueta() + ")";
                         nodoAdyAux = nodoAdyAux.getSigAdyacente();
+                        
+                        if (nodoAdyAux != null) {
+                            elementos += ", ";
+                        }   
                     }
-                } else {
-                    // El nodo vertice no tiene nodos adyacentes
-                    elementos += ": -";
+                    
                 }
             
                 // Siguiente nodo vertice
