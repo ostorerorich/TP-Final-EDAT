@@ -20,6 +20,8 @@ public class MetodosCiudad {
 
     // TODO: agregar validaciones del archivo.
     // TODO: Simplificar el codigo, crear un metodo generico para cargar los datos desde un archivo.
+
+    // Test NO
     public static void cargarCiudadesDesde(ArbolAVL arbol, Grafo caminos) throws IOException {
 
         System.out.println("Cargando ciudades...");
@@ -60,6 +62,7 @@ public class MetodosCiudad {
 
     }
 
+
     public static void agregarHabitantesCiudad(ArbolAVL arbol){
         System.out.println("Ingrese el nombre de la ciudad a la que desea agregar habitantes:");
         String nombre = sc.nextLine().trim();
@@ -68,8 +71,7 @@ public class MetodosCiudad {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
                     .print().guardar();
         } else{
-            Ciudad ciudad = new Ciudad(nombre);
-            Ciudad res = (Ciudad) arbol.obtener(ciudad);
+            Ciudad res = obtenerCiudad(arbol, nombre);
             if(res != null){
                 System.out.println("Ingrese el año:");
                 int anio = Integer.parseInt(sc.nextLine().trim());
@@ -86,7 +88,7 @@ public class MetodosCiudad {
                             .print().guardar();
                 }
             } else {
-                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
+                Log.mensaje("La ciudad " + nombre + " no existe en el sistema.")
                         .print().guardar();
             }
         }
@@ -96,7 +98,7 @@ public class MetodosCiudad {
     // Checkear todo lo que es input validaciones y agregar ciudades.
     //TODO: this
     private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona, String habitantes) {
-        return nombre.matches(letras) && validarNomenclatura(nombre, nomenclatura) && superficie.matches(numeros) && cantM3Persona.matches(decimales) && habitantes.matches(numeros);
+        return nombre.matches(letras) && crearNomenclatura(nombre, nomenclatura) && superficie.matches(numeros) && cantM3Persona.matches(decimales) && habitantes.matches(numeros);
     }
     //TODO: this
     public static boolean agregarCiudad(ArbolAVL arbol, Grafo caminos, Ciudad ciudad) {
@@ -162,7 +164,7 @@ public class MetodosCiudad {
     }
 
     //TODO: this
-    private static boolean validarNomenclatura(String nombre, String nomenclatura) {
+    private static boolean crearNomenclatura(String nombre, String nomenclatura) {
         boolean res = false;
         StringBuilder sb = new StringBuilder();
         String nombreMayus = nombre.toUpperCase().trim();
@@ -217,13 +219,12 @@ public class MetodosCiudad {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
                     .print().guardar();
         }else{
-            Ciudad ciudad = new Ciudad(nombre);
-            Ciudad res = (Ciudad) arbol.obtener(ciudad);
+            Ciudad res = obtenerCiudad(arbol, nombre);
             if(res != null){
                 Log.mensaje("Ciudad encontrada: " + res.getNombre())
                         .print().guardar();
             } else {
-                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
+                Log.mensaje("La ciudad " + nombre + " no existe en el sistema.")
                         .print().guardar();
             }
         }
@@ -237,14 +238,13 @@ public class MetodosCiudad {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
                     .print().guardar();
         }else{
-            Ciudad ciudad = new Ciudad(nombre);
-            Ciudad res = (Ciudad) arbol.obtener(ciudad);
+            Ciudad res = obtenerCiudad(arbol, nombre);
             if(res != null){
                 String habitantes = res.obtenerTodosLosHabitantes();
                 Log.mensaje("Habitantes de la ciudad " + res + ":\n" + habitantes)
                         .print().guardar();
             } else {
-                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
+                Log.mensaje("La ciudad " + nombre + " no existe en el sistema.")
                         .print().guardar();
             }
         }
@@ -257,15 +257,29 @@ public class MetodosCiudad {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
                     .print().guardar();
         }else{
-            Ciudad ciudad = new Ciudad(nombre);
-            Ciudad res = (Ciudad) arbol.obtener(ciudad);
+            Ciudad res = obtenerCiudad(arbol, nombre);
             if(res != null){
                 Log.mensaje("Datos de la ciudad " + res.getNombre() + ":\n" + res.toString())
                         .print().guardar();
             } else {
-                Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
+                Log.mensaje("La ciudad " + nombre + " no existe en el sistema.")
                         .print().guardar();
             }
         }
+    }
+
+    public static Ciudad obtenerCiudad(ArbolAVL ciudades, String nombreCiudad) {
+
+        Ciudad ciudadEncontrada = null;
+
+        if(!nombreCiudad.isEmpty() && nombreCiudad.matches(letras)) {
+
+            Ciudad ciudad = new Ciudad(nombreCiudad);
+            ciudadEncontrada = (Ciudad) ciudades.obtener(ciudad);
+
+        }
+
+        return ciudadEncontrada;
+
     }
 }
