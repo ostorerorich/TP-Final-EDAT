@@ -73,6 +73,36 @@ public class MetodosTuberia {
         }
     }
 
+    private static Estado obtenerEstadoTuberia() {
+        System.out.println("Seleccionar un nuevo estado para la tubería:");
+        boolean loop = true;
+
+        int estadoSeleccionado = 0;
+
+        while(loop){
+            System.out.println("1 - ACTIVO" +
+                    "\n2 - REPARACION" +
+                    "\n3 - DISENIO" +
+                    "\n4 - INACTIVO");
+
+            estadoSeleccionado = Integer.parseInt(sc.nextLine().trim());
+            if(estadoSeleccionado >= 1 && estadoSeleccionado <= 4){
+                loop = false;
+            } else {
+                System.out.println("Opción inválida, por favor intente nuevamente.");
+            }
+        }
+
+        return switch (estadoSeleccionado) {
+            case 1 -> Estado.ACTIVO;
+            case 2 -> Estado.REPARACION;
+            case 3 -> Estado.DISENIO;
+            case 4 -> Estado.INACTIVO;
+            default -> Estado.ACTIVO;
+        };
+    }
+
+
     public static void modificarTuberia(HashMap<TuberiaKey, Tuberia> tuberias) {
 
         if (!tuberias.isEmpty()) {
@@ -95,23 +125,10 @@ public class MetodosTuberia {
                     int caudalMax = Integer.parseInt(sc.nextLine().trim());
                     System.out.print("Ingrese el nuevo caudal mínimo: ");
                     int caudalMin = Integer.parseInt(sc.nextLine().trim());
-                    System.out.println("Seleccionar un nuevo estado para la tubería:");
-                    System.out.println("1 - ACTIVO" +
-                            "\n2 - REPARACION" +
-                            "\n3 - DISENIO" +
-                            "\n4 - INACTIVO");
 
-                    int estadoSeleccionado = Integer.parseInt(sc.nextLine().trim());
-                    if (estadoSeleccionado < 1 || estadoSeleccionado > 4) {
-                        tuberia.setEstado(Estado.ACTIVO);
-                    } else {
-                        switch (estadoSeleccionado) {
-                            case 1 -> tuberia.setEstado(Estado.ACTIVO);
-                            case 2 -> tuberia.setEstado(Estado.REPARACION);
-                            case 3 -> tuberia.setEstado(Estado.DISENIO);
-                            case 4 -> tuberia.setEstado(Estado.INACTIVO);
-                        }
-                    }
+
+                    tuberia.setEstado(obtenerEstadoTuberia());
+
 
                     if (diametro <= 0 || caudalMin <= 0 || caudalMax <= 0 || caudalMin >= caudalMax) {
                         Log.mensaje("Error: Valores de diámetro o caudales inválidos.").print().guardar();
@@ -195,24 +212,13 @@ public class MetodosTuberia {
                 } else {
                     Tuberia tuberia = new Tuberia(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura(),
                             diametro, caudalMax, caudalMin, Estado.ACTIVO);
-                    System.out.println("Seleccionar un estado para la tubería:");
-                    System.out.println("1 - ACTIVO" +
-                            "\n2 - REPARACION" +
-                            "\n3 - DISENIO" +
-                            "\n4 - INACTIVO");
-                    int estadoSeleccionado = Integer.parseInt(sc.nextLine().trim());
-                    if (estadoSeleccionado < 1 || estadoSeleccionado > 4) {
-                        tuberia.setEstado(Estado.ACTIVO);
-                    } else {
-                        switch (estadoSeleccionado) {
-                            case 1 -> tuberia.setEstado(Estado.ACTIVO);
-                            case 2 -> tuberia.setEstado(Estado.REPARACION);
-                            case 3 -> tuberia.setEstado(Estado.DISENIO);
-                            case 4 -> tuberia.setEstado(Estado.INACTIVO);
-                        }
-                    }
+
+                    tuberia.setEstado(obtenerEstadoTuberia());
+
                     tuberias.put(key, tuberia);
+
                     caminos.insertarArco(ciudadOrigen, ciudadDestino, tuberia.getCaudalMax());
+
                     Log.mensaje("Tubería agregada: " + tuberia).print().guardar();
                 }
             }

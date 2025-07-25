@@ -35,9 +35,9 @@ public class MetodosCiudad {
                 lineas.skip(1)
                         .map(l -> l.split(";"))
                         .forEach(l -> {
-                            if(l.length == 4){
-                                    if(validar(l[0],l[1], l[2], l[3])) {
-                                        Ciudad ciudad = new Ciudad(l[0], l[1], Integer.parseInt(l[2]), Double.parseDouble(l[3]));
+                            if(l.length == 5){
+                                    if(validar(l[0],l[1], l[2], l[3], l[4])) {
+                                        Ciudad ciudad = new Ciudad(l[0], l[1], Integer.parseInt(l[2]), Double.parseDouble(l[3]), Integer.parseInt(l[4]));
                                         agregarCiudad(arbol, caminos, ciudad);
                                         Log.mensaje("Ciudad cargada: " + ciudad.getNombre() + " con nomenclatura: " + ciudad.getNomenclatura())
                                                 .print().guardar();
@@ -95,8 +95,8 @@ public class MetodosCiudad {
 
     // Checkear todo lo que es input validaciones y agregar ciudades.
     //TODO: this
-    private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona){
-        return nombre.matches(letras) && validarNomenclatura(nombre, nomenclatura) && superficie.matches(numeros) && cantM3Persona.matches(decimales);
+    private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona, String habitantes) {
+        return nombre.matches(letras) && validarNomenclatura(nombre, nomenclatura) && superficie.matches(numeros) && cantM3Persona.matches(decimales) && habitantes.matches(numeros);
     }
     //TODO: this
     public static boolean agregarCiudad(ArbolAVL arbol, Grafo caminos, Ciudad ciudad) {
@@ -137,10 +137,12 @@ public class MetodosCiudad {
         System.out.println();
         System.out.print("Ingresar cantidad de m3 por persona: ");
         cantM3Persona = sc.nextLine();
+        System.out.println("Ingrese cantidad de habitantes:");
+        String habitantes = sc.nextLine();
         System.out.println();
-        if (validar(nombre, nomenclatura, superficie, cantM3Persona)) {
+        if (validar(nombre, nomenclatura, superficie, cantM3Persona, habitantes)) {
             try {
-                ciudad = new Ciudad(nombre, nomenclatura, Integer.parseInt(superficie), Double.parseDouble(cantM3Persona));
+                ciudad = new Ciudad(nombre, nomenclatura, Integer.parseInt(superficie), Double.parseDouble(cantM3Persona), Integer.parseInt(habitantes));
                 res = agregarCiudad(arbol, caminos, ciudad);
                 if(res) {
                     Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")

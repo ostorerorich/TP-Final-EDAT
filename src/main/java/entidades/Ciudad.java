@@ -1,6 +1,7 @@
 package entidades;
 
 import java.time.Year;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Objects;
@@ -13,9 +14,9 @@ public class Ciudad implements Comparable<Ciudad> {
     private int superficie;
     private double cantM3Persona;
 
-    public Ciudad(String nombre, String nomenclatura, int superficie, double cantM3Persona) {
+    public Ciudad(String nombre, String nomenclatura, int superficie, double cantM3Persona, Integer cantHabitantes) {
         this.nombre = nombre;
-        this.habitantes = this.generarAnios();
+        this.habitantes = this.generarAnios(cantHabitantes);
         this.nomenclatura = nomenclatura;
         this.superficie = superficie;
         this.cantM3Persona = cantM3Persona;
@@ -69,8 +70,6 @@ public class Ciudad implements Comparable<Ciudad> {
             if (obj == this) {
                 res = true;
             } else {
-                // Error al comparar nombre y nom, cuando el constructor es solo nombre, nom es
-                // null
                 Ciudad o = (Ciudad) obj;
                 res = this.nombre.equals(o.nombre);
             }
@@ -78,12 +77,13 @@ public class Ciudad implements Comparable<Ciudad> {
         return res;
     }
 
-    private Map<Integer, Integer[]> generarAnios() {
+    private Map<Integer, Integer[]> generarAnios(Integer cantHabitantes) {
         Map<Integer, Integer[]> res = new HashMap<>();
         Integer anio = Year.now().getValue();
-
         for (int i = 0; i < 10; i++) {
-            res.put(anio - i, new Integer[12]);
+            Integer[] arr = new Integer[12];
+            Arrays.fill(arr, cantHabitantes);
+            res.put(anio - i, arr);
         }
         return res;
     }
