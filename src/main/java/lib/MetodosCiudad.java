@@ -268,4 +268,17 @@ public class MetodosCiudad {
             }
         }
     }
+
+    public static void consultaConsumo(ArbolAVL arbol){
+        System.out.println("Ingrese la subcadena 'minNomb': ");
+        String minimoString = sc.nextLine().trim();
+        System.out.println("Ingrese la subcadena 'maxNomb': ");
+        String maximoString = sc.nextLine().trim();
+        System.out.println("Ingrese el volumen de agua menor: ");
+        double minVol = sc.nextDouble();
+        System.out.println("Ingrese el volumen de agua mayor: ");
+        double maxVol = sc.nextDouble();
+
+        
+    }
 }

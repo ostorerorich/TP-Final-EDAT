@@ -261,17 +261,17 @@ public class ArbolAVL {
 
 
     //TODO: Listar ciudades en orden alfabetico
-    public Lista listarInOrden() {
+    public Lista listar() {//SE RECORRE INORDEN
         Lista lis = new Lista();
-        listarInOrdenAux(this.raiz, lis);
+        listarAux(this.raiz, lis);
         return lis;
     }
 
-    private void listarInOrdenAux(NodoAVL nodoArbol, Lista lis) {
+    private void listarAux(NodoAVL nodoArbol, Lista lis) {
         if (nodoArbol != null) {
-            listarInOrdenAux(nodoArbol.getIzquierdo(), lis);
+            listarAux(nodoArbol.getIzquierdo(), lis);
             lis.insertar(nodoArbol.getElem(), lis.longitud() + 1);
-            listarInOrdenAux(nodoArbol.getDerecho(), lis);
+            listarAux(nodoArbol.getDerecho(), lis);
         }
     }
 
@@ -316,4 +316,72 @@ public class ArbolAVL {
         }
         return res;
     }
+
+    public Comparable minimoElem(){
+        Comparable res = null;
+        NodoAVL nodo = this.raiz;
+        if (nodo!=null){
+            while (nodo.getIzquierdo()!=null){
+                nodo = nodo.getIzquierdo();
+            }
+            res = nodo.getElem();
+        }
+        return res;
+    }
+
+    public Comparable maximoElem(){
+        Comparable res = null;
+        NodoAVL nodo = this.raiz;
+        if (nodo!=null){
+            while (nodo.getDerecho()!=null){
+                nodo = nodo.getDerecho();
+            }
+            res = nodo.getElem();
+        }
+        return res;
+    }
+
+    public Lista listarRango(Comparable minimoElem, Comparable maximoElem){
+        Lista lis = new Lista();
+        listarRangoAux(lis, this.raiz, minimoElem, maximoElem);
+        return lis;
+    }
+    private void listarRangoAux (Lista l, NodoAVL nodo, Comparable min, Comparable max){
+        if (nodo!=null){
+            if (min.compareTo(nodo.getElem()) < 0) {
+                listarRangoAux(l, nodo.getIzquierdo(), min, max);
+            }
+            if (min.compareTo(nodo.getElem()) <= 0 && max.compareTo(nodo.getElem()) >= 0) {
+                l.insertar(nodo.getElem(), l.longitud() + 1);
+            }
+            if (max.compareTo(nodo.getElem()) > 0) {
+                listarRangoAux(l, nodo.getDerecho(), min, max);
+            }
+        }
+    }
+
+    public void vaciar(){
+        this.raiz = null;
+    }
+    public ArbolAVL clone(){
+        ArbolAVL nuevoArbol = new ArbolAVL();
+        // Clona al arbol creando nuevos nodos con un recorrido en preorden
+        nuevoArbol.raiz = clonarArbol(this.raiz);
+        return nuevoArbol;
+    }
+    
+    private NodoAVL clonarArbol(NodoAVL nodo){
+        NodoAVL nuevoNodo = null;
+        if (nodo != null) { // Caso base: el nodo es nulo
+            // Caso recursivo: crea nuevos nodos y les agrega su hijo izquierdo y derecho mediante llamadas recursivas
+            // con un recorrido en preorden
+            nuevoNodo = new NodoAVL(nodo.getElem(), null, null);
+            nuevoNodo.setIzquierdo(clonarArbol(nodo.getIzquierdo()));
+            nuevoNodo.setDerecho(clonarArbol(nodo.getDerecho()));
+        }
+        return nuevoNodo;
+    }
+
+
+
 }
