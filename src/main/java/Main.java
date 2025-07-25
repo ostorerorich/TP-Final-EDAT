@@ -53,7 +53,7 @@ public class Main {
                     case 3 -> MetodosCiudad.agregarHabitantesCiudad(ciudades);
                     case 4 -> MetodosCiudad.mostrarDatosCiudad(ciudades);
                     case 5 -> consultasTransporte();
-                    case 6 -> System.out.println("Listado de ciudades: " + ciudades.listarInOrden());
+                    case 6 -> System.out.println("Listado de ciudades: " + ciudades.listar());
                     case 7 -> System.out.println("Mostrar sistema (Debug)");
                     case 0 -> {
                         fin = true;
@@ -89,7 +89,7 @@ public class Main {
             }
             case 2 -> MetodosCiudad.eliminarCiudad(ciudades);
             case 3 -> System.out.println("Modificacion Ciudad");
-            case 4 -> System.out.println("Listar Ciudades: " + ciudades.listarInOrden());
+            case 4 -> System.out.println("Listar Ciudades: " + ciudades.listar());
             case 5 -> MetodosCiudad.buscarCiudad(ciudades);
             case 6 -> {
                 MetodosCiudad.mostrarHabitantesCiudad(ciudades);
