@@ -255,11 +255,13 @@ public class MetodosTuberia {
         String estadoCamino;
 
         System.out.println("Por favor, ingrese el nombre de la ciudad origen");
-        ciudadOrigen = obtenerCiudad(ciudades);
+        String ciudadOrigenNombre = sc.nextLine().trim();
+        ciudadOrigen = MetodosCiudad.obtenerCiudad(ciudades, ciudadOrigenNombre);
 
         if (ciudadOrigen != null) {
             System.out.println("Por favor, ingrese el nombre de la ciudad destino");
-            ciudadDestino = obtenerCiudad(ciudades);
+            String ciudadDestinoNombre = sc.nextLine().trim();
+            ciudadDestino = MetodosCiudad.obtenerCiudad(ciudades, ciudadDestinoNombre);
 
             if (ciudadDestino != null) {
                 todosLosCaminos = caminos.todosLosCaminos(ciudadOrigen, ciudadDestino);
@@ -297,19 +299,6 @@ public class MetodosTuberia {
         }
     }
 
-    private static Ciudad obtenerCiudad(ArbolAVL ciudades) {
-
-        String nombreCiudad;
-        Ciudad ciudad, ciudadEncontrada;
-
-        // Verifica si existe la ciudad en el árbol y retorna el resultado
-        nombreCiudad = sc.nextLine().trim();
-        ciudad = new Ciudad(nombreCiudad);
-        ciudadEncontrada = (Ciudad) ciudades.obtener(ciudad);
-
-        return ciudadEncontrada;
-
-    }
 
     private static Lista buscarCaminoDeCaudalPlenoMinimo(Lista caminos, HashMap<TuberiaKey, Tuberia> tuberias) {
 
@@ -444,11 +433,13 @@ public class MetodosTuberia {
         String estadoCamino;
 
         System.out.println("Por favor, ingrese el nombre de la ciudad origen");
-        ciudadOrigen = obtenerCiudad(ciudades);
+        String ciudadOrigenNombre = sc.nextLine().trim();
+        ciudadOrigen = MetodosCiudad.obtenerCiudad(ciudades, ciudadOrigenNombre);
 
         if (ciudadOrigen != null) {
             System.out.println("Por favor, ingrese el nombre de la ciudad destino");
-            ciudadDestino = obtenerCiudad(ciudades);
+            String ciudadDestinoNombre = sc.nextLine().trim();
+            ciudadDestino = MetodosCiudad.obtenerCiudad(ciudades, ciudadDestinoNombre);
 
             if (ciudadDestino != null) {
                 caminoMasCorto = caminos.caminoMasCorto(ciudadOrigen, ciudadDestino);
