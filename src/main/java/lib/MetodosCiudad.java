@@ -436,12 +436,12 @@ public class MetodosCiudad {
     public static void mostrarCiudadesRango(ArbolAVL ciudades){
         Lista rangoCiudades = new Lista();
         Lista ciudadesFiltradas = new Lista();
-        String minNomb, maxNomb;
+        Ciudad minNomb, maxNomb;
         double minVol, maxVol;
         System.out.println("Ingrese el nombre minimo del rango: ");
-        minNomb = sc.nextLine().trim();
+        minNomb = new Ciudad(sc.nextLine().trim());
         System.out.println("Ingrese el nombre maximo del rango: ");
-        maxNomb = sc.nextLine().trim();
+        maxNomb = new Ciudad(sc.nextLine().trim());
         System.out.println("Ingrese el volumen minimo de agua: ");
         minVol = Double.parseDouble(sc.nextLine().trim());
         System.out.println("Ingrese el volumen maximo: ");
@@ -460,7 +460,7 @@ public class MetodosCiudad {
                 if (habi!=null){
                     Double volAgua = calcularVolumenAgua(ciudadAux, habi, mes);
                     if (volAgua>=minVol && volAgua<=maxVol){
-                        ciudadesFiltradas.agregarElem(ciudadAux, ciudadesFiltradas.longitud()+1);
+                        ciudadesFiltradas.insertar(ciudadAux.getNombre(),ciudadesFiltradas.longitud()+1);
                     }
                 }else {
                     System.out.println("El anio o mes ingresado es incorrecto");
