@@ -58,6 +58,10 @@ public class Ciudad implements Comparable<Ciudad> {
         this.cantM3Persona = cantM3Persona;
     }
 
+    public Map<?, ?> getMapHabitantes() {
+        return this.habitantes;
+    }
+
     @Override
     public int compareTo(Ciudad o) {
         return this.nombre.compareTo(o.getNombre());
@@ -88,9 +92,15 @@ public class Ciudad implements Comparable<Ciudad> {
         return res;
     }
 
+    public boolean anioValido(int anio) {
+        return this.habitantes.get(anio) != null;
+    }
+
     public boolean agregarCantHabitantes(Integer anio, Integer mes, Integer cant) {
         Integer[] yearArr = habitantes.getOrDefault(anio, null);
         boolean res = false;
+
+        // Verificar años siguientes cuando se le modifica a x mes de x año.
         if (yearArr != null && mes >= 1 && mes <= 12) {
             yearArr[mes - 1] = cant;
             res = true;
@@ -108,6 +118,8 @@ public class Ciudad implements Comparable<Ciudad> {
     }
 
 
+
+
     public String obtenerTodosLosHabitantes() {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<Integer, Integer[]> entry : habitantes.entrySet()) {
@@ -115,12 +127,12 @@ public class Ciudad implements Comparable<Ciudad> {
             Integer[] meses = entry.getValue();
             sb.append("Año: ").append(anio).append("\n");
             for (int i = 0; i < meses.length; i++) {
-                sb.append("Mes ").append(i + 1).append(": ").append(meses[i] != null ? meses[i] : "No registrado").append("\n");
+                sb.append("Mes ").append(i + 1).append(": ").append(meses[i] != null ? meses[i] : "No registrado")
+                        .append("\n");
             }
         }
         return sb.toString();
     }
-
 
     @Override
     public String toString() {

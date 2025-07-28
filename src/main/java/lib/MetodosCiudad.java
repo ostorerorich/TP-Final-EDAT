@@ -2,13 +2,18 @@ package lib;
 
 import entidades.Ciudad;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
+import estructuras.conjuntistas.estaticas.HeapMax;
 import estructuras.grafos.Grafo;
 import estructuras.lineales.dinamicas.Lista;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Year;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.stream.Stream;
 
 public class MetodosCiudad {
@@ -20,60 +25,64 @@ public class MetodosCiudad {
     private static final String decimales = "^\\d+\\.\\d{2}$";
 
     // TODO: agregar validaciones del archivo.
-    // TODO: Simplificar el codigo, crear un metodo generico para cargar los datos desde un archivo.
+    // TODO: Simplificar el codigo, crear un metodo generico para cargar los datos
+    // desde un archivo.
 
     // Test NO
     public static void cargarCiudadesDesde(ArbolAVL arbol, Grafo caminos) throws IOException {
 
         System.out.println("Cargando ciudades...");
         File archivo = Load.cargarArchivo();
-        if(archivo != null){
+        if (archivo != null) {
             Log.mensaje("Cargando ciudades desde: " + archivo.getAbsolutePath())
                     .print().guardar();
 
-            // Pone el archivo en una lista(stream) para luego poder recorrerla eficientemente, separando cada linea por ";"
-            // y luego se valida que tenga la cantidad de campos necesarios para crear una ciudad.
-            // Si es válido lo inserta en el árbol, si no, se guarda un mensaje de error en el log.
-            try(Stream<String> lineas = Files.lines(archivo.toPath())){
+            // Pone el archivo en una lista(stream) para luego poder recorrerla
+            // eficientemente, separando cada linea por ";"
+            // y luego se valida que tenga la cantidad de campos necesarios para crear una
+            // ciudad.
+            // Si es válido lo inserta en el árbol, si no, se guarda un mensaje de error en
+            // el log.
+            try (Stream<String> lineas = Files.lines(archivo.toPath())) {
                 lineas.skip(1)
                         .map(l -> l.split(";"))
                         .forEach(l -> {
-                            if(l.length == 5){
-                                    if(validar(l[0],l[1], l[2], l[3], l[4])) {
-                                        Ciudad ciudad = new Ciudad(l[0], l[1], Integer.parseInt(l[2]), Double.parseDouble(l[3]), Integer.parseInt(l[4]));
-                                        agregarCiudad(arbol, caminos, ciudad);
-                                        Log.mensaje("Ciudad cargada: " + ciudad.getNombre() + " con nomenclatura: " + ciudad.getNomenclatura())
-                                                .print().guardar();
-                                    }else{
-                                        Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.")
-                                                .print().guardar();
+                            if (l.length == 5) {
+                                if (validar(l[0], l[1], l[2], l[3], l[4])) {
+                                    Ciudad ciudad = new Ciudad(l[0], l[1], Integer.parseInt(l[2]),
+                                            Double.parseDouble(l[3]), Integer.parseInt(l[4]));
+                                    agregarCiudad(arbol, caminos, ciudad);
+                                    Log.mensaje("Ciudad cargada: " + ciudad.getNombre() + " con nomenclatura: "
+                                            + ciudad.getNomenclatura())
+                                            .print().guardar();
+                                } else {
+                                    Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.")
+                                            .print().guardar();
 
-                                    }
-                            }else {
+                                }
+                            } else {
                                 Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.").guardar();
                             }
                         });
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 Log.mensaje("Error al cargar las ciudades: " + e.getMessage())
                         .print().guardar();
-
 
             }
         }
 
     }
 
-
-    public static void agregarHabitantesCiudad(ArbolAVL arbol){
+    public static void agregarHabitantesCiudad(ArbolAVL arbol) {
         System.out.println("Ingrese el nombre de la ciudad a la que desea agregar habitantes:");
         String nombre = sc.nextLine().trim();
 
-        if(nombre.isEmpty() || !nombre.matches(letras)) {
+        if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
                     .print().guardar();
-        } else{
+        } else {
             Ciudad res = obtenerCiudad(arbol, nombre);
-            if(res != null){
+            if (res != null) {
                 System.out.println("Ingrese el año:");
                 int anio = Integer.parseInt(sc.nextLine().trim());
                 System.out.println("Ingrese el mes (1-12):");
@@ -81,11 +90,13 @@ public class MetodosCiudad {
                 System.out.println("Ingrese la cantidad de habitantes:");
                 int cantHabitantes = Integer.parseInt(sc.nextLine().trim());
 
-                if(res.agregarCantHabitantes(anio, mes, cantHabitantes)){
-                    Log.mensaje("Cantidad de habitantes agregada a la ciudad " + res.getNombre() + " para el año " + anio + " y mes " + mes)
+                if (res.agregarCantHabitantes(anio, mes, cantHabitantes)) {
+                    Log.mensaje("Cantidad de habitantes agregada a la ciudad " + res.getNombre() + " para el año "
+                            + anio + " y mes " + mes)
                             .print().guardar();
-                }else{
-                    Log.mensaje("Error al agregar habitantes a la ciudad " + res.getNombre() + ". Verifique los datos ingresados.")
+                } else {
+                    Log.mensaje("Error al agregar habitantes a la ciudad " + res.getNombre()
+                            + ". Verifique los datos ingresados.")
                             .print().guardar();
                 }
             } else {
@@ -95,22 +106,24 @@ public class MetodosCiudad {
         }
     }
 
-
     // Checkear todo lo que es input validaciones y agregar ciudades.
-    //TODO: this
-    private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona, String habitantes) {
-        return nombre.matches(letras) && crearNomenclatura(nombre, nomenclatura) && superficie.matches(numeros) && cantM3Persona.matches(decimales) && habitantes.matches(numeros);
+    // TODO: this
+    private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona,
+            String habitantes) {
+        return nombre.matches(letras) && crearNomenclatura(nombre, nomenclatura) && superficie.matches(numeros)
+                && cantM3Persona.matches(decimales) && habitantes.matches(numeros);
     }
-    //TODO: this
+
+    // TODO: this
     public static boolean agregarCiudad(ArbolAVL arbol, Grafo caminos, Ciudad ciudad) {
         boolean res = false;
 
-        if(ciudad !=null){
-            if(arbol.pertenece(ciudad)){
+        if (ciudad != null) {
+            if (arbol.pertenece(ciudad)) {
                 Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.")
                         .print().guardar();
 
-            }else{
+            } else {
                 arbol.insertar(ciudad);
                 caminos.insertarVertice(ciudad.getNomenclatura());
                 Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")
@@ -123,8 +136,7 @@ public class MetodosCiudad {
 
     }
 
-
-    //TODO: this
+    // TODO: this
     public static void agregarCiudadInput(ArbolAVL arbol, Grafo caminos) {
         Ciudad ciudad = null;
         boolean res = false;
@@ -145,9 +157,10 @@ public class MetodosCiudad {
         System.out.println();
         if (validar(nombre, nomenclatura, superficie, cantM3Persona, habitantes)) {
             try {
-                ciudad = new Ciudad(nombre, nomenclatura, Integer.parseInt(superficie), Double.parseDouble(cantM3Persona), Integer.parseInt(habitantes));
+                ciudad = new Ciudad(nombre, nomenclatura, Integer.parseInt(superficie),
+                        Double.parseDouble(cantM3Persona), Integer.parseInt(habitantes));
                 res = agregarCiudad(arbol, caminos, ciudad);
-                if(res) {
+                if (res) {
                     Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")
                             .print().guardar();
 
@@ -164,24 +177,24 @@ public class MetodosCiudad {
         }
     }
 
-    //TODO: this
+    // TODO: this
     private static boolean crearNomenclatura(String nombre, String nomenclatura) {
         boolean res = false;
         StringBuilder sb = new StringBuilder();
         String nombreMayus = nombre.toUpperCase().trim();
-        int numero  = Integer.parseInt(nomenclatura.substring(2));
+        int numero = Integer.parseInt(nomenclatura.substring(2));
 
-        if(numero > 3000 && numero < 4000 && nomenclatura.matches(REG)){
-                String[] partes = nombreMayus.split("[\\\\s-]");
-                if(partes.length == 2){
-                    sb.append(partes[0].substring(0,1)).append(partes[1].substring(0,1));
-                }else{
-                    sb.append(partes[0].substring(0,2));
-                }
-                sb.append(numero);
-                if(sb.toString().equals(nomenclatura)) {
-                    res = true;
-                }
+        if (numero > 3000 && numero < 4000 && nomenclatura.matches(REG)) {
+            String[] partes = nombreMayus.split("[\\\\s-]");
+            if (partes.length == 2) {
+                sb.append(partes[0].substring(0, 1)).append(partes[1].substring(0, 1));
+            } else {
+                sb.append(partes[0].substring(0, 2));
+            }
+            sb.append(numero);
+            if (sb.toString().equals(nomenclatura)) {
+                res = true;
+            }
 
         }
 
@@ -190,20 +203,20 @@ public class MetodosCiudad {
 
     public static boolean validarNomenclatura(String nomenclatura) {
         return nomenclatura.matches(REG) &&
-               Integer.parseInt(nomenclatura.substring(2)) > 3000 &&
-               Integer.parseInt(nomenclatura.substring(2)) < 4000;
+                Integer.parseInt(nomenclatura.substring(2)) > 3000 &&
+                Integer.parseInt(nomenclatura.substring(2)) < 4000;
     }
 
-    public static void eliminarCiudad(ArbolAVL arbol, Grafo caminos){
+    public static void eliminarCiudad(ArbolAVL arbol, Grafo caminos) {
         System.out.println("Ingrese el nombre de la ciudad a eliminar:");
         String nombre = sc.nextLine().trim();
-        if(nombre.isEmpty() || !nombre.matches(letras)){
+        if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
                     .print().guardar();
-        }else{
+        } else {
             Ciudad ciudad = new Ciudad(nombre);
             Ciudad ciudadEncontrada = (Ciudad) arbol.obtener(ciudad);
-            if(ciudadEncontrada != null){
+            if (ciudadEncontrada != null) {
                 arbol.eliminar(ciudad);
                 caminos.eliminarVertice(ciudadEncontrada.getNomenclatura());
                 Log.mensaje("Ciudad " + ciudad.getNombre() + " eliminada del sistema.")
@@ -219,12 +232,12 @@ public class MetodosCiudad {
     public static void buscarCiudad(ArbolAVL arbol) {
         System.out.println("Ingrese el nombre de la ciudad a buscar:");
         String nombre = sc.nextLine().trim();
-        if(nombre.isEmpty() || !nombre.matches(letras)){
+        if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
                     .print().guardar();
-        }else{
+        } else {
             Ciudad res = obtenerCiudad(arbol, nombre);
-            if(res != null){
+            if (res != null) {
                 Log.mensaje("Ciudad encontrada: " + res.getNombre())
                         .print().guardar();
             } else {
@@ -234,16 +247,15 @@ public class MetodosCiudad {
         }
     }
 
-
     public static void mostrarHabitantesCiudad(ArbolAVL arbol) {
         System.out.println("Ingrese el nombre de la ciudad para mostrar sus habitantes:");
         String nombre = sc.nextLine().trim();
-        if(nombre.isEmpty() || !nombre.matches(letras)){
+        if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
                     .print().guardar();
-        }else{
+        } else {
             Ciudad res = obtenerCiudad(arbol, nombre);
-            if(res != null){
+            if (res != null) {
                 String habitantes = res.obtenerTodosLosHabitantes();
                 Log.mensaje("Habitantes de la ciudad " + res + ":\n" + habitantes)
                         .print().guardar();
@@ -254,15 +266,15 @@ public class MetodosCiudad {
         }
     }
 
-    public static void mostrarDatosCiudad(ArbolAVL arbol){
+    public static void mostrarDatosCiudad(ArbolAVL arbol) {
         System.out.println("Ingrese el nombre de la ciudad para mostrar sus datos:");
         String nombre = sc.nextLine().trim();
-        if(nombre.isEmpty() || !nombre.matches(letras)){
+        if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
                     .print().guardar();
-        }else{
+        } else {
             Ciudad res = obtenerCiudad(arbol, nombre);
-            if(res != null){
+            if (res != null) {
                 Log.mensaje("Datos de la ciudad " + res.getNombre() + ":\n" + res.toString())
                         .print().guardar();
             } else {
@@ -276,8 +288,9 @@ public class MetodosCiudad {
 
         Ciudad ciudadEncontrada = null;
 
-        // Si el nombre no está vacío y tiene los caracteres correctos, entonces verifica si la ciudad esta en el árbol
-        if(!nombreCiudad.isEmpty() && nombreCiudad.matches(letras)) {
+        // Si el nombre no está vacío y tiene los caracteres correctos, entonces
+        // verifica si la ciudad esta en el árbol
+        if (!nombreCiudad.isEmpty() && nombreCiudad.matches(letras)) {
 
             Ciudad ciudad = new Ciudad(nombreCiudad);
             ciudadEncontrada = (Ciudad) ciudades.obtener(ciudad);
@@ -287,23 +300,24 @@ public class MetodosCiudad {
         return ciudadEncontrada;
 
     }
-    
-    public static void mostrarCantHabitantesYConsumo(ArbolAVL ciudades){
-        
+
+    public static void mostrarCantHabitantesYConsumo(ArbolAVL ciudades) {
+
         String nombreCiudad, nombreMes;
         Ciudad ciudad, ciudadEncontrada;
         int anio, mes;
         Integer cantHabitantes;
         double volumenAgua;
-        
+
         System.out.println("Por favor, ingrese el nombre de la ciudad");
         nombreCiudad = sc.nextLine().trim();
-        
-        // Verifica que el nombre ingresado no esté vacío y tenga los caracteres correctos
-        if(!nombreCiudad.isEmpty() && nombreCiudad.matches(letras)){
+
+        // Verifica que el nombre ingresado no esté vacío y tenga los caracteres
+        // correctos
+        if (!nombreCiudad.isEmpty() && nombreCiudad.matches(letras)) {
             ciudad = new Ciudad(nombreCiudad);
             ciudadEncontrada = (Ciudad) ciudades.obtener(ciudad);
-        
+
             if (ciudadEncontrada != null) {
                 System.out.println("Por favor, ingrese el anio");
                 anio = Integer.parseInt(sc.nextLine().trim());
@@ -312,13 +326,16 @@ public class MetodosCiudad {
                 mes = Integer.parseInt(sc.nextLine().trim());
 
                 cantHabitantes = ciudadEncontrada.getCantHabitantes(anio, mes); // Obtiene la cantidad de habitantes
-                
+
                 if (cantHabitantes != null) {
-                    volumenAgua = calcularVolumenAgua(ciudadEncontrada, cantHabitantes, mes); // Calcula el volumen de agua
+                    volumenAgua = calcularVolumenAgua(ciudadEncontrada, cantHabitantes, mes); // Calcula el volumen de
+                                                                                              // agua
                     nombreMes = obtenerNombreMes(mes); // Obtiene el nombre del mes por su número
 
-                    Log.mensaje("Cantidad de habitantes en " + nombreCiudad + " en " + nombreMes + " de " + anio + ": " +
-                            cantHabitantes).print().guardar();
+                    Log.mensaje(
+                            "Cantidad de habitantes en " + nombreCiudad + " en " + nombreMes + " de " + anio + ": " +
+                                    cantHabitantes)
+                            .print().guardar();
                     Log.mensaje("Volumen de agua que se habria distribuido en " + nombreCiudad + " en " + nombreMes +
                             " de " + anio + ": " + volumenAgua).print().guardar();
                 } else {
@@ -330,22 +347,22 @@ public class MetodosCiudad {
         } else {
             System.out.println("El nombre de la ciudad no puede estar vacio o tiene caracteres incorrectos");
         }
-        
+
     }
-    
+
     private static double calcularVolumenAgua(Ciudad ciudad, int cantHabitantes, int mes) {
-        
+
         double consumoPromedio = ciudad.getCantM3Persona();
         int cantDias = obtenerCantDias(mes);
-        
+
         return cantHabitantes * consumoPromedio * cantDias;
-        
+
     }
-    
+
     private static String obtenerNombreMes(int numeroMes) {
-        
+
         String nombreMes = "";
-        
+
         switch (numeroMes) {
             case 1 -> nombreMes = "Eenero";
             case 2 -> nombreMes = "Febrero";
@@ -360,14 +377,14 @@ public class MetodosCiudad {
             case 11 -> nombreMes = "Noviembre";
             case 12 -> nombreMes = "Diciembre";
         }
-        
+
         return nombreMes;
     }
-    
+
     private static int obtenerCantDias(int numeroMes) {
-        
+
         int cantDias;
-        
+
         if (numeroMes == 1 || numeroMes == 3 || numeroMes == 5 || numeroMes == 7 || numeroMes == 8 || numeroMes == 10 ||
                 numeroMes == 12) {
             cantDias = 31;
@@ -378,9 +395,42 @@ public class MetodosCiudad {
                 cantDias = 28;
             }
         }
-        
+
         return cantDias;
-        
+
+    }
+
+    public static void generarListaCiudadesConsumo(ArbolAVL arbol) {
+        if (!arbol.esVacio()) {
+            // Se utilizo Treemap para ordenar los elementos de mayor a menor
+            // ya que si usabamos Heap + Lista, no podriamos almacenar el nombre de la ciudad.
+            // Y hashmap no guarda los elementos de forma ordenada.
+            TreeMap<Double, String> ciudadesOrdenadas = new TreeMap<>(Collections.reverseOrder());
+            System.out.println("Ingresar año: ");
+
+            int res = Integer.parseInt(sc.nextLine());
+            Ciudad el = (Ciudad) arbol.maximoElem();
+
+            while (!el.anioValido(res)) {
+                System.out.println("Ingresar un año valido: ");
+                res = Integer.parseInt(sc.nextLine());
+            }
+            Lista listaCiudades = arbol.listar();
+            double aux = 0.0;
+            for (int i = 1; i <= listaCiudades.longitud(); i++) {
+                Ciudad ciudad = (Ciudad) listaCiudades.recuperar(i);
+                for (int j = 1; j <= 12; j++) {
+                    aux = calcularVolumenAgua(ciudad, ciudad.getCantHabitantes(res, j), j);
+                }
+                ciudadesOrdenadas.put(aux, ciudad.getNombre());
+            }
+
+            for (Double key : ciudadesOrdenadas.keySet()) {
+                System.out.println(String.format("%.2f", key) + " " + ciudadesOrdenadas.get(key));
+            }
+
+        }
+
     }
 
     public static void mostrarCiudadesRango(ArbolAVL ciudades){
