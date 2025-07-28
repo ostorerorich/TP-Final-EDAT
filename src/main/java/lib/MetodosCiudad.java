@@ -3,6 +3,7 @@ package lib;
 import entidades.Ciudad;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
 import estructuras.grafos.Grafo;
+import estructuras.lineales.dinamicas.Lista;
 
 import java.io.File;
 import java.io.IOException;
@@ -380,5 +381,44 @@ public class MetodosCiudad {
         
         return cantDias;
         
+    }
+
+    public static void mostrarCiudadesRango(ArbolAVL ciudades){
+        Lista rangoCiudades = new Lista();
+        Lista ciudadesFiltradas = new Lista();
+        String minNomb, maxNomb;
+        double minVol, maxVol;
+        System.out.println("Ingrese el nombre minimo del rango: ");
+        minNomb = sc.nextLine().trim();
+        System.out.println("Ingrese el nombre maximo del rango: ");
+        maxNomb = sc.nextLine().trim();
+        System.out.println("Ingrese el volumen minimo de agua: ");
+        minVol = Double.parseDouble(sc.nextLine().trim());
+        System.out.println("Ingrese el volumen maximo: ");
+        maxVol = Double.parseDouble(sc.nextLine().trim());
+        rangoCiudades = ciudades.listarRango(minNomb, maxNomb);
+
+        if (!rangoCiudades.esVacia()){
+            int mes,anio;
+            System.out.println("Por favor, ingrese el anio");
+            anio = Integer.parseInt(sc.nextLine().trim());
+            System.out.println("Por favor, ingrese el numero del mes (1-12)");
+            mes = Integer.parseInt(sc.nextLine().trim());
+            for (int i=1; i<=rangoCiudades.longitud();i++){
+                Ciudad ciudadAux = (Ciudad) rangoCiudades.recuperar(i);
+                Integer habi = ciudadAux.getCantHabitantes(anio, mes);
+                if (habi!=null){
+                    Double volAgua = calcularVolumenAgua(ciudadAux, habi, mes);
+                    if (volAgua>=minVol && volAgua<=maxVol){
+                        ciudadesFiltradas.agregarElem(ciudadAux, ciudadesFiltradas.longitud()+1);
+                    }
+                }else {
+                    System.out.println("El anio o mes ingresado es incorrecto");
+                }
+            }
+        }else{
+            System.out.println("No se encontraron ciudades dentro del rango");
+        }
+        Log.mensaje(ciudadesFiltradas.toString()).print().guardar();
     }
 }

@@ -136,7 +136,7 @@ public class Main {
                 MetodosCiudad.mostrarCantHabitantesYConsumo(ciudades);
             }
             case 2 -> {
-                // --
+                MetodosCiudad.mostrarCiudadesRango(ciudades);
             }
             case 3 -> {}
             default -> System.out.println("Opcion invalida");
