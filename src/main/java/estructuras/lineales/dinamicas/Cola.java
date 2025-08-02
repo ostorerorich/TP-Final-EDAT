@@ -102,6 +102,7 @@ public class Cola {
         
     }
     
+    @Override
     public Cola clone(){
         
         Cola colaClonada;
@@ -132,6 +133,7 @@ public class Cola {
         
     }
     
+    @Override
     public String toString(){
         
         String elementos;

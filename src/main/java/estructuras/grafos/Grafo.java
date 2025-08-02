@@ -654,7 +654,7 @@ public class Grafo {
         
         // Agrega al nodo a la lista de nodos visitados y a la cola
         nodosVisitados.insertar(nodo.getElem(), nodosVisitados.longitud()+1);
-        cola.poner(nodo.getElem());
+        cola.poner(nodo);
         
         while (!cola.esVacia()) {
             // Se obtiene el nodo del frente de la cola para sacarlo de la misma y busca todos sus nodos adyacentes
