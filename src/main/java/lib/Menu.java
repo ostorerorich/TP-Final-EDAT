@@ -27,7 +27,7 @@ public class Menu {
                 int res = Integer.parseInt(sc.nextLine());
 
                 switch (res) {
-                    case 1 -> menuCiudades(ciudades, recorrido, sc);
+                    case 1 -> menuCiudades(ciudades, listadoTuberias, recorrido, sc);
                     case 2 -> menuTuberias(ciudades, recorrido, listadoTuberias, sc);
                     case 3 -> MetodosCiudad.agregarHabitantesCiudad(ciudades);
                     case 4 -> consultasCiudad(ciudades, recorrido, sc);
@@ -50,7 +50,7 @@ public class Menu {
         }
     }
 
-    private static void menuCiudades(ArbolAVL ciudades, Grafo recorrido, Scanner sc) {
+    private static void menuCiudades(ArbolAVL ciudades, Map<TuberiaKey, Tuberia> listadoTuberias, Grafo recorrido, Scanner sc) {
         try {
             System.out.println(String.format(
                     " %s - Alta ciudad\n %s - Baja Ciudad\n %s - Modificacion Ciudad\n %s - Listar Ciudades\n %s - Buscar Ciudad\n %s - Mostrar habitantes de una ciudad\n %s - Volver al menu principal",
@@ -64,7 +64,7 @@ public class Menu {
                 case 1 -> {
                     MetodosCiudad.agregarCiudadInput(ciudades, recorrido);
                 }
-                case 2 -> MetodosCiudad.eliminarCiudad(ciudades, recorrido);
+                case 2 -> MetodosCiudad.eliminarCiudad(ciudades, listadoTuberias, recorrido);
                 case 3 -> System.out.println("Modificacion Ciudad");
                 case 4 -> System.out.println("Listar Ciudades: " + ciudades.listar());
                 case 5 -> MetodosCiudad.buscarCiudad(ciudades);

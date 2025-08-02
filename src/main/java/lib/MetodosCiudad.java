@@ -1,6 +1,8 @@
 package lib;
 
 import entidades.Ciudad;
+import entidades.Tuberia;
+import entidades.TuberiaKey;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
 import estructuras.grafos.Grafo;
 import estructuras.lineales.dinamicas.Lista;
@@ -9,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.stream.Stream;
@@ -199,7 +203,7 @@ public class MetodosCiudad {
                 Integer.parseInt(nomenclatura.substring(2)) < 4000;
     }
 
-    public static void eliminarCiudad(ArbolAVL arbol, Grafo caminos) {
+    public static void eliminarCiudad(ArbolAVL arbol, Map<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
         System.out.println("Ingrese el nombre de la ciudad a eliminar:");
         String nombre = sc.nextLine().trim();
         if (nombre.isEmpty() || !nombre.matches(letras)) {
@@ -211,6 +215,18 @@ public class MetodosCiudad {
             if (ciudadEncontrada != null) {
                 arbol.eliminar(ciudad);
                 caminos.eliminarVertice(ciudadEncontrada.getNomenclatura());
+                
+                Iterator<Map.Entry<TuberiaKey, Tuberia>> iterador =  tuberias.entrySet().iterator();
+                
+                while (iterador.hasNext()) {
+                    Map.Entry<TuberiaKey, Tuberia> entrada = iterador.next();
+                    
+                    if (entrada.getKey().getNomenclaturaOrigen().equals(ciudadEncontrada.getNomenclatura()) ||
+                            entrada.getKey().getNomenclaturaDestino().equals(ciudadEncontrada.getNomenclatura())) {
+                        iterador.remove();
+                    }
+                }
+                
                 Log.mensaje("Ciudad " + ciudad.getNombre() + " eliminada del sistema.")
                         .print().guardar();
             } else {
