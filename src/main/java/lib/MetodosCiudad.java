@@ -9,9 +9,7 @@ import estructuras.lineales.dinamicas.Lista;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Year;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.stream.Stream;
@@ -24,15 +22,10 @@ public class MetodosCiudad {
     private static final String numeros = "^\\d+$";
     private static final String decimales = "^\\d+\\.\\d{2}$";
 
-    // TODO: agregar validaciones del archivo.
-    // TODO: Simplificar el codigo, crear un metodo generico para cargar los datos
-    // desde un archivo.
-
-    // Test NO
     public static void cargarCiudadesDesde(ArbolAVL arbol, Grafo caminos) throws IOException {
 
-        System.out.println("Cargando ciudades...");
-        File archivo = Load.cargarArchivo();
+        System.out.println(Color.aplicar(Color.MAGENTA, "Cargando ciudades..."));
+        File archivo = Load.cargarArchivo("Seleccione un archivo CSV de ciudades");
         if (archivo != null) {
             Log.mensaje("Cargando ciudades desde: " + archivo.getAbsolutePath())
                     .print().guardar();
@@ -387,11 +380,13 @@ public class MetodosCiudad {
 
         if (numeroMes == 1 || numeroMes == 3 || numeroMes == 5 || numeroMes == 7 || numeroMes == 8 || numeroMes == 10 ||
                 numeroMes == 12) {
-            // Devuelve la cantidad de días de los meses Enero, Marzo, Mayo, Julio, Agosto, Octubre y Diciembre
+            // Devuelve la cantidad de días de los meses Enero, Marzo, Mayo, Julio, Agosto,
+            // Octubre y Diciembre
             cantDias = 31;
         } else {
             if (numeroMes == 4 || numeroMes == 6 || numeroMes == 9 || numeroMes == 11) {
-                // Devuelve la cantidad de días de los meses Abril, Junio, Septiembre y Noviembre
+                // Devuelve la cantidad de días de los meses Abril, Junio, Septiembre y
+                // Noviembre
                 cantDias = 30;
             } else {
                 // Devuelve la cantidad de días del mes de Febrero
@@ -406,7 +401,8 @@ public class MetodosCiudad {
     public static void generarListaCiudadesConsumo(ArbolAVL arbol) {
         if (!arbol.esVacio()) {
             // Se utilizo Treemap para ordenar los elementos de mayor a menor
-            // ya que si usabamos Heap + Lista, no podriamos almacenar el nombre de la ciudad.
+            // ya que si usabamos Heap + Lista, no podriamos almacenar el nombre de la
+            // ciudad.
             // Y hashmap no guarda los elementos de forma ordenada.
             TreeMap<Double, String> ciudadesOrdenadas = new TreeMap<>(Collections.reverseOrder());
             System.out.println("Ingresar año: ");
@@ -436,7 +432,7 @@ public class MetodosCiudad {
 
     }
 
-    public static void mostrarCiudadesRango(ArbolAVL ciudades){
+    public static void mostrarCiudadesRango(ArbolAVL ciudades) {
         Lista rangoCiudades = new Lista();
         Lista ciudadesFiltradas = new Lista();
         Ciudad minNomb, maxNomb;
@@ -451,25 +447,25 @@ public class MetodosCiudad {
         maxVol = Double.parseDouble(sc.nextLine().trim());
         rangoCiudades = ciudades.listarRango(minNomb, maxNomb);
 
-        if (!rangoCiudades.esVacia()){
-            int mes,anio;
+        if (!rangoCiudades.esVacia()) {
+            int mes, anio;
             System.out.println("Por favor, ingrese el anio");
             anio = Integer.parseInt(sc.nextLine().trim());
             System.out.println("Por favor, ingrese el numero del mes (1-12)");
             mes = Integer.parseInt(sc.nextLine().trim());
-            for (int i=1; i<=rangoCiudades.longitud();i++){
+            for (int i = 1; i <= rangoCiudades.longitud(); i++) {
                 Ciudad ciudadAux = (Ciudad) rangoCiudades.recuperar(i);
                 Integer habi = ciudadAux.getCantHabitantes(anio, mes);
-                if (habi!=null){
+                if (habi != null) {
                     Double volAgua = calcularVolumenAgua(ciudadAux, habi, mes);
-                    if (volAgua>=minVol && volAgua<=maxVol){
-                        ciudadesFiltradas.insertar(ciudadAux.getNombre(),ciudadesFiltradas.longitud()+1);
+                    if (volAgua >= minVol && volAgua <= maxVol) {
+                        ciudadesFiltradas.insertar(ciudadAux.getNombre(), ciudadesFiltradas.longitud() + 1);
                     }
-                }else {
+                } else {
                     System.out.println("El anio o mes ingresado es incorrecto");
                 }
             }
-        }else{
+        } else {
             System.out.println("No se encontraron ciudades dentro del rango");
         }
         Log.mensaje(ciudadesFiltradas.toString()).print().guardar();

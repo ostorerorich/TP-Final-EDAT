@@ -24,4 +24,8 @@ public enum Color {
     public static String aplicar(Color color, String texto) {
         return color.get() + texto + RESET.get();
     }
+
+    public static String aplicar(String texto) {
+        return VERDE.get() + texto + RESET.get();
+    }
 }

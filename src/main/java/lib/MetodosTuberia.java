@@ -29,7 +29,7 @@ public class MetodosTuberia {
                     .print()
                     .guardar();
         } else {
-            File archivo = Load.cargarArchivo();
+            File archivo = Load.cargarArchivo("Seleccione un archivo CSV de tuberías");
             if (archivo != null) {
                 Log.mensaje("Cargando tuberias desde: " + archivo.getAbsolutePath()).print().guardar();
 
@@ -59,7 +59,8 @@ public class MetodosTuberia {
                                                     destino.getNomenclatura(), diametro, caudalMax, caudalMin,
                                                     Estado.ACTIVO);
                                             tuberias.put(key, tuberia);
-                                            caminos.insertarArco(origen.getNomenclatura(), destino.getNomenclatura(), tuberia.getCaudalMax());
+                                            caminos.insertarArco(origen.getNomenclatura(), destino.getNomenclatura(),
+                                                    tuberia.getCaudalMax());
                                             Log.mensaje("Tubería cargada: " + tuberia).print().guardar();
                                         }
                                     }
@@ -79,14 +80,14 @@ public class MetodosTuberia {
 
         int estadoSeleccionado = 0;
 
-        while(loop){
+        while (loop) {
             System.out.println("1 - ACTIVO" +
                     "\n2 - REPARACION" +
                     "\n3 - DISENIO" +
                     "\n4 - INACTIVO");
 
             estadoSeleccionado = Integer.parseInt(sc.nextLine().trim());
-            if(estadoSeleccionado >= 1 && estadoSeleccionado <= 4){
+            if (estadoSeleccionado >= 1 && estadoSeleccionado <= 4) {
                 loop = false;
             } else {
                 System.out.println("Opción inválida, por favor intente nuevamente.");
@@ -101,7 +102,6 @@ public class MetodosTuberia {
             default -> Estado.ACTIVO;
         };
     }
-
 
     public static void modificarTuberia(HashMap<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
 
@@ -126,9 +126,7 @@ public class MetodosTuberia {
                     System.out.print("Ingrese el nuevo caudal mínimo: ");
                     int caudalMin = Integer.parseInt(sc.nextLine().trim());
 
-
                     tuberia.setEstado(obtenerEstadoTuberia());
-
 
                     if (diametro <= 0 || caudalMin <= 0 || caudalMax <= 0 || caudalMin >= caudalMax) {
                         Log.mensaje("Error: Valores de diámetro o caudales inválidos.").print().guardar();
@@ -219,7 +217,8 @@ public class MetodosTuberia {
 
                     tuberias.put(key, tuberia);
 
-                    caminos.insertarArco(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura(), tuberia.getCaudalMax());
+                    caminos.insertarArco(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura(),
+                            tuberia.getCaudalMax());
 
                     Log.mensaje("Tubería agregada: " + tuberia).print().guardar();
                 }
@@ -268,14 +267,15 @@ public class MetodosTuberia {
             if (ciudadDestino != null) {
                 nomenclaturaOrigen = ciudadOrigen.getNomenclatura();
                 nomenclaturaDestino = ciudadDestino.getNomenclatura();
-                
+
                 // Verifica que la nomenclatura de ambas ciudades no sean las mismas
                 if (!nomenclaturaOrigen.equals(nomenclaturaDestino)) {
                     caminoCaudalPlenoMinimo = caminos.caminoCaudalPlenoMinimo(nomenclaturaOrigen, nomenclaturaDestino);
 
                     // Verifica que exista un camino entre la ciudad origen y destino
                     if (!caminoCaudalPlenoMinimo.esVacia()) {
-                        estadoCamino = obtenerEstadoCamino(caminoCaudalPlenoMinimo, tuberias); // Obtiene el estado del camino
+                        estadoCamino = obtenerEstadoCamino(caminoCaudalPlenoMinimo, tuberias); // Obtiene el estado del
+                                                                                               // camino
 
                         // Resultados
                         Log.mensaje("Camino desde " + nomenclaturaOrigen + " hasta " +
@@ -307,7 +307,7 @@ public class MetodosTuberia {
         pos1 = 1; // Posicion de la ciudad1
         pos2 = 2; // Posicion de la ciudad2
         longitud = camino.longitud(); // Se guarda la longitud para no estar calculandola constantemente en el
-                                              // while
+                                      // while
         estado = "Activo"; // Estado por defecto
 
         while (pos2 <= longitud && !terminar) {
@@ -332,7 +332,7 @@ public class MetodosTuberia {
                         estado = "Reparación";
                     }
                 }
-                
+
             }
 
             pos1 += 1;
@@ -356,7 +356,7 @@ public class MetodosTuberia {
         return tuberia;
 
     }
-    
+
     public static void obtenerCaminoMasCorto(ArbolAVL ciudades, Grafo caminos, HashMap<TuberiaKey, Tuberia> tuberias) {
 
         Ciudad ciudadOrigen, ciudadDestino;
@@ -375,11 +375,11 @@ public class MetodosTuberia {
             if (ciudadDestino != null) {
                 nomenclaturaOrigen = ciudadOrigen.getNomenclatura();
                 nomenclaturaDestino = ciudadDestino.getNomenclatura();
-                
+
                 // Verifica que la nomenclatura de ambas ciudades no sean las mismas
                 if (!nomenclaturaOrigen.equals(nomenclaturaDestino)) {
                     caminoMasCorto = caminos.caminoMasCorto(nomenclaturaOrigen, nomenclaturaDestino);
-                    
+
                     // Verifica que exista un camino entre la ciudad origen y destino
                     if (!caminoMasCorto.esVacia()) {
                         estadoCamino = obtenerEstadoCamino(caminoMasCorto, tuberias); // Obtiene el estado del camino

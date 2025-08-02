@@ -19,13 +19,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        /*
-         * MetodosCiudad.cargarCiudadesDesde(ciudades, recorrido);
-         * MetodosTuberia.cargarTuberiasDesde(ciudades, recorrido, listadoTuberias);
-         * 
-         * listadoTuberias.forEach((k, v) -> System.out.println(k + " = " + v +
-         * " metros"));
-         */
+        MetodosCiudad.cargarCiudadesDesde(ciudades, recorrido);
+        MetodosTuberia.cargarTuberiasDesde(ciudades, recorrido, listadoTuberias);
+
+        listadoTuberias.forEach((k, v) -> System.out.println(k + " = " + v +
+                " metros"));
 
         menu();
 
@@ -64,9 +62,9 @@ public class Main {
 
             }
         } catch (NumberFormatException e) {
-            System.out.println("Error: Entrada invalida. Por favor, ingrese un numero.");
+            System.out.println(Color.aplicar(Color.ROJO, "Error: Debe ingresar un numero valido."));
         } catch (Exception e) {
-            System.out.println("Error inesperado: " + e.getMessage());
+            System.out.println(Color.aplicar(Color.ROJO, "Error: " + e.getMessage()));
         }
     }
 
