@@ -2,7 +2,7 @@ import entidades.Tuberia;
 import entidades.TuberiaKey;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
 import estructuras.grafos.Grafo;
-
+import lib.Color;
 import lib.MetodosCiudad;
 import lib.MetodosTuberia;
 
@@ -18,15 +18,16 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
+
         /*
          * MetodosCiudad.cargarCiudadesDesde(ciudades, recorrido);
          * MetodosTuberia.cargarTuberiasDesde(ciudades, recorrido, listadoTuberias);
          * 
          * listadoTuberias.forEach((k, v) -> System.out.println(k + " = " + v +
          * " metros"));
-         * 
-         * menu();
          */
+
+        menu();
 
     }
 
@@ -34,31 +35,29 @@ public class Main {
         boolean fin = false;
         try {
             while (!fin) {
-                System.out.println("""
-                        1 - Menu Ciudades
-                        2 - Modificacion Tuberia
-                        3 - Alta cantidad Habitantes
-                        4 - Consulta Ciudad
-                        5 - Consulta Transporte
-                        6 - Listado de ciudades
-                        7 - Mostrar sistema (Debug)
-                        0 - Salir del programa""");
+                System.out.println(String.format(
+                        " %s - Menu Ciudades\n %s - Modificacion Tuberia\n %s - Alta cantidad Habitantes\n %s - Consulta Ciudad\n %s - Consulta Transporte\n %s - Listado de ciudades\n %s - Mostrar sistema (Debug)\n %s - Salir del programa",
+                        Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3"),
+                        Color.aplicar(Color.AZUL, "4"), Color.aplicar(Color.AZUL, "5"), Color.aplicar(Color.AZUL, "6"),
+                        Color.aplicar(Color.AZUL, "7"), Color.aplicar(Color.AZUL, "0")));
 
                 // next line es para que no se quede en memoria el enter y lea la linea de
                 // manera correcta
-
+                System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
                 int res = Integer.parseInt(sc.nextLine());
+
                 switch (res) {
                     case 1 -> menuCiudades();
                     case 2 -> menuTuberias();
                     case 3 -> MetodosCiudad.agregarHabitantesCiudad(ciudades);
                     case 4 -> consultasCiudad();
                     case 5 -> consultasTransporte();
-                    case 6 -> System.out.println("Listado de ciudades: " + ciudades.listar());
+                    case 6 ->
+                        System.out.println(Color.aplicar(Color.AZUL, "Listado de ciudades :") + ciudades.listar());
                     case 7 -> mostrarSistema();
                     case 0 -> {
                         fin = true;
-                        System.out.println("Saliendo del programa...");
+                        System.out.println(Color.aplicar(Color.ROJO, "Saliendo del programa..."));
                     }
                     default -> System.out.println("Opcion invalida, intente nuevamente.");
                 }
@@ -72,14 +71,13 @@ public class Main {
     }
 
     private static void menuCiudades() {
-        System.out.println("""
-                1 - Alta Ciudad
-                2 - Baja Ciudad
-                3 - Modificacion Ciudad
-                4 - Listar Ciudades
-                5 - Buscar Ciudad
-                6 - Mostrar habitantes de una ciudad
-                7 - Volver al menu principal""");
+        System.out.println(String.format(
+                " %s - Alta ciudad\n %s - Baja Ciudad\n %s - Modificacion Ciudad\n %s - Listar Ciudades\n %s - Buscar Ciudad\n %s - Mostrar habitantes de una ciudad\n %s - Volver al menu principal",
+                Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3"),
+                Color.aplicar(Color.AZUL, "4"), Color.aplicar(Color.AZUL, "5"), Color.aplicar(Color.AZUL, "6"),
+                Color.aplicar(Color.AZUL, "7")));
+
+        System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
         int res = Integer.parseInt(sc.nextLine());
         switch (res) {
             case 1 -> {
@@ -99,13 +97,11 @@ public class Main {
     }
 
     private static void menuTuberias() {
-        System.out.println("""
-                1 - Alta Tuberia
-                2 - Baja Tuberia
-                3 - Modificacion Tuberia
-                4 - Listar Tuberias
-                5 - Buscar Tuberia
-                6 - Volver al menu principal""");
+        System.out.println(String.format(
+                " %s - Agregar Tuberia\n %s - Eliminar Tuberia\n %s - Modificar Tuberia\n %s - Mostrar Tuberias\n %s - Buscar Tuberia\n %s - Volver al menu principal",
+                Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3"),
+                Color.aplicar(Color.AZUL, "4"), Color.aplicar(Color.AZUL, "5"), Color.aplicar(Color.AZUL, "6")));
+        System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
         int res = Integer.parseInt(sc.nextLine());
         switch (res) {
             case 1 -> MetodosTuberia.agregarTuberia(listadoTuberias, ciudades, recorrido);
@@ -121,12 +117,10 @@ public class Main {
 
     private static void consultasCiudad() {
 
-        System.out.println("1 - Obtener la cantidad de habitantes y el volumen de agua que se habria distribuido"
-                + " en una ciudad en un mes y anio");
-        System.out.println("2 - Obtener todas las ciudades cuyo nombre este en un rango que en un mes y anio hayan"
-                + " consumido un volumen de agua en un rango");
-        System.out.println("3 - Volver al menu principal");
-
+        System.out.println(String.format(
+                " %s - Obtener cantidad de habitantes y volumen de agua distribuido en una ciudad en un mes y anio\n %s - Obtener ciudades por rango de consumo en un mes y anio\n %s - Volver al menu principal",
+                Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3")));
+        System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
         int resultado = Integer.parseInt(sc.nextLine());
 
         switch (resultado) {
@@ -145,11 +139,10 @@ public class Main {
 
     private static void consultasTransporte() {
 
-        System.out.println("1 - Obtener camino que llegue de una ciudad A a una ciudad B tal que el caudal pleno del " +
-                "camino completo sea el minimo entre todos los caminos posibles");
-        System.out.println(
-                "2 - Obtener el camino que llegue de una ciudad A a una ciudad B pasando por la minima cantidad de ciudades");
-        System.out.println("3 - Volver al menu principal");
+        System.out.println(String.format(
+                " %s - Obtener camino que llegue de una ciudad A a una ciudad B tal que el caudal pleno del camino completo sea el minimo entre todos los caminos posibles\n %s - Obtener el camino que llegue de una ciudad A a una ciudad B pasando por la minima cantidad de ciudades\n %s - Volver al menu principal",
+                Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3")));
+        System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
 
         int resultado = Integer.parseInt(sc.nextLine());
 
