@@ -8,22 +8,20 @@ import lib.MetodosTuberia;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
 
     private static ArbolAVL ciudades = new ArbolAVL();
     private static Grafo recorrido = new Grafo();
-    private static HashMap<TuberiaKey, Tuberia> listadoTuberias = new HashMap<TuberiaKey, Tuberia>();
+    private static Map<TuberiaKey, Tuberia> listadoTuberias = new HashMap<TuberiaKey, Tuberia>();
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
 
         MetodosCiudad.cargarCiudadesDesde(ciudades, recorrido);
         MetodosTuberia.cargarTuberiasDesde(ciudades, recorrido, listadoTuberias);
-
-        listadoTuberias.forEach((k, v) -> System.out.println(k + " = " + v +
-                " metros"));
 
         menu();
 
@@ -165,6 +163,9 @@ public class Main {
 
         System.out.println("Grafo: ");
         System.out.println(recorrido.toString());
+
+        listadoTuberias.forEach((k, v) -> System.out.println(k + " = " + v +
+                " metros"));
 
     }
 

@@ -117,9 +117,6 @@ public class Ciudad implements Comparable<Ciudad> {
         return res;
     }
 
-
-
-
     public String obtenerTodosLosHabitantes() {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<Integer, Integer[]> entry : habitantes.entrySet()) {
@@ -136,12 +133,8 @@ public class Ciudad implements Comparable<Ciudad> {
 
     @Override
     public String toString() {
-        return "Ciudad{" +
-                "nombre='" + nombre + '\'' +
-                ", nomenclatura='" + nomenclatura + '\'' +
-                ", superficie=" + superficie +
-                ", cantM3Persona=" + cantM3Persona +
-                '}';
+        return String.format("Ciudad: { nombre= %s, nomenclatura= %s, superficie= %d, cantM3Persona= %.2f }", nombre,
+                nomenclatura, superficie, cantM3Persona);
     }
 
     @Override

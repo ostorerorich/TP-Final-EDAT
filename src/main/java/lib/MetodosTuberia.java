@@ -11,8 +11,7 @@ import estructuras.grafos.Grafo;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
-
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -20,7 +19,7 @@ public class MetodosTuberia {
 
     private final static Scanner sc = new Scanner(System.in);
 
-    public static void cargarTuberiasDesde(ArbolAVL arbol, Grafo caminos, HashMap<TuberiaKey, Tuberia> tuberias)
+    public static void cargarTuberiasDesde(ArbolAVL arbol, Grafo caminos, Map<TuberiaKey, Tuberia> tuberias)
             throws IOException {
 
         if (arbol.esVacio()) {
@@ -103,7 +102,7 @@ public class MetodosTuberia {
         };
     }
 
-    public static void modificarTuberia(HashMap<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
+    public static void modificarTuberia(Map<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
 
         if (!tuberias.isEmpty()) {
             System.out.println("Seleccione la tubería a modificar:");
@@ -150,7 +149,7 @@ public class MetodosTuberia {
 
     }
 
-    public static void eliminarTuberia(HashMap<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
+    public static void eliminarTuberia(Map<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
         if (!tuberias.isEmpty()) {
             System.out.println("Seleccione la tubería a eliminar:");
             mostrarTuberias(tuberias);
@@ -176,7 +175,7 @@ public class MetodosTuberia {
         }
     }
 
-    public static void mostrarTuberias(HashMap<TuberiaKey, Tuberia> tuberias) {
+    public static void mostrarTuberias(Map<TuberiaKey, Tuberia> tuberias) {
         if (!tuberias.isEmpty()) {
             System.out.println("Listado de tuberías:");
             tuberias.forEach((k, v) -> System.out.println(k + " = " + v));
@@ -185,7 +184,7 @@ public class MetodosTuberia {
         }
     }
 
-    public static void agregarTuberia(HashMap<TuberiaKey, Tuberia> tuberias, ArbolAVL arbol, Grafo caminos) {
+    public static void agregarTuberia(Map<TuberiaKey, Tuberia> tuberias, ArbolAVL arbol, Grafo caminos) {
         System.out.print("Ingrese la ciudad de origen: ");
         String origen = sc.nextLine().trim();
         System.out.print("Ingrese la ciudad de destino: ");
@@ -228,7 +227,7 @@ public class MetodosTuberia {
 
     }
 
-    public static void buscarTuberia(HashMap<TuberiaKey, Tuberia> tuberias) {
+    public static void buscarTuberia(Map<TuberiaKey, Tuberia> tuberias) {
         System.out.print("Ingrese la nomenclatura de origen y destino (ej: AB3001-CD3002): ");
         String input = sc.nextLine().trim();
         String[] partes = input.split("-");
@@ -249,7 +248,7 @@ public class MetodosTuberia {
     }
 
     public static void obtenerCaminoDeCaudalPlenoMinimo(ArbolAVL ciudades, Grafo caminos,
-            HashMap<TuberiaKey, Tuberia> tuberias) {
+            Map<TuberiaKey, Tuberia> tuberias) {
 
         Ciudad ciudadOrigen, ciudadDestino;
         String ciudadOrigenNombre, ciudadDestinoNombre, nomenclaturaOrigen, nomenclaturaDestino, estadoCamino;
@@ -297,7 +296,7 @@ public class MetodosTuberia {
         }
     }
 
-    private static String obtenerEstadoCamino(Lista camino, HashMap<TuberiaKey, Tuberia> tuberias) {
+    private static String obtenerEstadoCamino(Lista camino, Map<TuberiaKey, Tuberia> tuberias) {
 
         int pos1, pos2, longitud;
         String estado;
@@ -344,7 +343,7 @@ public class MetodosTuberia {
     }
 
     private static Tuberia obtenerTuberia(String nomenclaturaCiudad1, String nomenclaturaCiudad2,
-            HashMap<TuberiaKey, Tuberia> tuberias) {
+            Map<TuberiaKey, Tuberia> tuberias) {
 
         TuberiaKey key;
         Tuberia tuberia;
@@ -357,7 +356,7 @@ public class MetodosTuberia {
 
     }
 
-    public static void obtenerCaminoMasCorto(ArbolAVL ciudades, Grafo caminos, HashMap<TuberiaKey, Tuberia> tuberias) {
+    public static void obtenerCaminoMasCorto(ArbolAVL ciudades, Grafo caminos, Map<TuberiaKey, Tuberia> tuberias) {
 
         Ciudad ciudadOrigen, ciudadDestino;
         String ciudadOrigenNombre, ciudadDestinoNombre, nomenclaturaOrigen, nomenclaturaDestino, estadoCamino;
