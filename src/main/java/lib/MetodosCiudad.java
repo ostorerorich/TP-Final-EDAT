@@ -2,7 +2,6 @@ package lib;
 
 import entidades.Ciudad;
 import estructuras.conjuntistas.dinamicas.ArbolAVL;
-import estructuras.conjuntistas.estaticas.HeapMax;
 import estructuras.grafos.Grafo;
 import estructuras.lineales.dinamicas.Lista;
 
