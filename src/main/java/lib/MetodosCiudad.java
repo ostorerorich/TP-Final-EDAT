@@ -387,11 +387,14 @@ public class MetodosCiudad {
 
         if (numeroMes == 1 || numeroMes == 3 || numeroMes == 5 || numeroMes == 7 || numeroMes == 8 || numeroMes == 10 ||
                 numeroMes == 12) {
+            // Devuelve la cantidad de días de los meses Enero, Marzo, Mayo, Julio, Agosto, Octubre y Diciembre
             cantDias = 31;
         } else {
             if (numeroMes == 4 || numeroMes == 6 || numeroMes == 9 || numeroMes == 11) {
+                // Devuelve la cantidad de días de los meses Abril, Junio, Septiembre y Noviembre
                 cantDias = 30;
             } else {
+                // Devuelve la cantidad de días del mes de Febrero
                 cantDias = 28;
             }
         }

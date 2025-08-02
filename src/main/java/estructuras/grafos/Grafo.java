@@ -1,5 +1,6 @@
 package estructuras.grafos;
 
+import estructuras.lineales.dinamicas.Cola;
 import estructuras.lineales.dinamicas.Lista;
 
 public class Grafo {
@@ -514,6 +515,170 @@ public class Grafo {
     
     ///////////////////////////////////////
     
+    public Lista caminoMasLargo(Object origen, Object destino){
+        
+        Lista caminoActual, caminoMasLargo;
+        NodoVert nodoOrigen, nodoDestino, nodoVertAux;
+        
+        caminoMasLargo = new Lista();
+        caminoActual = new Lista();
+        nodoOrigen = null;
+        nodoDestino = null;
+        nodoVertAux = this.inicio;
+        
+        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+            // Busca el nodo origen y el nodo destino en el grafo
+            if (nodoVertAux.getElem().equals(origen)) {
+                nodoOrigen = nodoVertAux;
+            }
+            
+            if (nodoVertAux.getElem().equals(destino)){
+                nodoDestino = nodoVertAux;
+            }
+            
+            nodoVertAux = nodoVertAux.getSigVertice();
+        }
+        
+        if (nodoOrigen != null && nodoDestino != null) {
+            // Si ambos nodos existen, verifica cual (si hay) es el camino más largo entre ambos
+            caminoMasLargo = buscarCaminoMasLargo(nodoOrigen, destino, caminoActual, caminoMasLargo);
+            
+        }
+        
+        return caminoMasLargo;
+        
+    }
+    
+    private Lista buscarCaminoMasLargo(NodoVert origen, Object destino, Lista caminoActual, Lista caminoMasLargo){
+        
+        NodoVert nodoVertAux;
+        NodoAdy nodoAdyAux;
+        
+        // Ingresa el elemento del nodo en la lista para ir formando el camino
+        caminoActual.insertar(origen.getElem(), caminoActual.longitud()+1);
+        
+        if (origen.getElem().equals(destino)) {
+            // Caso base: se encontró un camino entre el nodo origen y el nodo destino
+            if (caminoActual.longitud() > caminoMasLargo.longitud()) {
+                // El nuevo camino es más largo que el último camino más largo encontrado o es el primero
+                caminoMasLargo = caminoActual.clone();
+            }
+        } else {
+            nodoAdyAux = origen.getPrimerAdy();
+            
+            while (nodoAdyAux != null) {
+                // Caso recursivo: busca entre los nodos adyacentes del nodo origen y sus derivados si existe un
+                // camino entre él y el nodo destino
+                nodoVertAux = nodoAdyAux.getVertice();
+                
+                if (caminoActual.localizar(nodoVertAux.getElem()) < 0) {
+                    // Si el nuevo nodo a visitar no fue visitado antes, se hace una llamada recursiva
+                    caminoMasLargo = buscarCaminoMasLargo(nodoVertAux, destino, caminoActual, caminoMasLargo);
+                    caminoActual.eliminar(caminoActual.longitud()); // Elimina el último elemento de la lista
+                }
+                
+                nodoAdyAux = nodoAdyAux.getSigAdyacente();
+            }
+            
+        }
+        
+        return caminoMasLargo;
+        
+    }
+    
+    ///////////////////////////////////////
+    
+    public Lista listarEnProfundidad(){
+        
+        Lista nodosVisitados = new Lista();
+        NodoVert nodoVertAux = this.inicio;
+        
+        while (nodoVertAux != null) {
+            // Si el nodo existe y no fue visitado, se hace un recorrido en profundidad desde ese nodo
+            if (nodosVisitados.localizar(nodoVertAux.getElem()) < 0) {
+                listarEnProfundidadAux(nodoVertAux, nodosVisitados);
+            }
+            nodoVertAux = nodoVertAux.getSigVertice();
+        }
+        
+        return nodosVisitados;
+        
+    }
+    
+    private void listarEnProfundidadAux(NodoVert nodo, Lista nodosVisitados){
+        
+        NodoAdy nodoAdyAux;
+        
+        if (nodo != null) {
+            // Agrega al nodo a la lista de nodos visitados
+            nodosVisitados.insertar(nodo.getElem(), nodosVisitados.longitud()+1);
+            nodoAdyAux = nodo.getPrimerAdy();
+            
+            while (nodoAdyAux != null) {
+                // Si el nodo tiene nodos adyacentes, se hace un recorrido en profundidad desde sus nodos adyacentes
+                // no visitados
+                if (nodosVisitados.localizar(nodoAdyAux.getVertice().getElem()) < 0) {
+                    listarEnProfundidadAux(nodoAdyAux.getVertice(), nodosVisitados);
+                }
+                
+                nodoAdyAux = nodoAdyAux.getSigAdyacente();
+            }
+        }
+        
+    }
+    
+    ///////////////////////////////////////
+    
+    public Lista listarEnAnchura(){
+        
+        Lista nodosVisitados = new Lista();
+        NodoVert nodoVertAux = this.inicio;
+        
+        while (nodoVertAux != null) {
+            // Si el nodo existe y no fue visitado, se hace un recorrido en anchura desde ese nodo
+            if (nodosVisitados.localizar(nodoVertAux.getElem()) < 0) {
+                listarEnAnchuraAux(nodoVertAux, nodosVisitados);
+            }
+            nodoVertAux = nodoVertAux.getSigVertice();
+        }
+        
+        return nodosVisitados;
+        
+    }
+    
+    private void listarEnAnchuraAux(NodoVert nodo, Lista nodosVisitados){
+        
+        Cola cola = new Cola();
+        NodoVert nodoVertAux;
+        NodoAdy nodoAdyAux;
+        
+        // Agrega al nodo a la lista de nodos visitados y a la cola
+        nodosVisitados.insertar(nodo.getElem(), nodosVisitados.longitud()+1);
+        cola.poner(nodo.getElem());
+        
+        while (!cola.esVacia()) {
+            // Se obtiene el nodo del frente de la cola para sacarlo de la misma y busca todos sus nodos adyacentes
+            nodoVertAux = (NodoVert) cola.obtenerFrente();
+            cola.sacar();
+            nodoAdyAux = nodoVertAux.getPrimerAdy();
+            
+            while (nodoAdyAux != null) {
+                // Si el nodo tiene nodos adyacentes, los que no fueron visitados los agrega a la lista de nodos
+                // visitados y a la cola para que después de que todos hayan sido visitados, se haga un recorrido
+                // en anchura desde ellos
+                if (nodosVisitados.localizar(nodoAdyAux.getVertice().getElem()) < 0) {
+                    nodosVisitados.insertar(nodoAdyAux.getVertice().getElem(), nodosVisitados.longitud()+1);
+                    cola.poner(nodoAdyAux.getVertice());
+                }
+                
+                nodoAdyAux = nodoAdyAux.getSigAdyacente();
+            }
+        }
+        
+    }
+    
+    ///////////////////////////////////////
+    
     public Lista caminoCaudalPlenoMinimo(Object origen, Object destino){
         
         Lista caminoElegido, camino;
@@ -613,6 +778,72 @@ public class Grafo {
         // Como Java utiliza un Sistema Garbage Collector, elimina en memoria todas las posiciones a las cuales ya
         // no se tiene acceso
         this.inicio = null;
+    }
+    
+    ///////////////////////////////////////
+    
+    @Override
+    public Grafo clone(){
+        
+        Grafo grafoClon = new Grafo();
+        NodoVert nodoVertAux, nodoVertClon, nodoVertClonAux;
+        NodoAdy nodoAdyAux, nodoAdyClon;
+        
+        nodoVertAux = this.inicio;
+
+        if (nodoVertAux != null) {
+            grafoClon.inicio = new NodoVert(nodoVertAux.getElem(), null, null);
+            nodoVertAux = nodoVertAux.getSigVertice();
+            nodoVertClon = grafoClon.inicio;
+            
+            while (nodoVertAux != null) {
+                nodoVertClon.setSigVertice(new NodoVert(nodoVertAux.getElem(), null, null));
+                nodoVertClon = nodoVertClon.getSigVertice();
+                nodoVertAux = nodoVertAux.getSigVertice();
+            }
+            
+            nodoVertAux = this.inicio;
+            nodoVertClon = grafoClon.inicio;
+            
+            while (nodoVertAux != null) {
+                
+                    nodoAdyAux = nodoVertAux.getPrimerAdy();
+                    nodoVertClonAux = grafoClon.inicio;
+
+                    while (!nodoVertClonAux.getElem().equals(nodoAdyAux.getVertice().getElem())) {
+                        nodoVertClonAux = nodoVertClonAux.getSigVertice();
+                    }
+
+                    nodoVertClon.setPrimerAdy(new NodoAdy(nodoVertClonAux, null, nodoAdyAux.getEtiqueta()));
+
+                    nodoAdyAux = nodoAdyAux.getSigAdyacente();
+                    nodoAdyClon = nodoVertClon.getPrimerAdy();
+
+                    while (nodoAdyAux != null) {
+                        nodoVertClonAux = grafoClon.inicio;
+
+                        while (!nodoVertClonAux.getElem().equals(nodoAdyAux.getVertice().getElem())) {
+                            nodoVertClonAux = nodoVertClonAux.getSigVertice();
+                        }
+
+                        nodoAdyClon.setSigAdyacente(new NodoAdy(nodoVertClonAux, null, nodoAdyAux.getEtiqueta()));
+
+                        nodoAdyAux = nodoAdyAux.getSigAdyacente();
+                        nodoAdyClon = nodoAdyClon.getSigAdyacente();
+                    }
+                
+                
+                nodoVertAux = nodoVertAux.getSigVertice();
+                nodoVertClon = nodoVertClon.getSigVertice();
+            
+            }
+            
+            
+            
+        }
+        
+        return grafoClon;
+        
     }
     
     ///////////////////////////////////////
