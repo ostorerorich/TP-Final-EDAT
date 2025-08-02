@@ -480,15 +480,16 @@ public class Grafo {
                 // camino entre él y el nodo destino
                 nodoVertAux = nodoAdyAux.getVertice();
                 
-                if (caminoActual.localizar(nodoVertAux.getElem()) < 0) {
+                // Verifica si sigue buscando por ese nodo, es decir, que la longitud del camino actual sea menor y uno
+                // menos que la del camino más corto encontrado hasta ahora
+                buscar = seguirBuscandoCamino(caminoActual.longitud(), caminoMasCorto.longitud());
+                
+                if (buscar && caminoActual.localizar(nodoVertAux.getElem()) < 0) {
                     // Si el nuevo nodo a visitar no fue visitado antes, se hace una llamada recursiva
                     caminoMasCorto = buscarCaminoMasCorto(nodoVertAux, destino, caminoActual, caminoMasCorto);
                     caminoActual.eliminar(caminoActual.longitud()); // Elimina el último elemento de la lista
                 }
-                
-                // Verifica si sigue buscando por ese nodo
-                buscar = seguirBuscandoCamino(caminoActual.longitud(), caminoMasCorto.longitud());
-                
+
                 nodoAdyAux = nodoAdyAux.getSigAdyacente();
             }
             
