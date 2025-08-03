@@ -35,28 +35,32 @@ public class ArbolAVL {
     }
 
     private NodoAVL insertarAux(NodoAVL nodo, Comparable elem) {
-
+        boolean inserto = false;
         if (elem.compareTo(nodo.getElem()) < 0) {
             if (nodo.getIzquierdo() == null) {
                 nodo.setIzquierdo(new NodoAVL(elem));
             } else {
                 nodo.setIzquierdo(insertarAux(nodo.getIzquierdo(), elem));
             }
+            inserto = true;
         } else if (elem.compareTo(nodo.getElem()) > 0) {
             if (nodo.getDerecho() == null) {
                 nodo.setDerecho(new NodoAVL(elem));
             } else {
                 nodo.setDerecho(insertarAux(nodo.getDerecho(), elem));
             }
+            inserto = true;
         }
 
-        nodo.recalcularAltura();
-        int balance = balance(nodo);
-        if (Math.abs(balance) > 1) {
-            nodo = balancear(nodo, balance);
+        if (inserto) {
+            nodo.recalcularAltura();
+            int balance = balance(nodo);
+            if (Math.abs(balance) > 1) {
+                nodo = balancear(nodo, balance);
+            }
         }
 
-        return nodo;
+        return inserto ? nodo : null;
     }
 
     public boolean eliminar(Comparable elem) {

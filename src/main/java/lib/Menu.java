@@ -16,14 +16,14 @@ public class Menu {
         try {
             while (!fin) {
                 System.out.println(String.format(
-                        " %s - Menu Ciudades\n %s - Modificacion Tuberia\n %s - Alta cantidad Habitantes\n %s - Consulta Ciudad\n %s - Consulta Transporte\n %s - Listado de ciudades\n %s - Mostrar sistema (Debug)\n %s - Salir del programa",
+                        " %s - Menu Ciudades\n %s - Modificacion Tuberia\n %s - Alta cantidad Habitantes\n %s - Consulta Ciudad\n %s - Consulta Transporte\n %s - Listado de ciudades\n %s - Mostrar sistema (Debug)\n %s - Salir del programa\n",
                         Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3"),
                         Color.aplicar(Color.AZUL, "4"), Color.aplicar(Color.AZUL, "5"), Color.aplicar(Color.AZUL, "6"),
                         Color.aplicar(Color.AZUL, "7"), Color.aplicar(Color.AZUL, "0")));
 
                 // next line es para que no se quede en memoria el enter y lea la linea de
                 // manera correcta
-                System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
+                Color.printWar("Ingrese una opcion:");
                 int res = Integer.parseInt(sc.nextLine());
 
                 switch (res) {
@@ -37,20 +37,21 @@ public class Menu {
                     case 7 -> mostrarSistema(ciudades, recorrido, listadoTuberias);
                     case 0 -> {
                         fin = true;
-                        System.out.println(Color.aplicar(Color.ROJO, "Saliendo del programa..."));
+                        Color.printErr("Saliendo del programa...");
                     }
-                    default -> System.out.println("Opcion invalida, intente nuevamente.");
+                    default -> Color.printErr("Opcion invalida, por favor intente nuevamente.");
                 }
 
             }
         } catch (NumberFormatException e) {
-            System.out.println(Color.aplicar(Color.ROJO, "Error: Debe ingresar un numero valido."));
+            Color.printErr("Error: Debe ingresar un numero valido.");
         } catch (Exception e) {
-            System.out.println(Color.aplicar(Color.ROJO, "Error: " + e.getMessage()));
+            Color.printErr("Error: " + e.getMessage());
         }
     }
 
-    private static void menuCiudades(ArbolAVL ciudades, Map<TuberiaKey, Tuberia> listadoTuberias, Grafo recorrido, Scanner sc) {
+    private static void menuCiudades(ArbolAVL ciudades, Map<TuberiaKey, Tuberia> listadoTuberias, Grafo recorrido,
+            Scanner sc) {
         try {
             System.out.println(String.format(
                     " %s - Alta ciudad\n %s - Baja Ciudad\n %s - Modificacion Ciudad\n %s - Listar Ciudades\n %s - Buscar Ciudad\n %s - Mostrar habitantes de una ciudad\n %s - Volver al menu principal",
@@ -58,7 +59,7 @@ public class Menu {
                     Color.aplicar(Color.AZUL, "4"), Color.aplicar(Color.AZUL, "5"), Color.aplicar(Color.AZUL, "6"),
                     Color.aplicar(Color.AZUL, "7")));
 
-            System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
+            Color.printWar("Ingrese una opcion:");
             int res = Integer.parseInt(sc.nextLine());
             switch (res) {
                 case 1 -> {
@@ -89,7 +90,7 @@ public class Menu {
                     " %s - Agregar Tuberia\n %s - Eliminar Tuberia\n %s - Modificar Tuberia\n %s - Mostrar Tuberias\n %s - Buscar Tuberia\n %s - Volver al menu principal",
                     Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3"),
                     Color.aplicar(Color.AZUL, "4"), Color.aplicar(Color.AZUL, "5"), Color.aplicar(Color.AZUL, "6")));
-            System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
+            Color.printWar("Ingrese una opcion:");
             int res = Integer.parseInt(sc.nextLine());
             switch (res) {
                 case 1 -> MetodosTuberia.agregarTuberia(listadoTuberias, ciudades, recorrido);
@@ -102,9 +103,9 @@ public class Menu {
                 default -> System.out.println("Opcion invalida");
             }
         } catch (NumberFormatException e) {
-            System.out.println(Color.aplicar(Color.ROJO, "Error: Debe ingresar un numero valido."));
+            Color.printErr("Error: Debe ingresar un numero valido.");
         } catch (Exception e) {
-            System.out.println(Color.aplicar(Color.ROJO, "Error: " + e.getMessage()));
+            Color.printErr("Error: " + e.getMessage());
         }
     }
 
@@ -114,7 +115,7 @@ public class Menu {
             System.out.println(String.format(
                     " %s - Obtener cantidad de habitantes y volumen de agua distribuido en una ciudad en un mes y anio\n %s - Obtener ciudades por rango de consumo en un mes y anio\n %s - Volver al menu principal",
                     Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3")));
-            System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
+            Color.printWar("Ingrese una opcion:");
             int resultado = Integer.parseInt(sc.nextLine());
 
             switch (resultado) {
@@ -129,9 +130,9 @@ public class Menu {
                 default -> System.out.println("Opcion invalida");
             }
         } catch (NumberFormatException e) {
-            System.out.println(Color.aplicar(Color.ROJO, "Error: Debe ingresar un numero valido."));
+            Color.printErr("Error: Debe ingresar un numero valido.");
         } catch (Exception e) {
-            System.out.println(Color.aplicar(Color.ROJO, "Error: " + e.getMessage()));
+            Color.printErr("Error: " + e.getMessage());
         }
 
     }
@@ -143,7 +144,7 @@ public class Menu {
             System.out.println(String.format(
                     " %s - Obtener camino que llegue de una ciudad A a una ciudad B tal que el caudal pleno del camino completo sea el minimo entre todos los caminos posibles\n %s - Obtener el camino que llegue de una ciudad A a una ciudad B pasando por la minima cantidad de ciudades\n %s - Volver al menu principal",
                     Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3")));
-            System.out.println(Color.aplicar(Color.AMARILLO, "Ingrese una opcion:"));
+            Color.printWar("Ingrese una opcion:");
 
             int resultado = Integer.parseInt(sc.nextLine());
 
@@ -159,9 +160,9 @@ public class Menu {
                 default -> System.out.println("Opcion invalida");
             }
         } catch (NumberFormatException e) {
-            System.out.println(Color.aplicar(Color.ROJO, "Error: Debe ingresar un numero valido."));
+            Color.printErr("Error: Debe ingresar un numero valido.");
         } catch (Exception e) {
-            System.out.println(Color.aplicar(Color.ROJO, "Error: " + e.getMessage()));
+            Color.printErr("Error: " + e.getMessage());
         }
 
     }

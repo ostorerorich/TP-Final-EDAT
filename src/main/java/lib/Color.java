@@ -28,4 +28,16 @@ public enum Color {
     public static String aplicar(String texto) {
         return VERDE.get() + texto + RESET.get();
     }
+
+    public static void printErr(String texto) {
+        System.out.print(aplicar(Color.ROJO, texto));
+    }
+
+    public static void printOk(String texto) {
+        System.out.print(aplicar(texto));
+    }
+
+    public static void printWar(String texto) {
+        System.out.println(aplicar(Color.AMARILLO, texto));
+    }
 }

@@ -31,7 +31,7 @@ public class MetodosCiudad {
         File archivo = Load.cargarArchivo("Seleccione un archivo CSV de ciudades");
         if (archivo != null) {
             Log.mensaje("Cargando ciudades desde: " + archivo.getAbsolutePath())
-                    .print().guardar();
+                    .print(Color.MAGENTA).guardar();
 
             // Pone el archivo en una lista(stream) para luego poder recorrerla
             // eficientemente, separando cada linea por ";"
@@ -50,19 +50,20 @@ public class MetodosCiudad {
                                     agregarCiudad(arbol, caminos, ciudad);
                                     Log.mensaje("Ciudad cargada: " + ciudad.getNombre() + " con nomenclatura: "
                                             + ciudad.getNomenclatura())
-                                            .print().guardar();
+                                            .print(Color.VERDE).guardar();
                                 } else {
                                     Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.")
-                                            .print().guardar();
+                                            .print(Color.ROJO).guardar();
 
                                 }
                             } else {
-                                Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.").guardar();
+                                Log.mensaje("Error al cargar la ciudad: " + l[0] + ". Formato incorrecto.")
+                                        .print(Color.ROJO).guardar();
                             }
                         });
             } catch (NumberFormatException e) {
                 Log.mensaje("Error al cargar las ciudades: " + e.getMessage())
-                        .print().guardar();
+                        .print(Color.ROJO).guardar();
 
             }
         }
@@ -70,54 +71,52 @@ public class MetodosCiudad {
     }
 
     public static void agregarHabitantesCiudad(ArbolAVL arbol) {
-        System.out.println("Ingrese el nombre de la ciudad a la que desea agregar habitantes:");
+        Color.printWar("Ingrese el nombre de la ciudad a la que desea agregar habitantes:");
         String nombre = sc.nextLine().trim();
 
         if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
-                    .print().guardar();
+                    .print(Color.ROJO).guardar();
         } else {
             Ciudad res = obtenerCiudad(arbol, nombre);
             if (res != null) {
-                System.out.println("Ingrese el año:");
+                Color.printWar("Ingrese el año:");
                 int anio = Integer.parseInt(sc.nextLine().trim());
-                System.out.println("Ingrese el mes (1-12):");
+                Color.printWar("Ingrese el mes (1-12):");
                 int mes = Integer.parseInt(sc.nextLine().trim());
-                System.out.println("Ingrese la cantidad de habitantes:");
+                Color.printWar("Ingrese la cantidad de habitantes:");
                 int cantHabitantes = Integer.parseInt(sc.nextLine().trim());
 
                 if (res.agregarCantHabitantes(anio, mes, cantHabitantes)) {
                     Log.mensaje("Cantidad de habitantes agregada a la ciudad " + res.getNombre() + " para el año "
                             + anio + " y mes " + mes)
-                            .print().guardar();
+                            .print(Color.VERDE).guardar();
                 } else {
                     Log.mensaje("Error al agregar habitantes a la ciudad " + res.getNombre()
                             + ". Verifique los datos ingresados.")
-                            .print().guardar();
+                            .print(Color.ROJO).guardar();
                 }
             } else {
                 Log.mensaje("La ciudad " + nombre + " no existe en el sistema.")
-                        .print().guardar();
+                        .print(Color.ROJO).guardar();
             }
         }
     }
 
     // Checkear todo lo que es input validaciones y agregar ciudades.
-    // TODO: this
     private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona,
             String habitantes) {
         return nombre.matches(letras) && crearNomenclatura(nombre, nomenclatura) && superficie.matches(numeros)
                 && cantM3Persona.matches(decimales) && habitantes.matches(numeros);
     }
 
-    // TODO: this
     public static boolean agregarCiudad(ArbolAVL arbol, Grafo caminos, Ciudad ciudad) {
         boolean res = false;
 
         if (ciudad != null) {
             if (arbol.pertenece(ciudad)) {
                 Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.")
-                        .print().guardar();
+                        .print(Color.MAGENTA).guardar();
 
             } else {
                 arbol.insertar(ciudad);
@@ -132,25 +131,29 @@ public class MetodosCiudad {
 
     }
 
-    // TODO: this
     public static void agregarCiudadInput(ArbolAVL arbol, Grafo caminos) {
+        String nombre, nomenclatura, superficie, cantM3Persona;
         Ciudad ciudad = null;
         boolean res = false;
-        String nombre, nomenclatura, superficie, cantM3Persona;
 
-        System.out.println("Ingresar nombre de la ciudad:");
+        System.out.println(Color.aplicar(Color.CYAN, "Ingrese los datos de la ciudad:"));
         nombre = sc.nextLine();
-        System.out.print("Ingresar nomenclatura de la ciudad (Formato: AA0000): ");
+
+        System.out.print(Color.aplicar(Color.CYAN, "Ingresar nomenclatura de la ciudad (Formato: AA0000): "));
         nomenclatura = sc.nextLine();
+
         System.out.println();
-        System.out.print("Ingresar superficie de la ciudad (en m2): ");
+        System.out.print(Color.aplicar(Color.CYAN, "Ingresar superficie de la ciudad (en m2): "));
         superficie = sc.nextLine();
-        System.out.println();
-        System.out.print("Ingresar cantidad de m3 por persona: ");
+
+        System.out.println(Color.aplicar(Color.CYAN, "Ingresar cantidad de m3 por persona: "));
         cantM3Persona = sc.nextLine();
-        System.out.println("Ingrese cantidad de habitantes:");
+
+        System.out.println(Color.aplicar(Color.CYAN, "Ingrese cantidad de habitantes:"));
         String habitantes = sc.nextLine();
+
         System.out.println();
+
         if (validar(nombre, nomenclatura, superficie, cantM3Persona, habitantes)) {
             try {
                 ciudad = new Ciudad(nombre, nomenclatura, Integer.parseInt(superficie),
@@ -173,7 +176,6 @@ public class MetodosCiudad {
         }
     }
 
-    // TODO: this
     private static boolean crearNomenclatura(String nombre, String nomenclatura) {
         boolean res = false;
         StringBuilder sb = new StringBuilder();
@@ -204,29 +206,29 @@ public class MetodosCiudad {
     }
 
     public static void eliminarCiudad(ArbolAVL arbol, Map<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
-        System.out.println("Ingrese el nombre de la ciudad a eliminar:");
+        System.out.println(Color.aplicar(Color.CYAN, "Ingrese el nombre de la ciudad a eliminar:"));
         String nombre = sc.nextLine().trim();
         if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
-                    .print().guardar();
+                    .print(Color.ROJO).guardar();
         } else {
             Ciudad ciudad = new Ciudad(nombre);
             Ciudad ciudadEncontrada = (Ciudad) arbol.obtener(ciudad);
             if (ciudadEncontrada != null) {
                 arbol.eliminar(ciudad);
                 caminos.eliminarVertice(ciudadEncontrada.getNomenclatura());
-                
-                Iterator<Map.Entry<TuberiaKey, Tuberia>> iterador =  tuberias.entrySet().iterator();
-                
+
+                Iterator<Map.Entry<TuberiaKey, Tuberia>> iterador = tuberias.entrySet().iterator();
+
                 while (iterador.hasNext()) {
                     Map.Entry<TuberiaKey, Tuberia> entrada = iterador.next();
-                    
+
                     if (entrada.getKey().getNomenclaturaOrigen().equals(ciudadEncontrada.getNomenclatura()) ||
                             entrada.getKey().getNomenclaturaDestino().equals(ciudadEncontrada.getNomenclatura())) {
                         iterador.remove();
                     }
                 }
-                
+
                 Log.mensaje("Ciudad " + ciudad.getNombre() + " eliminada del sistema.")
                         .print().guardar();
             } else {
@@ -238,11 +240,11 @@ public class MetodosCiudad {
     }
 
     public static void buscarCiudad(ArbolAVL arbol) {
-        System.out.println("Ingrese el nombre de la ciudad a buscar:");
+        System.out.println(Color.aplicar(Color.ROJO, "Ingrese el nombre de la ciudad a buscar:"));
         String nombre = sc.nextLine().trim();
         if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
-                    .print().guardar();
+                    .print(Color.ROJO).guardar();
         } else {
             Ciudad res = obtenerCiudad(arbol, nombre);
             if (res != null) {
@@ -250,7 +252,7 @@ public class MetodosCiudad {
                         .print().guardar();
             } else {
                 Log.mensaje("La ciudad " + nombre + " no existe en el sistema.")
-                        .print().guardar();
+                        .print(Color.ROJO).guardar();
             }
         }
     }
