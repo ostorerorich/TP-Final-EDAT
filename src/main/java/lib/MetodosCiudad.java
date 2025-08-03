@@ -27,7 +27,7 @@ public class MetodosCiudad {
 
     public static void cargarCiudadesDesde(ArbolAVL arbol, Grafo caminos) throws IOException {
 
-        System.out.println(Color.aplicar(Color.MAGENTA, "Cargando ciudades..."));
+        Color.print(Color.MAGENTA, "Cargando ciudades...");
         File archivo = Load.cargarArchivo("Seleccione un archivo CSV de ciudades");
         if (archivo != null) {
             Log.mensaje("Cargando ciudades desde: " + archivo.getAbsolutePath())
@@ -71,7 +71,7 @@ public class MetodosCiudad {
     }
 
     public static void agregarHabitantesCiudad(ArbolAVL arbol) {
-        Color.printWar("Ingrese el nombre de la ciudad a la que desea agregar habitantes:");
+        Color.print("Ingrese el nombre de la ciudad a la que desea agregar habitantes:");
         String nombre = sc.nextLine().trim();
 
         if (nombre.isEmpty() || !nombre.matches(letras)) {
@@ -80,11 +80,11 @@ public class MetodosCiudad {
         } else {
             Ciudad res = obtenerCiudad(arbol, nombre);
             if (res != null) {
-                Color.printWar("Ingrese el año:");
+                Color.print("Ingrese el año:");
                 int anio = Integer.parseInt(sc.nextLine().trim());
-                Color.printWar("Ingrese el mes (1-12):");
+                Color.print("Ingrese el mes (1-12):");
                 int mes = Integer.parseInt(sc.nextLine().trim());
-                Color.printWar("Ingrese la cantidad de habitantes:");
+                Color.print("Ingrese la cantidad de habitantes:");
                 int cantHabitantes = Integer.parseInt(sc.nextLine().trim());
 
                 if (res.agregarCantHabitantes(anio, mes, cantHabitantes)) {
@@ -103,7 +103,6 @@ public class MetodosCiudad {
         }
     }
 
-    // Checkear todo lo que es input validaciones y agregar ciudades.
     private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona,
             String habitantes) {
         return nombre.matches(letras) && crearNomenclatura(nombre, nomenclatura) && superficie.matches(numeros)
@@ -116,7 +115,7 @@ public class MetodosCiudad {
         if (ciudad != null) {
             if (arbol.pertenece(ciudad)) {
                 Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.")
-                        .print(Color.MAGENTA).guardar();
+                        .print(Color.ROJO).guardar();
 
             } else {
                 arbol.insertar(ciudad);
@@ -136,20 +135,20 @@ public class MetodosCiudad {
         Ciudad ciudad = null;
         boolean res = false;
 
-        System.out.println(Color.aplicar(Color.CYAN, "Ingrese los datos de la ciudad:"));
+        Color.print("Ingrese los datos de la ciudad:");
         nombre = sc.nextLine();
 
-        System.out.print(Color.aplicar(Color.CYAN, "Ingresar nomenclatura de la ciudad (Formato: AA0000): "));
+        Color.print("Ingresar nomenclatura de la ciudad (Formato: AA0000): ");
         nomenclatura = sc.nextLine();
 
         System.out.println();
-        System.out.print(Color.aplicar(Color.CYAN, "Ingresar superficie de la ciudad (en m2): "));
+        Color.print("Ingresar superficie de la ciudad (en m2): ");
         superficie = sc.nextLine();
 
-        System.out.println(Color.aplicar(Color.CYAN, "Ingresar cantidad de m3 por persona: "));
+        Color.print("Ingresar cantidad de m3 por persona: ");
         cantM3Persona = sc.nextLine();
 
-        System.out.println(Color.aplicar(Color.CYAN, "Ingrese cantidad de habitantes:"));
+        Color.print("Ingrese cantidad de habitantes:");
         String habitantes = sc.nextLine();
 
         System.out.println();
@@ -165,12 +164,12 @@ public class MetodosCiudad {
 
                 } else {
                     Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.")
-                            .print().guardar();
+                            .print(Color.ROJO).guardar();
 
                 }
             } catch (NumberFormatException e) {
                 Log.mensaje("Error al agregar la ciudad: " + e.getMessage())
-                        .print().guardar();
+                        .print(Color.ROJO).guardar();
             }
 
         }
@@ -233,14 +232,14 @@ public class MetodosCiudad {
                         .print().guardar();
             } else {
                 Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
-                        .print().guardar();
+                        .print(Color.ROJO).guardar();
 
             }
         }
     }
 
     public static void buscarCiudad(ArbolAVL arbol) {
-        System.out.println(Color.aplicar(Color.ROJO, "Ingrese el nombre de la ciudad a buscar:"));
+        Color.print("Ingrese el nombre de la ciudad a buscar:");
         String nombre = sc.nextLine().trim();
         if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
@@ -258,7 +257,7 @@ public class MetodosCiudad {
     }
 
     public static void mostrarHabitantesCiudad(ArbolAVL arbol) {
-        System.out.println("Ingrese el nombre de la ciudad para mostrar sus habitantes:");
+        Color.print("Ingrese el nombre de la ciudad para mostrar sus habitantes:");
         String nombre = sc.nextLine().trim();
         if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
@@ -277,11 +276,11 @@ public class MetodosCiudad {
     }
 
     public static void mostrarDatosCiudad(ArbolAVL arbol) {
-        System.out.println("Ingrese el nombre de la ciudad para mostrar sus datos:");
+        Color.print("Ingrese el nombre de la ciudad para mostrar sus datos:");
         String nombre = sc.nextLine().trim();
         if (nombre.isEmpty() || !nombre.matches(letras)) {
             Log.mensaje("El nombre de la ciudad no puede estar vacío.")
-                    .print().guardar();
+                    .print(Color.ROJO).guardar();
         } else {
             Ciudad res = obtenerCiudad(arbol, nombre);
             if (res != null) {
@@ -289,7 +288,7 @@ public class MetodosCiudad {
                         .print().guardar();
             } else {
                 Log.mensaje("La ciudad " + nombre + " no existe en el sistema.")
-                        .print().guardar();
+                        .print(Color.ROJO).guardar();
             }
         }
     }
@@ -319,7 +318,7 @@ public class MetodosCiudad {
         Integer cantHabitantes;
         double volumenAgua;
 
-        System.out.println("Por favor, ingrese el nombre de la ciudad");
+        Color.print("Ingrese el nombre de la ciudad");
         nombreCiudad = sc.nextLine().trim();
 
         // Verifica que el nombre ingresado no esté vacío y tenga los caracteres
@@ -329,10 +328,10 @@ public class MetodosCiudad {
             ciudadEncontrada = (Ciudad) ciudades.obtener(ciudad);
 
             if (ciudadEncontrada != null) {
-                System.out.println("Por favor, ingrese el anio");
+                Color.print("Ingrese el año");
                 anio = Integer.parseInt(sc.nextLine().trim());
 
-                System.out.println("Por favor, ingrese el numero del mes (1-12)");
+                Color.print("Ingrese el numero del mes (1-12)");
                 mes = Integer.parseInt(sc.nextLine().trim());
 
                 cantHabitantes = ciudadEncontrada.getCantHabitantes(anio, mes); // Obtiene la cantidad de habitantes
@@ -349,13 +348,13 @@ public class MetodosCiudad {
                     Log.mensaje("Volumen de agua que se habria distribuido en " + nombreCiudad + " en " + nombreMes +
                             " de " + anio + ": " + volumenAgua).print().guardar();
                 } else {
-                    System.out.println("El anio o mes ingresado es incorrecto");
+                    Color.printErr("El año o mes ingresado es incorrecto");
                 }
             } else {
-                System.out.println("La ciudad ingresada no existe en el sistema");
+                Color.printErr("La ciudad ingresada no existe en el sistema");
             }
         } else {
-            System.out.println("El nombre de la ciudad no puede estar vacio o tiene caracteres incorrectos");
+            Color.printErr("El nombre de la ciudad no puede estar vacio o tiene caracteres incorrectos");
         }
 
     }
@@ -374,7 +373,7 @@ public class MetodosCiudad {
         String nombreMes = "";
 
         switch (numeroMes) {
-            case 1 -> nombreMes = "Eenero";
+            case 1 -> nombreMes = "Enero";
             case 2 -> nombreMes = "Febrero";
             case 3 -> nombreMes = "Marzo";
             case 4 -> nombreMes = "Abril";
@@ -422,13 +421,13 @@ public class MetodosCiudad {
             // ciudad.
             // Y hashmap no guarda los elementos de forma ordenada.
             TreeMap<Double, String> ciudadesOrdenadas = new TreeMap<>(Collections.reverseOrder());
-            System.out.println("Ingresar año: ");
+            Color.print("Ingresar año: ");
 
             int res = Integer.parseInt(sc.nextLine());
             Ciudad el = (Ciudad) arbol.maximoElem();
 
             while (!el.anioValido(res)) {
-                System.out.println("Ingresar un año valido: ");
+                Color.print("Ingresar un año valido: ");
                 res = Integer.parseInt(sc.nextLine());
             }
             Lista listaCiudades = arbol.listar();
@@ -442,7 +441,7 @@ public class MetodosCiudad {
             }
 
             for (Double key : ciudadesOrdenadas.keySet()) {
-                System.out.println(String.format("%.2f", key) + " " + ciudadesOrdenadas.get(key));
+                Color.print(Color.CYAN, String.format("%.2f", key) + " " + ciudadesOrdenadas.get(key));
             }
 
         }
@@ -454,21 +453,21 @@ public class MetodosCiudad {
         Lista ciudadesFiltradas = new Lista();
         Ciudad minNomb, maxNomb;
         double minVol, maxVol;
-        System.out.println("Ingrese el nombre minimo del rango: ");
+        Color.print("Ingrese el nombre minimo del rango: ");
         minNomb = new Ciudad(sc.nextLine().trim());
-        System.out.println("Ingrese el nombre maximo del rango: ");
+        Color.print("Ingrese el nombre maximo del rango: ");
         maxNomb = new Ciudad(sc.nextLine().trim());
-        System.out.println("Ingrese el volumen minimo de agua: ");
+        Color.print("Ingrese el volumen minimo de agua: ");
         minVol = Double.parseDouble(sc.nextLine().trim());
-        System.out.println("Ingrese el volumen maximo: ");
+        Color.print("Ingrese el volumen maximo: ");
         maxVol = Double.parseDouble(sc.nextLine().trim());
         rangoCiudades = ciudades.listarRango(minNomb, maxNomb);
 
         if (!rangoCiudades.esVacia()) {
             int mes, anio;
-            System.out.println("Por favor, ingrese el anio");
+            Color.print("Ingresar año:");
             anio = Integer.parseInt(sc.nextLine().trim());
-            System.out.println("Por favor, ingrese el numero del mes (1-12)");
+            Color.print("Ingresar el numero del mes (1-12):");
             mes = Integer.parseInt(sc.nextLine().trim());
             for (int i = 1; i <= rangoCiudades.longitud(); i++) {
                 Ciudad ciudadAux = (Ciudad) rangoCiudades.recuperar(i);
@@ -479,12 +478,26 @@ public class MetodosCiudad {
                         ciudadesFiltradas.insertar(ciudadAux.getNombre(), ciudadesFiltradas.longitud() + 1);
                     }
                 } else {
-                    System.out.println("El anio o mes ingresado es incorrecto");
+                    Color.printErr("El año o mes ingresado es incorrecto");
                 }
             }
         } else {
-            System.out.println("No se encontraron ciudades dentro del rango");
+            Color.printErr("No se encontraron ciudades dentro del rango");
         }
         Log.mensaje(ciudadesFiltradas.toString()).print().guardar();
+    }
+
+    public static void mostrarListaCiudades(ArbolAVL arbol) {
+        Lista listaCiudades = arbol.listar();
+        if (!listaCiudades.esVacia()) {
+            Color.printOk("Lista de ciudades:");
+            for (int i = 1; i <= listaCiudades.longitud(); i++) {
+                Ciudad ciudad = (Ciudad) listaCiudades.recuperar(i);
+                System.out.println(String.format("%s - %s", Color.aplicar(Color.AZUL, String.valueOf(i)),
+                        Color.aplicar(ciudad.getNomenclatura() + " - " + ciudad.getNombre())));
+            }
+        } else {
+            Color.printErr("No hay ciudades cargadas en el sistema.");
+        }
     }
 }

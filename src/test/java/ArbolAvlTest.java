@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -65,7 +66,7 @@ public class ArbolAvlTest {
     }
 
     @Test
-    @DisplayName("Verificar si un elemento pertenece al arbol")
+    @DisplayName("Verificar si un elemento pertenece al árbol")
     void testPertenece() {
         arbolAVL.insertar(10);
         arbolAVL.insertar(20);
@@ -77,7 +78,7 @@ public class ArbolAvlTest {
     }
 
     @Test
-    @DisplayName("Verificar obtener elemento de un arbol")
+    @DisplayName("Verificar obtener elemento de un árbol")
     void testObtener() {
         arbolAVL.insertar(10);
         arbolAVL.insertar(20);
@@ -89,7 +90,7 @@ public class ArbolAvlTest {
     }
 
     @Test
-    @DisplayName("Verificar elemento minimo del arbol")
+    @DisplayName("Verificar elemento minimo del árbol")
     void testMinimo() {
         arbolAVL.insertar(10);
         arbolAVL.insertar(20);
@@ -102,7 +103,7 @@ public class ArbolAvlTest {
     }
 
     @Test
-    @DisplayName("Verificar elemento maximo del arbol")
+    @DisplayName("Verificar elemento maximo del árbol")
     void testMaximo() {
         arbolAVL.insertar(10);
         arbolAVL.insertar(20);
@@ -115,12 +116,103 @@ public class ArbolAvlTest {
     }
 
     @Test
-    @DisplayName("Verificar vaciar arbol")
+    @DisplayName("Verificar vaciar árbol")
     void testVaciar() {
         arbolAVL.insertar(10);
         assertFalse(arbolAVL.esVacio());
         arbolAVL.vaciar();
         assertTrue(arbolAVL.esVacio());
 
+    }
+
+    @Test
+    @DisplayName("Verificar estructura del árbol con toString")
+    void testEstructuraBasica() {
+        arbolAVL.insertar(10);
+        String esperado = "10(alt: 0) HI: - HD: -\n";
+        assertEquals(esperado, arbolAVL.toString());
+
+        arbolAVL.insertar(5);
+        arbolAVL.insertar(15);
+        String esperadoConHijos = "10(alt: 1) HI: 5 HD: 15\n" +
+                "5(alt: 0) HI: - HD: -\n" +
+                "15(alt: 0) HI: - HD: -\n";
+        assertEquals(esperadoConHijos, arbolAVL.toString());
+    }
+
+    @Test
+    @DisplayName("Verificar rotación derecha en inserción secuencial descendente")
+    void testRotacionDerecha() {
+
+        arbolAVL.insertar(3);
+        arbolAVL.insertar(2);
+        arbolAVL.insertar(1);
+
+        String estructuraEsperada = "2(alt: 1) HI: 1 HD: 3\n" +
+                "1(alt: 0) HI: - HD: -\n" +
+                "3(alt: 0) HI: - HD: -\n";
+
+        assertEquals(estructuraEsperada, arbolAVL.toString());
+    }
+
+    @Test
+    @DisplayName("Verificar rotación izquierda en inserción secuencial ascendente")
+    void testRotacionIzquierda() {
+
+        arbolAVL.insertar(1);
+        arbolAVL.insertar(2);
+        arbolAVL.insertar(3);
+
+        String estructuraEsperada = "2(alt: 1) HI: 1 HD: 3\n" +
+                "1(alt: 0) HI: - HD: -\n" +
+                "3(alt: 0) HI: - HD: -\n";
+
+        assertEquals(estructuraEsperada, arbolAVL.toString());
+    }
+
+    @Test
+    @DisplayName("Verificar rotación doble izquierda-derecha")
+    void testRotacionDobleIzquierdaDerecha() {
+
+        arbolAVL.insertar(3);
+        arbolAVL.insertar(1);
+        arbolAVL.insertar(2);
+
+        String estructuraEsperada = "2(alt: 1) HI: 1 HD: 3\n" +
+                "1(alt: 0) HI: - HD: -\n" +
+                "3(alt: 0) HI: - HD: -\n";
+
+        assertEquals(estructuraEsperada, arbolAVL.toString());
+    }
+
+    @Test
+    @DisplayName("Verificar que las alturas son correctas")
+    void testAlturasCorrectas() {
+        arbolAVL.insertar(50);
+        arbolAVL.insertar(30);
+        arbolAVL.insertar(70);
+        arbolAVL.insertar(20);
+        arbolAVL.insertar(40);
+        arbolAVL.insertar(60);
+        arbolAVL.insertar(80);
+
+        String estructura = arbolAVL.toString();
+
+        assertTrue(estructura.contains("50(alt: 2)"));
+
+        assertTrue(estructura.contains("20(alt: 0)"));
+        assertTrue(estructura.contains("40(alt: 0)"));
+    }
+
+    @Test
+    @DisplayName("Verificar clone de árbol avl")
+    void testClone() {
+        arbolAVL.insertar(10);
+        arbolAVL.insertar(20);
+        arbolAVL.insertar(5);
+
+        ArbolAVL clone = arbolAVL.clone();
+
+        assertEquals(arbolAVL.toString(), clone.toString());
     }
 }

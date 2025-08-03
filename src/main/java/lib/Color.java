@@ -9,7 +9,8 @@ public enum Color {
     AZUL("\u001B[34m"),
     MAGENTA("\u001B[35m"),
     CYAN("\u001B[36m"),
-    BLANCO("\u001B[37m");
+    BLANCO("\u001B[37m"),
+    NARANJA("\u001B[38;5;208m");
 
     private final String color;
 
@@ -35,6 +36,14 @@ public enum Color {
 
     public static void printOk(String texto) {
         System.out.print(aplicar(texto));
+    }
+
+    public static void print(String texto) {
+        System.out.print(aplicar(Color.NARANJA, texto));
+    }
+
+    public static void print(Color color, String texto) {
+        System.out.print(aplicar(color, texto));
     }
 
     public static void printWar(String texto) {

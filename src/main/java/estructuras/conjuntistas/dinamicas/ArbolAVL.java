@@ -5,8 +5,6 @@ import estructuras.lineales.dinamicas.Lista;
 @SuppressWarnings({ "all" })
 public class ArbolAVL {
 
-    // TODO: Eliminar
-
     private NodoAVL raiz;
 
     public ArbolAVL() {
@@ -264,7 +262,6 @@ public class ArbolAVL {
         return res;
     }
 
-    // TODO: Listar ciudades en orden alfabetico
     public Lista listar() {// SE RECORRE INORDEN
         Lista lis = new Lista();
         listarAux(this.raiz, lis);
@@ -385,6 +382,7 @@ public class ArbolAVL {
             nuevoNodo = new NodoAVL(nodo.getElem(), null, null);
             nuevoNodo.setIzquierdo(clonarArbol(nodo.getIzquierdo()));
             nuevoNodo.setDerecho(clonarArbol(nodo.getDerecho()));
+            nuevoNodo.recalcularAltura(); // Recalcula la altura del nuevo nodo
         }
         return nuevoNodo;
     }

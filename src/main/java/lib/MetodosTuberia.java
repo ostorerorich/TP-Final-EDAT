@@ -25,12 +25,12 @@ public class MetodosTuberia {
         if (arbol.esVacio()) {
             Log
                     .mensaje("No hay ciudades cargadas. Cargue ciudades primero.")
-                    .print()
+                    .print(Color.ROJO)
                     .guardar();
         } else {
             File archivo = Load.cargarArchivo("Seleccione un archivo CSV de tuberías");
             if (archivo != null) {
-                Log.mensaje("Cargando tuberias desde: " + archivo.getAbsolutePath()).print().guardar();
+                Log.mensaje("Cargando tuberias desde: " + archivo.getAbsolutePath()).print(Color.MAGENTA).guardar();
 
                 try (Stream<String> lineas = Files.lines(archivo.toPath())) {
                     lineas.skip(1)
@@ -44,7 +44,8 @@ public class MetodosTuberia {
                                     int diametro = Integer.parseInt(l[4].trim());
                                     // Asumimos que los datos son correctos
                                     if (origen == null || destino == null) {
-                                        Log.mensaje("Error al cargar la tubería: Ciudad no encontrada.").print()
+                                        Log.mensaje("Error al cargar la tubería: Ciudad no encontrada.")
+                                                .print(Color.ROJO)
                                                 .guardar();
                                     } else {
                                         TuberiaKey key = new TuberiaKey(origen.getNomenclatura(),
@@ -52,7 +53,7 @@ public class MetodosTuberia {
                                         if (tuberias.containsKey(key)) {
                                             Log.mensaje(
                                                     "Error al cargar la tubería: Ya existe una tubería entre estas ciudades.")
-                                                    .print().guardar();
+                                                    .print(Color.ROJO).guardar();
                                         } else {
                                             Tuberia tuberia = new Tuberia(origen.getNomenclatura(),
                                                     destino.getNomenclatura(), diametro, caudalMax, caudalMin,
@@ -64,7 +65,8 @@ public class MetodosTuberia {
                                         }
                                     }
                                 } else {
-                                    Log.mensaje("Error al cargar la tubería: Formato incorrecto.").print().guardar();
+                                    Log.mensaje("Error al cargar la tubería: Formato incorrecto.").print(Color.ROJO)
+                                            .guardar();
                                 }
                             });
 
@@ -74,13 +76,13 @@ public class MetodosTuberia {
     }
 
     private static Estado obtenerEstadoTuberia() {
-        System.out.println("Seleccionar un nuevo estado para la tubería:");
+        Color.print("Seleccionar un nuevo estado para la tubería:");
         boolean loop = true;
 
         int estadoSeleccionado = 0;
 
         while (loop) {
-            System.out.println("1 - ACTIVO" +
+            Color.print("1 - ACTIVO" +
                     "\n2 - REPARACION" +
                     "\n3 - DISENIO" +
                     "\n4 - INACTIVO");
@@ -89,7 +91,7 @@ public class MetodosTuberia {
             if (estadoSeleccionado >= 1 && estadoSeleccionado <= 4) {
                 loop = false;
             } else {
-                System.out.println("Opción inválida, por favor intente nuevamente.");
+                Color.print("Opción inválida, por favor intente nuevamente:");
             }
         }
 
@@ -105,9 +107,9 @@ public class MetodosTuberia {
     public static void modificarTuberia(Map<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
 
         if (!tuberias.isEmpty()) {
-            System.out.println("Seleccione la tubería a modificar:");
+            Color.print("Seleccione la tubería a modificar:");
             tuberias.forEach((k, v) -> System.out.println(k + " = " + v));
-            System.out.print("Ingrese la nomenclatura de origen y destino (ej: AB-CD): ");
+            System.out.print("Ingrese la nomenclatura de origen y destino (ej: AB3000-CD3001): ");
             String input = sc.nextLine().trim();
             String[] partes = input.split("-");
             if (partes.length == 2 && MetodosCiudad.validarNomenclatura(partes[0])
@@ -117,18 +119,18 @@ public class MetodosTuberia {
                 TuberiaKey key = new TuberiaKey(origen, destino);
                 if (tuberias.containsKey(key)) {
                     Tuberia tuberia = tuberias.get(key);
-                    System.out.println("Tubería encontrada: " + tuberia);
-                    System.out.print("Ingrese el nuevo diámetro: ");
+                    Color.printOk("Tubería encontrada: " + tuberia);
+                    Color.print("Ingrese el nuevo diámetro: ");
                     int diametro = Integer.parseInt(sc.nextLine().trim());
-                    System.out.print("Ingrese el nuevo caudal máximo: ");
+                    Color.print("Ingrese el nuevo caudal máximo: ");
                     int caudalMax = Integer.parseInt(sc.nextLine().trim());
-                    System.out.print("Ingrese el nuevo caudal mínimo: ");
+                    Color.print("Ingrese el nuevo caudal mínimo: ");
                     int caudalMin = Integer.parseInt(sc.nextLine().trim());
 
                     tuberia.setEstado(obtenerEstadoTuberia());
 
                     if (diametro <= 0 || caudalMin <= 0 || caudalMax <= 0 || caudalMin >= caudalMax) {
-                        Log.mensaje("Error: Valores de diámetro o caudales inválidos.").print().guardar();
+                        Log.mensaje("Error: Valores de diámetro o caudales inválidos.").print(Color.ROJO).guardar();
                     } else {
                         tuberia.setDiametro(diametro);
                         tuberia.setCaudalMax(caudalMax);
@@ -137,23 +139,23 @@ public class MetodosTuberia {
                         Log.mensaje("Tubería modificada: " + tuberia).print().guardar();
                     }
                 } else {
-                    Log.mensaje("Error: Tubería no encontrada.").print().guardar();
+                    Log.mensaje("Error: Tubería no encontrada.").print(Color.ROJO).guardar();
                 }
 
             } else {
-                Log.mensaje("Error: Formato de entrada inválido.").print().guardar();
+                Log.mensaje("Error: Formato de entrada inválido.").print(Color.ROJO).guardar();
             }
         } else {
-            Log.mensaje("No hay tuberías cargadas.").print().guardar();
+            Log.mensaje("No hay tuberías cargadas.").print(Color.ROJO).guardar();
         }
 
     }
 
     public static void eliminarTuberia(Map<TuberiaKey, Tuberia> tuberias, Grafo caminos) {
         if (!tuberias.isEmpty()) {
-            System.out.println("Seleccione la tubería a eliminar:");
+            Color.print("Seleccione la tubería a eliminar:");
             mostrarTuberias(tuberias);
-            System.out.print("Ingrese la nomenclatura de origen y destino (ej: AB3001-CD3002): ");
+            Color.print("Ingrese la nomenclatura de origen y destino (ej: AB3001-CD3002): ");
             String input = sc.nextLine().trim();
             String[] partes = input.split("-");
 
@@ -167,47 +169,47 @@ public class MetodosTuberia {
                     caminos.eliminarArco(origen, destino);
                     Log.mensaje("Tubería eliminada: " + key).print().guardar();
                 } else {
-                    Log.mensaje("Error: Tubería no encontrada.").print().guardar();
+                    Log.mensaje("Error: Tubería no encontrada.").print(Color.ROJO).guardar();
                 }
             }
         } else {
-            Log.mensaje("No hay tuberías cargadas.").print().guardar();
+            Log.mensaje("No hay tuberías cargadas.").print(Color.ROJO).guardar();
         }
     }
 
     public static void mostrarTuberias(Map<TuberiaKey, Tuberia> tuberias) {
         if (!tuberias.isEmpty()) {
-            System.out.println("Listado de tuberías:");
+            Color.print("Listado de tuberías:");
             tuberias.forEach((k, v) -> System.out.println(k + " = " + v));
         } else {
-            Log.mensaje("No hay tuberías cargadas.").print().guardar();
+            Log.mensaje("No hay tuberías cargadas.").print(Color.ROJO).guardar();
         }
     }
 
     public static void agregarTuberia(Map<TuberiaKey, Tuberia> tuberias, ArbolAVL arbol, Grafo caminos) {
-        System.out.print("Ingrese la ciudad de origen: ");
+        Color.print("Ingrese la ciudad de origen: ");
         String origen = sc.nextLine().trim();
-        System.out.print("Ingrese la ciudad de destino: ");
+        Color.print("Ingrese la ciudad de destino: ");
         String destino = sc.nextLine().trim();
         Ciudad ciudadOrigen = (Ciudad) arbol.obtener(new Ciudad(origen));
         Ciudad ciudadDestino = (Ciudad) arbol.obtener(new Ciudad(destino));
 
         if (ciudadOrigen == null || ciudadDestino == null) {
-            Log.mensaje("Error: Una o ambas ciudades no existen.").print().guardar();
+            Log.mensaje("Error: Una o ambas ciudades no existen.").print(Color.ROJO).guardar();
         } else {
-            System.out.print("Ingrese el diámetro de la tubería: ");
+            Color.print("Ingrese el diámetro de la tubería: ");
             int diametro = Integer.parseInt(sc.nextLine().trim());
-            System.out.print("Ingrese el caudal máximo: ");
+            Color.print("Ingrese el caudal máximo: ");
             int caudalMax = Integer.parseInt(sc.nextLine().trim());
-            System.out.print("Ingrese el caudal mínimo: ");
+            Color.print("Ingrese el caudal mínimo: ");
             int caudalMin = Integer.parseInt(sc.nextLine().trim());
 
             if (diametro <= 0 || caudalMin <= 0 || caudalMax <= 0 || caudalMin >= caudalMax) {
-                Log.mensaje("Error: Valores de diámetro o caudales inválidos.").print().guardar();
+                Log.mensaje("Error: Valores de diámetro o caudales inválidos.").print(Color.ROJO).guardar();
             } else {
                 TuberiaKey key = new TuberiaKey(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura());
                 if (tuberias.containsKey(key)) {
-                    Log.mensaje("Error: Ya existe una tubería entre estas ciudades.").print().guardar();
+                    Log.mensaje("Error: Ya existe una tubería entre estas ciudades.").print(Color.ROJO).guardar();
                 } else {
                     Tuberia tuberia = new Tuberia(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura(),
                             diametro, caudalMax, caudalMin, Estado.ACTIVO);
@@ -228,7 +230,7 @@ public class MetodosTuberia {
     }
 
     public static void buscarTuberia(Map<TuberiaKey, Tuberia> tuberias) {
-        System.out.print("Ingrese la nomenclatura de origen y destino (ej: AB3001-CD3002): ");
+        Color.print("Ingrese la nomenclatura de origen y destino (ej: AB3001-CD3002): ");
         String input = sc.nextLine().trim();
         String[] partes = input.split("-");
         if (partes.length == 2 && MetodosCiudad.validarNomenclatura(partes[0])
@@ -240,10 +242,10 @@ public class MetodosTuberia {
                 Tuberia tuberia = tuberias.get(key);
                 Log.mensaje("Tubería encontrada: " + tuberia).print().guardar();
             } else {
-                Log.mensaje("Error: Tubería no encontrada.").print().guardar();
+                Log.mensaje("Error: Tubería no encontrada.").print(Color.ROJO).guardar();
             }
         } else {
-            Log.mensaje("Error: Formato de entrada incorrecto.").print().guardar();
+            Log.mensaje("Error: Formato de entrada incorrecto.").print(Color.ROJO).guardar();
         }
     }
 
@@ -254,12 +256,12 @@ public class MetodosTuberia {
         String ciudadOrigenNombre, ciudadDestinoNombre, nomenclaturaOrigen, nomenclaturaDestino, estadoCamino;
         Lista caminoCaudalPlenoMinimo;
 
-        System.out.println("Por favor, ingrese el nombre de la ciudad origen");
+        Color.print("Ingrese el nombre de la ciudad origen:");
         ciudadOrigenNombre = sc.nextLine().trim();
         ciudadOrigen = MetodosCiudad.obtenerCiudad(ciudades, ciudadOrigenNombre);
 
         if (ciudadOrigen != null) {
-            System.out.println("Por favor, ingrese el nombre de la ciudad destino");
+            Color.print("Ingrese el nombre de la ciudad destino:");
             ciudadDestinoNombre = sc.nextLine().trim();
             ciudadDestino = MetodosCiudad.obtenerCiudad(ciudades, ciudadDestinoNombre);
 
@@ -282,17 +284,17 @@ public class MetodosTuberia {
                                 + "caminos posibles: " + caminoCaudalPlenoMinimo.toString()).print().guardar();
                         Log.mensaje("Estado del camino: " + estadoCamino).print().guardar();
                     } else {
-                        System.out.println("No existe un camino desde " + nomenclaturaOrigen + " hasta " +
+                        Color.printErr("No existe un camino desde " + nomenclaturaOrigen + " hasta " +
                                 nomenclaturaDestino);
                     }
                 } else {
-                    System.out.println("No hay caminos porque la ciudad origen y destino es la misma");
+                    Color.printErr("No hay caminos porque la ciudad origen y destino es la misma");
                 }
             } else {
-                System.out.println("La ciudad destino ingresada no existe en el sistema");
+                Color.printErr("La ciudad destino ingresada no existe en el sistema");
             }
         } else {
-            System.out.println("La ciudad origen ingresada no existe en el sistema");
+            Color.printErr("La ciudad origen ingresada no existe en el sistema");
         }
     }
 
@@ -362,12 +364,12 @@ public class MetodosTuberia {
         String ciudadOrigenNombre, ciudadDestinoNombre, nomenclaturaOrigen, nomenclaturaDestino, estadoCamino;
         Lista caminoMasCorto;
 
-        System.out.println("Por favor, ingrese el nombre de la ciudad origen");
+        Color.print("Por favor, ingrese el nombre de la ciudad origen");
         ciudadOrigenNombre = sc.nextLine().trim();
         ciudadOrigen = MetodosCiudad.obtenerCiudad(ciudades, ciudadOrigenNombre);
 
         if (ciudadOrigen != null) {
-            System.out.println("Por favor, ingrese el nombre de la ciudad destino");
+            Color.print("Por favor, ingrese el nombre de la ciudad destino");
             ciudadDestinoNombre = sc.nextLine().trim();
             ciudadDestino = MetodosCiudad.obtenerCiudad(ciudades, ciudadDestinoNombre);
 
@@ -388,17 +390,17 @@ public class MetodosTuberia {
                                 nomenclaturaDestino + ": " + caminoMasCorto.toString()).print().guardar();
                         Log.mensaje("Estado del camino: " + estadoCamino).print().guardar();
                     } else {
-                        System.out.println("No existe un camino desde " + nomenclaturaOrigen + " hasta " +
+                        Color.printErr("No existe un camino desde " + nomenclaturaOrigen + " hasta " +
                                 nomenclaturaDestino);
                     }
                 } else {
-                    System.out.println("No hay caminos porque la ciudad origen y destino es la misma");
+                    Color.printErr("No hay caminos porque la ciudad origen y destino es la misma");
                 }
             } else {
-                System.out.println("La ciudad destino ingresada no existe en el sistema");
+                Color.printErr("La ciudad destino ingresada no existe en el sistema");
             }
         } else {
-            System.out.println("La ciudad origen ingresada no existe en el sistema");
+            Color.printErr("La ciudad origen ingresada no existe en el sistema");
         }
 
     }
