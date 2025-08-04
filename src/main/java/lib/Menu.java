@@ -51,10 +51,10 @@ public class Menu {
             Scanner sc, int[] nomenclatura) {
         try {
             System.out.println(String.format(
-                    " %s - Alta ciudad\n %s - Baja Ciudad\n %s - Modificacion Ciudad\n %s - Listar Ciudades\n %s - Buscar Ciudad\n %s - Mostrar habitantes de una ciudad\n %s - Volver al menu principal",
+                    " %s - Alta ciudad\n %s - Baja Ciudad\n %s - Modificacion Ciudad\n %s - Listar Ciudades\n %s - Buscar Ciudad\n %s - Mostrar habitantes de una ciudad\n %s - Mostrar consumo Ciudad\n %s - Volver al menu principal",
                     Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3"),
                     Color.aplicar(Color.AZUL, "4"), Color.aplicar(Color.AZUL, "5"), Color.aplicar(Color.AZUL, "6"),
-                    Color.aplicar(Color.AZUL, "7")));
+                    Color.aplicar(Color.AZUL, "7"), Color.aplicar(Color.AZUL, "0")));
 
             Color.print("Ingrese una opcion:");
             int res = Integer.parseInt(sc.nextLine());
@@ -70,6 +70,9 @@ public class Menu {
                     MetodosCiudad.mostrarHabitantesCiudad(ciudades);
                 }
                 case 7 -> {
+                    MetodosCiudad.generarListaCiudadesConsumo(ciudades);
+                }
+                case 0 -> {
                 }
                 default -> Color.printErr("Opcion invalida");
             }
