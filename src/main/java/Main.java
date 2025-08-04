@@ -19,6 +19,7 @@ public class Main {
     private static Grafo recorrido = new Grafo();
     private static Map<TuberiaKey, Tuberia> listadoTuberias = new HashMap<TuberiaKey, Tuberia>();
     private static Scanner sc = new Scanner(System.in);
+    private static int[] nomenclatura = { 3000 };
 
     public static void main(String[] args) throws IOException {
 
@@ -29,13 +30,13 @@ public class Main {
             Color.print("Cargar datos desde un archivo? (s/n): ");
             String respuesta = sc.nextLine().trim().toLowerCase();
             if (respuesta.equals("s")) {
-                MetodosCiudad.cargarCiudadesDesde(ciudades, recorrido);
+                MetodosCiudad.cargarCiudadesDesde(ciudades, recorrido, nomenclatura);
                 MetodosTuberia.cargarTuberiasDesde(ciudades, recorrido, listadoTuberias);
             } else {
                 Color.print("No se cargaran datos desde un archivo.");
             }
 
-            Menu.menu(ciudades, recorrido, listadoTuberias, sc);
+            Menu.menu(ciudades, recorrido, listadoTuberias, sc, nomenclatura);
         } catch (RuntimeException e) {
             System.out.println(Color.aplicar(Color.ROJO, "Error inesperado: " + e.getMessage()));
         } finally {

@@ -11,7 +11,7 @@ import estructuras.grafos.Grafo;
 public class Menu {
 
     public static void menu(ArbolAVL ciudades, Grafo recorrido,
-            Map<TuberiaKey, Tuberia> listadoTuberias, Scanner sc) {
+            Map<TuberiaKey, Tuberia> listadoTuberias, Scanner sc, int[] nomenclatura) {
         boolean fin = false;
         try {
             while (!fin) {
@@ -27,7 +27,7 @@ public class Menu {
                 int res = Integer.parseInt(sc.nextLine());
 
                 switch (res) {
-                    case 1 -> menuCiudades(ciudades, listadoTuberias, recorrido, sc);
+                    case 1 -> menuCiudades(ciudades, listadoTuberias, recorrido, sc, nomenclatura);
                     case 2 -> menuTuberias(ciudades, recorrido, listadoTuberias, sc);
                     case 3 -> consultasCiudad(ciudades, recorrido, sc);
                     case 4 -> consultasTransporte(ciudades, listadoTuberias, recorrido, sc);
@@ -48,7 +48,7 @@ public class Menu {
     }
 
     private static void menuCiudades(ArbolAVL ciudades, Map<TuberiaKey, Tuberia> listadoTuberias, Grafo recorrido,
-            Scanner sc) {
+            Scanner sc, int[] nomenclatura) {
         try {
             System.out.println(String.format(
                     " %s - Alta ciudad\n %s - Baja Ciudad\n %s - Modificacion Ciudad\n %s - Listar Ciudades\n %s - Buscar Ciudad\n %s - Mostrar habitantes de una ciudad\n %s - Volver al menu principal",
@@ -60,7 +60,7 @@ public class Menu {
             int res = Integer.parseInt(sc.nextLine());
             switch (res) {
                 case 1 -> {
-                    MetodosCiudad.agregarCiudadInput(ciudades, recorrido);
+                    MetodosCiudad.agregarCiudadInput(ciudades, recorrido, nomenclatura);
                 }
                 case 2 -> MetodosCiudad.eliminarCiudad(ciudades, listadoTuberias, recorrido);
                 case 3 -> MetodosCiudad.modificarCiudad(ciudades);

@@ -25,7 +25,7 @@ public class MetodosCiudad {
     private static final String numeros = "^\\d+$";
     private static final String decimales = "^\\d+\\.\\d{2}$";
 
-    public static void cargarCiudadesDesde(ArbolAVL arbol, Grafo caminos) throws IOException {
+    public static void cargarCiudadesDesde(ArbolAVL arbol, Grafo caminos, int[] nomenclaturaNum) throws IOException {
 
         Color.print(Color.MAGENTA, "Cargando ciudades...");
         File archivo = Load.cargarArchivo("Seleccione un archivo CSV de ciudades");
@@ -44,10 +44,11 @@ public class MetodosCiudad {
                         .map(l -> l.split(";"))
                         .forEach(l -> {
                             if (l.length == 5) {
-                                if (validar(l[0], l[1], l[2], l[3], l[4])) {
+                                if (validar(l[0], l[2], l[3], l[4]) && validarNomenclatura(l[1])) {
                                     Ciudad ciudad = new Ciudad(l[0], l[1], Integer.parseInt(l[2]),
                                             Double.parseDouble(l[3]), Integer.parseInt(l[4]));
                                     agregarCiudad(arbol, caminos, ciudad);
+                                    nomenclaturaNum[0] = Integer.parseInt(l[1].substring(2));
                                     Log.mensaje("Ciudad cargada: " + ciudad.getNombre() + " con nomenclatura: "
                                             + ciudad.getNomenclatura())
                                             .print(Color.VERDE).guardar();
@@ -137,10 +138,10 @@ public class MetodosCiudad {
 
     }
 
-    private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona,
+    private static boolean validar(String nombre, String superficie, String cantM3Persona,
             String habitantes) {
-        return nombre.matches(letras) && crearNomenclatura(nombre, nomenclatura) && superficie.matches(numeros)
-                && cantM3Persona.matches(decimales) && habitantes.matches(numeros);
+        return (nombre.matches(letras) && superficie.matches(numeros) && cantM3Persona.matches(decimales)
+                && habitantes.matches(numeros));
     }
 
     public static boolean agregarCiudad(ArbolAVL arbol, Grafo caminos, Ciudad ciudad) {
@@ -164,17 +165,16 @@ public class MetodosCiudad {
 
     }
 
-    public static void agregarCiudadInput(ArbolAVL arbol, Grafo caminos) {
-        String nombre, nomenclatura, superficie, cantM3Persona;
+    public static void agregarCiudadInput(ArbolAVL arbol, Grafo caminos, int[] nomenclatura) {
+        String nombre, superficie, cantM3Persona, nom;
         Ciudad ciudad = null;
+        int num = nomenclatura[0] + 1;
         boolean res = false;
 
-        Color.print("Ingrese los datos de la ciudad:");
-        nombre = sc.nextLine();
+        Color.print("Ingrese el nombre de la ciudad:");
+        nombre = sc.nextLine().trim();
 
-        Color.print("Ingresar nomenclatura de la ciudad (Formato: AA0000): ");
-        nomenclatura = sc.nextLine();
-
+        nom = crearNomenclatura(nombre, num);
         System.out.println();
         Color.print("Ingresar superficie de la ciudad (en m2): ");
         superficie = sc.nextLine();
@@ -187,14 +187,15 @@ public class MetodosCiudad {
 
         System.out.println();
 
-        if (validar(nombre, nomenclatura, superficie, cantM3Persona, habitantes)) {
+        if (validar(nombre, superficie, cantM3Persona, habitantes)) {
             try {
-                ciudad = new Ciudad(nombre, nomenclatura, Integer.parseInt(superficie),
+                ciudad = new Ciudad(nombre, nom, Integer.parseInt(superficie),
                         Double.parseDouble(cantM3Persona), Integer.parseInt(habitantes));
                 res = agregarCiudad(arbol, caminos, ciudad);
                 if (res) {
                     Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")
                             .print().guardar();
+                    nomenclatura[0] += 1;
 
                 } else {
                     Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.")
@@ -209,27 +210,19 @@ public class MetodosCiudad {
         }
     }
 
-    private static boolean crearNomenclatura(String nombre, String nomenclatura) {
-        boolean res = false;
+    private static String crearNomenclatura(String nombre, int numero) {
         StringBuilder sb = new StringBuilder();
         String nombreMayus = nombre.toUpperCase().trim();
-        int numero = Integer.parseInt(nomenclatura.substring(2));
 
-        if (numero > 3000 && numero < 4000 && nomenclatura.matches(REG)) {
-            String[] partes = nombreMayus.split("[\\\\s-]");
-            if (partes.length == 2) {
-                sb.append(partes[0].substring(0, 1)).append(partes[1].substring(0, 1));
-            } else {
-                sb.append(partes[0].substring(0, 2));
-            }
-            sb.append(numero);
-            if (sb.toString().equals(nomenclatura)) {
-                res = true;
-            }
-
+        String[] partes = nombreMayus.split("[\\s-]");
+        if (partes.length == 2) {
+            sb.append(partes[0].substring(0, 1)).append(partes[1].substring(0, 1));
+        } else {
+            sb.append(partes[0].substring(0, 2));
         }
+        sb.append(numero);
 
-        return res;
+        return sb.toString();
     }
 
     public static boolean validarNomenclatura(String nomenclatura) {
@@ -456,9 +449,11 @@ public class MetodosCiudad {
             for (int i = 1; i <= listaCiudades.longitud(); i++) {
                 Ciudad ciudad = (Ciudad) listaCiudades.recuperar(i);
                 for (int j = 1; j <= 12; j++) {
-                    aux = calcularVolumenAgua(ciudad, ciudad.getCantHabitantes(res, j), j);
+                    aux += calcularVolumenAgua(ciudad, ciudad.getCantHabitantes(res, j), j);
                 }
                 ciudadesOrdenadas.put(aux, ciudad.getNombre());
+                Log.mensaje("Consumo de: " + ciudad.getNombre() + " " + aux).guardar();
+                aux = 0.0;
             }
 
             for (Double key : ciudadesOrdenadas.keySet()) {
