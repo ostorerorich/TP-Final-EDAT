@@ -1,10 +1,9 @@
 package estructuras.conjuntistas.dinamicas;
+
 import estructuras.lineales.dinamicas.Lista;
 
-@SuppressWarnings({"all"})
+@SuppressWarnings({ "all" })
 public class ArbolAVL {
-
-    //TODO: Eliminar
 
     private NodoAVL raiz;
 
@@ -34,140 +33,78 @@ public class ArbolAVL {
     }
 
     private NodoAVL insertarAux(NodoAVL nodo, Comparable elem) {
-
+        boolean inserto = false;
         if (elem.compareTo(nodo.getElem()) < 0) {
             if (nodo.getIzquierdo() == null) {
                 nodo.setIzquierdo(new NodoAVL(elem));
             } else {
                 nodo.setIzquierdo(insertarAux(nodo.getIzquierdo(), elem));
             }
+            inserto = true;
         } else if (elem.compareTo(nodo.getElem()) > 0) {
             if (nodo.getDerecho() == null) {
                 nodo.setDerecho(new NodoAVL(elem));
             } else {
                 nodo.setDerecho(insertarAux(nodo.getDerecho(), elem));
             }
+            inserto = true;
         }
 
-        nodo.recalcularAltura();
-        int balance = balance(nodo);
-        if (Math.abs(balance) > 1) {
-            nodo = balancear(nodo, balance);
-        }
-
-        return nodo;
-    }
-
-    public boolean eliminar (Comparable elem){
-        // elem elemento a eliminar, se envía raíz y un nodo padre nulo
-        boolean res = false;
-        if (this.raiz != null) {
-            res = eliminarAux(this.raiz, null, elem);
-            this.raiz = eliminarRebalancear(this.raiz, elem);
-        }
-        return res;
-    }
-
-    private boolean eliminarAux (NodoAVL nodo, NodoAVL padre, Comparable elem){
-         // nodo es el nodo actual
-        // padre es el padre del nodo actual
-        // elem elemento a eliminar
-        boolean res = false;
-        if (nodo != null) {
-            if (elem.compareTo(nodo.getElem()) < 0) {
-                // si X es menor al elemento actual
-                res = eliminarAux(nodo.getIzquierdo(), nodo, elem);
-            } else if (elem.compareTo(nodo.getElem()) > 0) {
-                // si X es mayor al elemento actual
-                res = eliminarAux(nodo.getDerecho(), nodo, elem);
-            } else {
-                // X es el elemento actual
-                res = eliminarCasos(nodo, padre);
-            }
-        }
-        return res;
-    }
-
-    private boolean eliminarCasos(NodoAVL nodo, NodoAVL padre) {
-        // nodo es el nodo a eliminar y padre es el padre de este.
-        boolean res = false;
-        NodoAVL hi = nodo.getIzquierdo();
-        NodoAVL hd = nodo.getDerecho();
-        if (hi == null && hd == null) {
-            // Caso 1, sin hijos
-            if (padre == null) {
-                // la raiz no tiene hijos
-                this.raiz = null;
-            } else if (padre.getIzquierdo() == nodo) {
-                // borra el HI del padre
-                padre.setIzquierdo(null);
-            } else {
-                // borra el HD del padre
-                padre.setDerecho(null);
-            }
-            res = true;
-        } else if (hi == null || hd == null) {
-            // Caso 2, 1 hijo
-            NodoAVL hijoExistente = (hi != null) ? hi : hd;
-            if (padre == null){
-                this.raiz = hijoExistente;
-            } else if (padre.getIzquierdo() == nodo) {
-                // Si el nodo a eliminar es el HI del padre, lo reemplazamos con su HI.
-                padre.setIzquierdo(hijoExistente);
-            } else {
-                // si el nodo a eliminar es el HD del padre, lo reemplazamos con su HD.
-                padre.setDerecho(hijoExistente);
-            }
-            res = true;
-        } else {
-            // Caso 3, 2 hijos.
-            // Candidato A, máximo de la rama izquierda.
-            NodoAVL candidato = nodo.getIzquierdo();
-            NodoAVL padreCandidato = nodo;
-            while (candidato.getDerecho() != null) {
-                // se busca el nodo más a la derecha del subárbol izquierdo de nodo.
-                padreCandidato = candidato;
-                candidato = candidato.getDerecho();
-            }
-            if (padre == null) {
-                // Si el nodo a eliminar es la raiz, la nueva raíz será candidato.
-                this.raiz = candidato;
-            } else if (padre.getIzquierdo() == nodo) {
-                // Si el nodo a eliminar es el hijo izquierdo del padre, lo reemplazamos con el
-                // candidato
-                padre.setIzquierdo(candidato);
-            } else {
-                // Si el nodo a eliminar es el hijo derecho del padre, lo reemplazamos con el
-                // candidato
-                padre.setDerecho(candidato);
-            }
-            candidato.setDerecho(nodo.getDerecho());
-            // Establece el HD del candidato como el hijo derecho del nodo a eliminar.
-            if (padreCandidato != nodo) {
-                padreCandidato.setDerecho(candidato.getIzquierdo());
-
-                candidato.setIzquierdo(nodo.getIzquierdo());
-            }
-            res = true;
-        }
-        return res;
-    }
-
-     private NodoAVL eliminarRebalancear(NodoAVL nodo, Comparable x) {
-        if (nodo != null) {
-            int cmp = x.compareTo(nodo.getElem());
-            if (cmp < 0) {
-                nodo.setIzquierdo(eliminarRebalancear(nodo.getIzquierdo(), x));
-            } else if (cmp > 0) {
-                nodo.setDerecho(eliminarRebalancear(nodo.getDerecho(), x));
-            }
+        if (inserto) {
             nodo.recalcularAltura();
             int balance = balance(nodo);
             if (Math.abs(balance) > 1) {
                 nodo = balancear(nodo, balance);
             }
         }
-        return nodo;
+
+        return inserto ? nodo : null;
+    }
+
+    public boolean eliminar(Comparable elem) {
+        boolean[] eliminado = { false };
+        if (this.raiz != null) {
+            this.raiz = eliminarElem(this.raiz, elem, eliminado);
+        }
+        return eliminado[0];
+    }
+
+    private NodoAVL eliminarElem(NodoAVL nodo, Comparable elem, boolean[] eliminado) {
+        NodoAVL res = nodo;
+
+        if (nodo != null) {
+            int comp = elem.compareTo(nodo.getElem());
+            if (comp < 0) {
+                nodo.setIzquierdo(eliminarElem(nodo.getIzquierdo(), elem, eliminado));
+            } else if (comp > 0) {
+                nodo.setDerecho(eliminarElem(nodo.getDerecho(), elem, eliminado));
+            } else {
+                eliminado[0] = true;
+                if (nodo.getIzquierdo() == null) {
+                    res = nodo.getDerecho();
+                } else if (nodo.getDerecho() == null) {
+                    res = nodo.getIzquierdo();
+                } else {
+                    NodoAVL max = nodo.getIzquierdo();
+                    while (max.getDerecho() != null) {
+                        max = max.getDerecho();
+                    }
+                    nodo.setElem(max.getElem());
+                    nodo.setIzquierdo(eliminarElem(nodo.getIzquierdo(), max.getElem(), eliminado));
+                    res = nodo;
+                }
+            }
+
+            if (res != null) {
+                res.recalcularAltura();
+                int balance = balance(res);
+                if (Math.abs(balance) > 1) {
+                    res = balancear(nodo, balance);
+                }
+            }
+        }
+
+        return res;
     }
 
     private NodoAVL balancear(NodoAVL nodo, int balance) {
@@ -200,7 +137,6 @@ public class ArbolAVL {
 
         nodo.recalcularAltura();
         hi.recalcularAltura();
-
 
         return hi;
     }
@@ -241,16 +177,17 @@ public class ArbolAVL {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String res = toStringAux(this.raiz);
         return res;
     }
 
-    private String toStringAux(NodoAVL nodo){
+    private String toStringAux(NodoAVL nodo) {
         String res = "";
 
-        if (nodo != null){
-            res += nodo.getElem() + "(alt: " + nodo.getAltura() + ")" + " HI: "  + (nodo.getIzquierdo() != null ? nodo.getIzquierdo().getElem() : "-") +
+        if (nodo != null) {
+            res += nodo.getElem() + "(alt: " + nodo.getAltura() + ")" + " HI: "
+                    + (nodo.getIzquierdo() != null ? nodo.getIzquierdo().getElem() : "-") +
                     " HD: " + (nodo.getDerecho() != null ? nodo.getDerecho().getElem() : "-") + "\n";
             res += toStringAux(nodo.getIzquierdo());
             res += toStringAux(nodo.getDerecho());
@@ -259,9 +196,7 @@ public class ArbolAVL {
         return res;
     }
 
-
-    //TODO: Listar ciudades en orden alfabetico
-    public Lista listar() {//SE RECORRE INORDEN
+    public Lista listar() {
         Lista lis = new Lista();
         listarAux(this.raiz, lis);
         return lis;
@@ -317,11 +252,11 @@ public class ArbolAVL {
         return res;
     }
 
-    public Comparable minimoElem(){
+    public Comparable minimoElem() {
         Comparable res = null;
         NodoAVL nodo = this.raiz;
-        if (nodo!=null){
-            while (nodo.getIzquierdo()!=null){
+        if (nodo != null) {
+            while (nodo.getIzquierdo() != null) {
                 nodo = nodo.getIzquierdo();
             }
             res = nodo.getElem();
@@ -329,11 +264,11 @@ public class ArbolAVL {
         return res;
     }
 
-    public Comparable maximoElem(){
+    public Comparable maximoElem() {
         Comparable res = null;
         NodoAVL nodo = this.raiz;
-        if (nodo!=null){
-            while (nodo.getDerecho()!=null){
+        if (nodo != null) {
+            while (nodo.getDerecho() != null) {
                 nodo = nodo.getDerecho();
             }
             res = nodo.getElem();
@@ -341,13 +276,14 @@ public class ArbolAVL {
         return res;
     }
 
-    public Lista listarRango(Comparable minimoElem, Comparable maximoElem){
+    public Lista listarRango(Comparable minimoElem, Comparable maximoElem) {
         Lista lis = new Lista();
         listarRangoAux(lis, this.raiz, minimoElem, maximoElem);
         return lis;
     }
-    private void listarRangoAux (Lista l, NodoAVL nodo, Comparable min, Comparable max){
-        if (nodo!=null){
+
+    private void listarRangoAux(Lista l, NodoAVL nodo, Comparable min, Comparable max) {
+        if (nodo != null) {
             if (min.compareTo(nodo.getElem()) < 0) {
                 listarRangoAux(l, nodo.getIzquierdo(), min, max);
             }
@@ -360,28 +296,25 @@ public class ArbolAVL {
         }
     }
 
-    public void vaciar(){
+    public void vaciar() {
         this.raiz = null;
     }
-    public ArbolAVL clone(){
+
+    public ArbolAVL clone() {
         ArbolAVL nuevoArbol = new ArbolAVL();
-        // Clona al arbol creando nuevos nodos con un recorrido en preorden
         nuevoArbol.raiz = clonarArbol(this.raiz);
         return nuevoArbol;
     }
-    
-    private NodoAVL clonarArbol(NodoAVL nodo){
+
+    private NodoAVL clonarArbol(NodoAVL nodo) {
         NodoAVL nuevoNodo = null;
-        if (nodo != null) { // Caso base: el nodo es nulo
-            // Caso recursivo: crea nuevos nodos y les agrega su hijo izquierdo y derecho mediante llamadas recursivas
-            // con un recorrido en preorden
+        if (nodo != null) {
             nuevoNodo = new NodoAVL(nodo.getElem(), null, null);
             nuevoNodo.setIzquierdo(clonarArbol(nodo.getIzquierdo()));
             nuevoNodo.setDerecho(clonarArbol(nodo.getDerecho()));
+            nuevoNodo.recalcularAltura();
         }
         return nuevoNodo;
     }
-
-
 
 }
