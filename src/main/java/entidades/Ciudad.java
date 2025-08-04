@@ -101,7 +101,7 @@ public class Ciudad implements Comparable<Ciudad> {
         boolean res = false;
 
         // Verificar años siguientes cuando se le modifica a x mes de x año.
-        if (yearArr != null && mes >= 1 && mes <= 12) {
+        if (yearArr != null && mes >= 1 && mes <= 12 && cant >= 1) {
             yearArr[mes - 1] = cant;
             res = true;
         }

@@ -329,7 +329,7 @@ public class MetodosTuberia {
                 case "Reparación" -> {
                     // El estado actual del camino está en reparación, siempre y cuando no se haya
                     // encontrado una tubería inactiva
-                    if (!estado.equals("Reparación")) {
+                    if (!estado.equals("Inactivo")) {
                         estado = "Reparación";
                     }
                 }

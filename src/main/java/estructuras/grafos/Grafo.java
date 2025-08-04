@@ -794,23 +794,29 @@ public class Grafo {
 
         if (nodoVertAux != null) {
             grafoClon.inicio = new NodoVert(nodoVertAux.getElem(), null, null);
-            nodoVertAux = nodoVertAux.getSigVertice();
-            nodoVertClon = grafoClon.inicio;
+            nodoVertAux = nodoVertAux.getSigVertice(); // Puntero que va visitando los vértices del grafo original
+            nodoVertClon = grafoClon.inicio; // Puntero que irá clonando los vértices
             
             while (nodoVertAux != null) {
+                // Clona todos los vértices de la lista de vértices del grafo
                 nodoVertClon.setSigVertice(new NodoVert(nodoVertAux.getElem(), null, null));
                 nodoVertClon = nodoVertClon.getSigVertice();
                 nodoVertAux = nodoVertAux.getSigVertice();
             }
             
-            nodoVertAux = this.inicio;
-            nodoVertClon = grafoClon.inicio;
+            nodoVertAux = this.inicio; // Puntero que irá visitando los´vértices del grafo original para clonar sus adyacentes
+            nodoVertClon = grafoClon.inicio; // Puntero para clonar al primer adyacente de un vértice del grafo clonado
             
             while (nodoVertAux != null) {
+                // Clona todos los arcos del grafo
                 
-                    nodoAdyAux = nodoVertAux.getPrimerAdy();
-                    nodoVertClonAux = grafoClon.inicio;
+                nodoAdyAux = nodoVertAux.getPrimerAdy(); // Puntero que irá visitando los adyacentes de cada vértice
+                // Puntero que irá visitando los vértices del grafo clonado para tomar la referencia y colocarla como
+                // adyacente del vértice correspondiente
+                nodoVertClonAux = grafoClon.inicio;
 
+                if (nodoAdyAux != null) {
+                    // Clona el primer adyacente
                     while (!nodoVertClonAux.getElem().equals(nodoAdyAux.getVertice().getElem())) {
                         nodoVertClonAux = nodoVertClonAux.getSigVertice();
                     }
@@ -821,6 +827,7 @@ public class Grafo {
                     nodoAdyClon = nodoVertClon.getPrimerAdy();
 
                     while (nodoAdyAux != null) {
+                        // Clona todos los demás adyacentes
                         nodoVertClonAux = grafoClon.inicio;
 
                         while (!nodoVertClonAux.getElem().equals(nodoAdyAux.getVertice().getElem())) {
@@ -832,14 +839,12 @@ public class Grafo {
                         nodoAdyAux = nodoAdyAux.getSigAdyacente();
                         nodoAdyClon = nodoAdyClon.getSigAdyacente();
                     }
-                
-                
+                }
+                    
                 nodoVertAux = nodoVertAux.getSigVertice();
                 nodoVertClon = nodoVertClon.getSigVertice();
             
             }
-            
-            
             
         }
         
