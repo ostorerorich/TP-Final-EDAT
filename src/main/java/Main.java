@@ -35,7 +35,9 @@ public class Main {
             } else {
                 Color.print("No se cargaran datos desde un archivo.");
             }
-
+            Log.mensaje(ciudades.toString()).guardar();
+            Log.mensaje(recorrido.toString()).guardar();
+            Log.mensaje(listadoTuberias.toString()).guardar();
             Menu.menu(ciudades, recorrido, listadoTuberias, sc, nomenclatura);
         } catch (RuntimeException e) {
             System.out.println(Color.aplicar(Color.ROJO, "Error inesperado: " + e.getMessage()));
