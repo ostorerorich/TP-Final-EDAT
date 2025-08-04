@@ -135,7 +135,7 @@ public class Lista {
         if (this.cabecera != null) {
             Nodo aux = this.cabecera;
             while (aux != null) {
-                res += aux.getElemento() + ";";
+                res += aux.getElemento();
                 aux = aux.getEnlace();
                 if (aux != null) {
                     res += ",";

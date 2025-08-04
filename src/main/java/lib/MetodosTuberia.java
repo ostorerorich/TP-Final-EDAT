@@ -312,7 +312,7 @@ public class MetodosTuberia {
         estado = "Activo"; // Estado por defecto
 
         while (pos2 <= longitud && !terminar) {
-            tuberia = obtenerTuberia((String) camino.recuperar(pos1), (String) camino.recuperar(2), tuberias);
+            tuberia = obtenerTuberia((String) camino.recuperar(pos1), (String) camino.recuperar(pos2), tuberias);
 
             switch (tuberia.getEstado().getNombre()) {
                 case "Diseño" -> {

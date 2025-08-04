@@ -193,20 +193,14 @@ public class MetodosCiudad {
                         Double.parseDouble(cantM3Persona), Integer.parseInt(habitantes));
                 res = agregarCiudad(arbol, caminos, ciudad);
                 if (res) {
-                    Log.mensaje("Ciudad " + ciudad.getNombre() + " agregada al sistema.")
-                            .print().guardar();
                     nomenclatura[0] += 1;
-
-                } else {
-                    Log.mensaje("La ciudad " + ciudad.getNombre() + " ya existe en el sistema.")
-                            .print(Color.ROJO).guardar();
-
                 }
             } catch (NumberFormatException e) {
                 Log.mensaje("Error al agregar la ciudad: " + e.getMessage())
                         .print(Color.ROJO).guardar();
             }
-
+        } else {
+            Log.mensaje("Datos incorrectos. La ciudad no se pudo agregar").print(Color.ROJO).guardar();
         }
     }
 
@@ -460,6 +454,8 @@ public class MetodosCiudad {
                 Color.print(Color.CYAN, String.format("%.2f", key) + " " + ciudadesOrdenadas.get(key));
             }
 
+        } else {
+            Color.printErr("No hay ciudades cargadas en el sistema");
         }
 
     }

@@ -1,11 +1,24 @@
 ciudad_desde;ciudad_hasta;caudalmax;caudalmin;diametro
 Neufuen;Rionegra;274;120;500
-Neufuen;Solandina;387;180;600
-Neufuen;Terraviva;443;200;650
-Neufuen;Bosquemonte;148;60;350
-Cupral-Co;Piedraluna;312;140;520
-Cupral-Co;Terraviva;431;210;630
-Cupral-Co;Valleverde;268;110;480
-Maravelica;Terraviva;456;220;670
-Maravelica;Bosquemonte;164;70;370
-Maravelica;Monteaurora;460;230;680
+Neufuen;Terraviva;387;180;600
+Neufuen;Maravelica;443;200;650
+Cupral-Co;Maravelica;186;100;400
+Cupral-Co;Ventisquero Alto;318;163;530
+Maravelica;Monteaurora;412;248;630
+Solandina;Cupral-Co;243;140;470
+Terraviva;Piedraluna;380;182;520
+Terraviva;Valleverde;337;190;570
+Piedraluna;Fuenteluz;473;183;620
+Monteaurora;Solandina;456;220;640
+Monteaurora;Terraviva;312;137;510
+Monteaurora;Fuenteluz;192;87;410
+Rionegra;Cupral-Co;328;243;490
+Rionegra;Bosquemonte;389;230;590
+Fuenteluz;Neufuen;357;150;530
+Fuenteluz;Monteaurora;228;120;450
+Ventisquero Alto;Cupral-Co;164;70;430
+Ventisquero Alto;Bosquemonte;431;280;670
+Cieloflor;Neufuen;240;146;460
+Cieloflor;Valleverde;340;197;580
+Bosquemonte;Ventisquero Alto;408;208;660
+Bosquemonte;Cieloflor;260;164;440

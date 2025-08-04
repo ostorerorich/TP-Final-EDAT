@@ -13,8 +13,8 @@ public class Menu {
     public static void menu(ArbolAVL ciudades, Grafo recorrido,
             Map<TuberiaKey, Tuberia> listadoTuberias, Scanner sc, int[] nomenclatura) {
         boolean fin = false;
-        try {
-            while (!fin) {
+        while (!fin) {
+            try {
                 System.out.println(String.format(
                         " %s - Menu Ciudades\n %s - Menu tuberia\n %s - Consulta Ciudad\n %s - Consulta Transporte\n %s - Mostrar sistema (Debug)\n %s - Salir del programa\n",
                         Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3"),
@@ -39,11 +39,11 @@ public class Menu {
                     default -> Color.printErr("Opcion invalida, por favor intente nuevamente.");
                 }
 
+            } catch (NumberFormatException e) {
+                Color.printErr("Error: Debe ingresar un numero valido.");
+            } catch (Exception e) {
+                Color.printErr("Error: " + e.getMessage());
             }
-        } catch (NumberFormatException e) {
-            Color.printErr("Error: Debe ingresar un numero valido.");
-        } catch (Exception e) {
-            Color.printErr("Error: " + e.getMessage());
         }
     }
 
