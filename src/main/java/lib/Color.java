@@ -31,19 +31,19 @@ public enum Color {
     }
 
     public static void printErr(String texto) {
-        System.out.print(aplicar(Color.ROJO, texto));
+        System.out.println(aplicar(Color.ROJO, texto));
     }
 
     public static void printOk(String texto) {
-        System.out.print(aplicar(texto));
+        System.out.println(aplicar(texto));
     }
 
     public static void print(String texto) {
-        System.out.print(aplicar(Color.NARANJA, texto));
+        System.out.println(aplicar(Color.NARANJA, texto));
     }
 
     public static void print(Color color, String texto) {
-        System.out.print(aplicar(color, texto));
+        System.out.println(aplicar(color, texto));
     }
 
     public static void printWar(String texto) {

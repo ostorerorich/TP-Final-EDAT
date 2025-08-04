@@ -16,10 +16,10 @@ public class Menu {
         try {
             while (!fin) {
                 System.out.println(String.format(
-                        " %s - Menu Ciudades\n %s - Modificacion Tuberia\n %s - Alta cantidad Habitantes\n %s - Consulta Ciudad\n %s - Consulta Transporte\n %s - Listado de ciudades\n %s - Mostrar sistema (Debug)\n %s - Salir del programa\n",
+                        " %s - Menu Ciudades\n %s - Menu tuberia\n %s - Consulta Ciudad\n %s - Consulta Transporte\n %s - Mostrar sistema (Debug)\n %s - Salir del programa\n",
                         Color.aplicar(Color.AZUL, "1"), Color.aplicar(Color.AZUL, "2"), Color.aplicar(Color.AZUL, "3"),
-                        Color.aplicar(Color.AZUL, "4"), Color.aplicar(Color.AZUL, "5"), Color.aplicar(Color.AZUL, "6"),
-                        Color.aplicar(Color.AZUL, "7"), Color.aplicar(Color.AZUL, "0")));
+                        Color.aplicar(Color.AZUL, "4"), Color.aplicar(Color.AZUL, "5"),
+                        Color.aplicar(Color.AZUL, "0")));
 
                 // next line es para que no se quede en memoria el enter y lea la linea de
                 // manera correcta
@@ -29,11 +29,9 @@ public class Menu {
                 switch (res) {
                     case 1 -> menuCiudades(ciudades, listadoTuberias, recorrido, sc);
                     case 2 -> menuTuberias(ciudades, recorrido, listadoTuberias, sc);
-                    case 3 -> MetodosCiudad.agregarHabitantesCiudad(ciudades);
-                    case 4 -> consultasCiudad(ciudades, recorrido, sc);
-                    case 5 -> consultasTransporte(ciudades, listadoTuberias, recorrido, sc);
-                    case 6 -> MetodosCiudad.mostrarListaCiudades(ciudades);
-                    case 7 -> mostrarSistema(ciudades, recorrido, listadoTuberias);
+                    case 3 -> consultasCiudad(ciudades, recorrido, sc);
+                    case 4 -> consultasTransporte(ciudades, listadoTuberias, recorrido, sc);
+                    case 5 -> mostrarSistema(ciudades, recorrido, listadoTuberias);
                     case 0 -> {
                         fin = true;
                         Color.printWar("Saliendo del programa...");
@@ -65,8 +63,8 @@ public class Menu {
                     MetodosCiudad.agregarCiudadInput(ciudades, recorrido);
                 }
                 case 2 -> MetodosCiudad.eliminarCiudad(ciudades, listadoTuberias, recorrido);
-                case 3 -> System.out.println("Modificacion Ciudad");
-                case 4 -> System.out.println("Listar Ciudades: " + ciudades.listar());
+                case 3 -> MetodosCiudad.modificarCiudad(ciudades);
+                case 4 -> MetodosCiudad.mostrarListaCiudades(ciudades);
                 case 5 -> MetodosCiudad.buscarCiudad(ciudades);
                 case 6 -> {
                     MetodosCiudad.mostrarHabitantesCiudad(ciudades);
@@ -99,7 +97,7 @@ public class Menu {
                 case 5 -> MetodosTuberia.buscarTuberia(listadoTuberias);
                 case 6 -> {
                 }
-                default -> System.out.println("Opcion invalida");
+                default -> Color.printErr("Opcion invalida");
             }
         } catch (NumberFormatException e) {
             Color.printErr("Error: Debe ingresar un numero valido.");
@@ -168,11 +166,11 @@ public class Menu {
 
     private static void mostrarSistema(ArbolAVL ciudades, Grafo recorrido, Map<TuberiaKey, Tuberia> listadoTuberias) {
 
-        System.out.println("Arbol AVL: ");
-        System.out.println(ciudades.toString());
+        Color.print("Arbol AVL: ");
+        Color.printOk(ciudades.toString());
 
-        System.out.println("Grafo: ");
-        System.out.println(recorrido.toString());
+        Color.print("Grafo: ");
+        Color.printOk(recorrido.toString());
 
         listadoTuberias.forEach((k, v) -> System.out.println(k + " = " + v +
                 " metros"));

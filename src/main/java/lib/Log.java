@@ -43,8 +43,8 @@ public class Log {
 
         crearDir();
 
-        // Obtiene la fecha y hora actual en formato ISO_DATE_TIME.
-        String hora = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+        // Obtiene la fecha y hora actual.
+        String hora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String log = String.format("[%s] %s", hora, mes);
 
         // Si el PrintWriter no está inicializado, lo inicializa.

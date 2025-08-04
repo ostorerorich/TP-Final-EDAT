@@ -130,15 +130,15 @@ public class Lista {
 
     @Override
     public String toString() {
-        String res = "[ \n";
+        String res = "[";
 
         if (this.cabecera != null) {
             Nodo aux = this.cabecera;
             while (aux != null) {
-                res += aux.getElemento() + "\n";
+                res += aux.getElemento() + ";";
                 aux = aux.getEnlace();
                 if (aux != null) {
-                    res += "";
+                    res += ",";
                 }
             }
 

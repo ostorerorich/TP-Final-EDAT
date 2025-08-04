@@ -262,7 +262,7 @@ public class ArbolAVL {
         return res;
     }
 
-    public Lista listar() {// SE RECORRE INORDEN
+    public Lista listar() {
         Lista lis = new Lista();
         listarAux(this.raiz, lis);
         return lis;
@@ -368,21 +368,17 @@ public class ArbolAVL {
 
     public ArbolAVL clone() {
         ArbolAVL nuevoArbol = new ArbolAVL();
-        // Clona al arbol creando nuevos nodos con un recorrido en preorden
         nuevoArbol.raiz = clonarArbol(this.raiz);
         return nuevoArbol;
     }
 
     private NodoAVL clonarArbol(NodoAVL nodo) {
         NodoAVL nuevoNodo = null;
-        if (nodo != null) { // Caso base: el nodo es nulo
-            // Caso recursivo: crea nuevos nodos y les agrega su hijo izquierdo y derecho
-            // mediante llamadas recursivas
-            // con un recorrido en preorden
+        if (nodo != null) {
             nuevoNodo = new NodoAVL(nodo.getElem(), null, null);
             nuevoNodo.setIzquierdo(clonarArbol(nodo.getIzquierdo()));
             nuevoNodo.setDerecho(clonarArbol(nodo.getDerecho()));
-            nuevoNodo.recalcularAltura(); // Recalcula la altura del nuevo nodo
+            nuevoNodo.recalcularAltura();
         }
         return nuevoNodo;
     }

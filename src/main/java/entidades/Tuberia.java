@@ -22,10 +22,10 @@ public class Tuberia {
     public Tuberia(String nomOrigen, String nomDestino) {
         this.nomOrigen = nomOrigen;
         this.nomDestino = nomDestino;
-        this.diametro = 0; // Default value
-        this.caudalMax = 0; // Default value
-        this.caudalMin = 0; // Default value
-        this.estado = Estado.INACTIVO; // Default state
+        this.diametro = 0;
+        this.caudalMax = 0;
+        this.caudalMin = 0;
+        this.estado = Estado.INACTIVO;
     }
 
 

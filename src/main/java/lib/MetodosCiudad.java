@@ -70,8 +70,8 @@ public class MetodosCiudad {
 
     }
 
-    public static void agregarHabitantesCiudad(ArbolAVL arbol) {
-        Color.print("Ingrese el nombre de la ciudad a la que desea agregar habitantes:");
+    public static void modificarCiudad(ArbolAVL arbol) {
+        Color.print("Ingrese el nombre de la ciudad a la que desea modificar:");
         String nombre = sc.nextLine().trim();
 
         if (nombre.isEmpty() || !nombre.matches(letras)) {
@@ -80,27 +80,61 @@ public class MetodosCiudad {
         } else {
             Ciudad res = obtenerCiudad(arbol, nombre);
             if (res != null) {
-                Color.print("Ingrese el año:");
-                int anio = Integer.parseInt(sc.nextLine().trim());
-                Color.print("Ingrese el mes (1-12):");
-                int mes = Integer.parseInt(sc.nextLine().trim());
-                Color.print("Ingrese la cantidad de habitantes:");
-                int cantHabitantes = Integer.parseInt(sc.nextLine().trim());
+                System.out.println(
+                        String.format(" %s - Modificar cantidad habitantes\n %s - Modificar cantidad de consumo",
+                                Color.aplicar(Color.AZUL, "1"),
+                                Color.aplicar(Color.AZUL, "2")));
+                int opcion = Integer.parseInt(sc.nextLine().trim());
 
-                if (res.agregarCantHabitantes(anio, mes, cantHabitantes)) {
-                    Log.mensaje("Cantidad de habitantes agregada a la ciudad " + res.getNombre() + " para el año "
-                            + anio + " y mes " + mes)
-                            .print(Color.VERDE).guardar();
-                } else {
-                    Log.mensaje("Error al agregar habitantes a la ciudad " + res.getNombre()
-                            + ". Verifique los datos ingresados.")
-                            .print(Color.ROJO).guardar();
+                switch (opcion) {
+                    case 1 -> {
+                        modificarHabitantesCiudad(res);
+                    }
+                    case 2 -> {
+                        modificarConsumoCiudad(res);
+                    }
+                    default -> {
+                        Color.printErr("Opción no válida. Por favor, elija una opción correcta.");
+                    }
                 }
             } else {
                 Log.mensaje("La ciudad " + nombre + " no existe en el sistema.")
                         .print(Color.ROJO).guardar();
             }
         }
+    }
+
+    private static void modificarHabitantesCiudad(Ciudad ciudad) {
+        Color.print("Ingrese el año:");
+        int anio = Integer.parseInt(sc.nextLine().trim());
+        Color.print("Ingrese el mes (1-12):");
+        int mes = Integer.parseInt(sc.nextLine().trim());
+        Color.print("Ingrese la cantidad de habitantes:");
+        int cantHabitantes = Integer.parseInt(sc.nextLine().trim());
+
+        if (ciudad.agregarCantHabitantes(anio, mes, cantHabitantes)) {
+            Log.mensaje("Cantidad de habitantes agregada a la ciudad " + ciudad.getNombre() + " para el año "
+                    + anio + " y mes " + mes)
+                    .print(Color.VERDE).guardar();
+        } else {
+            Log.mensaje("Error al agregar habitantes a la ciudad " + ciudad.getNombre()
+                    + ". Verifique los datos ingresados.")
+                    .print(Color.ROJO).guardar();
+        }
+    }
+
+    private static void modificarConsumoCiudad(Ciudad ciudad) {
+
+        Color.print("Ingrese consumo de agua por persona (m3):");
+        double consumo = Double.parseDouble(sc.nextLine().trim());
+        if (consumo > 0) {
+            ciudad.setCantM3Persona(consumo);
+            Log.mensaje("Consumo de agua por persona modificado a " + consumo + " m3.")
+                    .print().guardar();
+        } else {
+            Color.printErr("El consumo de agua debe ser un número positivo.");
+        }
+
     }
 
     private static boolean validar(String nombre, String nomenclatura, String superficie, String cantM3Persona,
@@ -227,13 +261,11 @@ public class MetodosCiudad {
                         iterador.remove();
                     }
                 }
-
                 Log.mensaje("Ciudad " + ciudad.getNombre() + " eliminada del sistema.")
                         .print().guardar();
             } else {
                 Log.mensaje("La ciudad " + ciudad.getNombre() + " no existe en el sistema.")
                         .print(Color.ROJO).guardar();
-
             }
         }
     }
@@ -294,9 +326,7 @@ public class MetodosCiudad {
     }
 
     public static Ciudad obtenerCiudad(ArbolAVL ciudades, String nombreCiudad) {
-
         Ciudad ciudadEncontrada = null;
-
         // Si el nombre no está vacío y tiene los caracteres correctos, entonces
         // verifica si la ciudad esta en el árbol
         if (!nombreCiudad.isEmpty() && nombreCiudad.matches(letras)) {
@@ -305,13 +335,10 @@ public class MetodosCiudad {
             ciudadEncontrada = (Ciudad) ciudades.obtener(ciudad);
 
         }
-
         return ciudadEncontrada;
-
     }
 
     public static void mostrarCantHabitantesYConsumo(ArbolAVL ciudades) {
-
         String nombreCiudad, nombreMes;
         Ciudad ciudad, ciudadEncontrada;
         int anio, mes;
@@ -360,16 +387,13 @@ public class MetodosCiudad {
     }
 
     private static double calcularVolumenAgua(Ciudad ciudad, int cantHabitantes, int mes) {
-
         double consumoPromedio = ciudad.getCantM3Persona();
         int cantDias = obtenerCantDias(mes);
 
         return cantHabitantes * consumoPromedio * cantDias;
-
     }
 
     private static String obtenerNombreMes(int numeroMes) {
-
         String nombreMes = "";
 
         switch (numeroMes) {
@@ -391,7 +415,6 @@ public class MetodosCiudad {
     }
 
     private static int obtenerCantDias(int numeroMes) {
-
         int cantDias;
 
         if (numeroMes == 1 || numeroMes == 3 || numeroMes == 5 || numeroMes == 7 || numeroMes == 8 || numeroMes == 10 ||
@@ -409,9 +432,7 @@ public class MetodosCiudad {
                 cantDias = 28;
             }
         }
-
         return cantDias;
-
     }
 
     public static void generarListaCiudadesConsumo(ArbolAVL arbol) {

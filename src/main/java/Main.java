@@ -24,14 +24,25 @@ public class Main {
 
         try {
             System.out.println(Color.aplicar(Color.AZUL, "Bienvenido al sistema de gestion de ciudades y tuberias"));
+            System.out.println();
 
-            MetodosCiudad.cargarCiudadesDesde(ciudades, recorrido);
-            MetodosTuberia.cargarTuberiasDesde(ciudades, recorrido, listadoTuberias);
+            Color.print("Cargar datos desde un archivo? (s/n): ");
+            String respuesta = sc.nextLine().trim().toLowerCase();
+            if (respuesta.equals("s")) {
+                MetodosCiudad.cargarCiudadesDesde(ciudades, recorrido);
+                MetodosTuberia.cargarTuberiasDesde(ciudades, recorrido, listadoTuberias);
+            } else {
+                Color.print("No se cargaran datos desde un archivo.");
+            }
 
             Menu.menu(ciudades, recorrido, listadoTuberias, sc);
         } catch (RuntimeException e) {
             System.out.println(Color.aplicar(Color.ROJO, "Error inesperado: " + e.getMessage()));
         } finally {
+            Log.mensaje(ciudades.toString()).guardar();
+            Log.mensaje(recorrido.toString()).guardar();
+            Log.mensaje(listadoTuberias.toString()).guardar();
+            Log.mensaje("Programa finalizado.").print().guardar();
             sc.close();
             Log.cerrar();
         }
