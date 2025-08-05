@@ -191,40 +191,45 @@ public class MetodosTuberia {
         String origen = sc.nextLine().trim();
         Color.print("Ingrese la ciudad de destino: ");
         String destino = sc.nextLine().trim();
-        Ciudad ciudadOrigen = (Ciudad) arbol.obtener(new Ciudad(origen));
-        Ciudad ciudadDestino = (Ciudad) arbol.obtener(new Ciudad(destino));
+        
+        if (!origen.equals(destino)) {
+            Ciudad ciudadOrigen = (Ciudad) arbol.obtener(new Ciudad(origen));
+            Ciudad ciudadDestino = (Ciudad) arbol.obtener(new Ciudad(destino));
 
-        if (ciudadOrigen == null || ciudadDestino == null) {
-            Log.mensaje("Error: Una o ambas ciudades no existen.").print(Color.ROJO).guardar();
-        } else {
-            Color.print("Ingrese el diámetro de la tubería: ");
-            int diametro = Integer.parseInt(sc.nextLine().trim());
-            Color.print("Ingrese el caudal máximo: ");
-            int caudalMax = Integer.parseInt(sc.nextLine().trim());
-            Color.print("Ingrese el caudal mínimo: ");
-            int caudalMin = Integer.parseInt(sc.nextLine().trim());
-
-            if (diametro <= 0 || caudalMin <= 0 || caudalMax <= 0 || caudalMin >= caudalMax) {
-                Log.mensaje("Error: Valores de diámetro o caudales inválidos.").print(Color.ROJO).guardar();
+            if (ciudadOrigen == null || ciudadDestino == null) {
+                Log.mensaje("Error: Una o ambas ciudades no existen.").print(Color.ROJO).guardar();
             } else {
-                TuberiaKey key = new TuberiaKey(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura());
-                if (tuberias.containsKey(key)) {
-                    Log.mensaje("Error: Ya existe una tubería entre estas ciudades.").print(Color.ROJO).guardar();
+                Color.print("Ingrese el diámetro de la tubería: ");
+                int diametro = Integer.parseInt(sc.nextLine().trim());
+                Color.print("Ingrese el caudal máximo: ");
+                int caudalMax = Integer.parseInt(sc.nextLine().trim());
+                Color.print("Ingrese el caudal mínimo: ");
+                int caudalMin = Integer.parseInt(sc.nextLine().trim());
+
+                if (diametro <= 0 || caudalMin <= 0 || caudalMax <= 0 || caudalMin >= caudalMax) {
+                    Log.mensaje("Error: Valores de diámetro o caudales inválidos.").print(Color.ROJO).guardar();
                 } else {
-                    Tuberia tuberia = new Tuberia(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura(),
-                            diametro, caudalMax, caudalMin, Estado.ACTIVO);
+                    TuberiaKey key = new TuberiaKey(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura());
+                    if (tuberias.containsKey(key)) {
+                        Log.mensaje("Error: Ya existe una tubería entre estas ciudades.").print(Color.ROJO).guardar();
+                    } else {
+                        Tuberia tuberia = new Tuberia(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura(),
+                                diametro, caudalMax, caudalMin, Estado.ACTIVO);
 
-                    tuberia.setEstado(obtenerEstadoTuberia());
+                        tuberia.setEstado(obtenerEstadoTuberia());
 
-                    tuberias.put(key, tuberia);
+                        tuberias.put(key, tuberia);
 
-                    caminos.insertarArco(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura(),
-                            tuberia.getCaudalMax());
+                        caminos.insertarArco(ciudadOrigen.getNomenclatura(), ciudadDestino.getNomenclatura(),
+                                tuberia.getCaudalMax());
 
-                    Log.mensaje("Tubería agregada: " + tuberia).print().guardar();
+                        Log.mensaje("Tubería agregada: " + tuberia).print().guardar();
+                    }
                 }
-            }
 
+            }
+        } else {
+            Log.mensaje("Error: La ciudad origen y destino es la misma").print(Color.ROJO).guardar();
         }
 
     }
