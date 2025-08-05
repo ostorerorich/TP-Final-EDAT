@@ -3,6 +3,14 @@ package estructuras.grafos;
 import estructuras.lineales.dinamicas.Cola;
 import estructuras.lineales.dinamicas.Lista;
 
+/*
+    Condiciones del dominio:
+        - El grafo es un digrafo
+        - La etiqueta de los arcos (tuberías) es de tipo numérica
+        - Solo puede haber un arco (tubería) por par de vértices (ciudades) en el mismo sentido
+        - No pueden haber arcos (tuberías) que tengan como origen y destino al mismo vértice (ciudad)
+*/
+
 public class Grafo {
     
     // Atributos
@@ -109,25 +117,27 @@ public class Grafo {
         nodoOrigen = null;
         nodoDestino = null;
         nodoVertAux = this.inicio;
-        
-        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
-            // Busca el nodo origen y el nodo destino en el grafo
-            if (nodoVertAux.getElem().equals(origen)) {
-                nodoOrigen = nodoVertAux;
+
+        if (!origen.equals(destino)) {
+            while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+                // Busca el nodo origen y el nodo destino en el grafo
+                if (nodoVertAux.getElem().equals(origen)) {
+                    nodoOrigen = nodoVertAux;
+                }
+                
+                if (nodoVertAux.getElem().equals(destino)){
+                    nodoDestino = nodoVertAux;
+                }
+                
+                nodoVertAux = nodoVertAux.getSigVertice();
             }
             
-            if (nodoVertAux.getElem().equals(destino)){
-                nodoDestino = nodoVertAux;
+            if (nodoOrigen != null && nodoDestino != null) {
+                // Si ambos nodos existen, verifica si puede crear un nuevo arco entre ambos
+                arcoInsertado = ubicarArco(nodoOrigen, nodoDestino, etiqueta);
             }
-            
-            nodoVertAux = nodoVertAux.getSigVertice();
         }
-        
-        if (nodoOrigen != null && nodoDestino != null) {
-            // Si ambos nodos existen, verifica si puede crear un nuevo arco entre ambos
-            arcoInsertado = ubicarArco(nodoOrigen, nodoDestino, etiqueta);
-        }
-        
+
         return arcoInsertado;
         
     }
@@ -178,23 +188,25 @@ public class Grafo {
         nodoDestino = null;
         nodoVertAux = this.inicio;
         
-        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
-            // Busca el nodo origen y el nodo destino en el grafo
-            if (nodoVertAux.getElem().equals(origen)) {
-                nodoOrigen = nodoVertAux;
+        if (!origen.equals(destino)) {
+            while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+                // Busca el nodo origen y el nodo destino en el grafo
+                if (nodoVertAux.getElem().equals(origen)) {
+                    nodoOrigen = nodoVertAux;
+                }
+                
+                if (nodoVertAux.getElem().equals(destino)){
+                    nodoDestino = nodoVertAux;
+                }
+                
+                nodoVertAux = nodoVertAux.getSigVertice();
             }
             
-            if (nodoVertAux.getElem().equals(destino)){
-                nodoDestino = nodoVertAux;
+            if (nodoOrigen != null && nodoDestino != null && nodoOrigen != nodoDestino) {
+                arcoEliminado = eliminarArcoAux(nodoOrigen, destino);
             }
-            
-            nodoVertAux = nodoVertAux.getSigVertice();
         }
-        
-        if (nodoOrigen != null && nodoDestino != null) {
-            arcoEliminado = eliminarArcoAux(nodoOrigen, destino);
-        }
-        
+
         return arcoEliminado;
         
     }
@@ -241,23 +253,25 @@ public class Grafo {
         nodoDestino = null;
         nodoVertAux = this.inicio;
         
-        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
-            // Busca el nodo origen y el nodo destino en el grafo
-            if (nodoVertAux.getElem().equals(origen)) {
-                nodoOrigen = nodoVertAux;
+        if (!origen.equals(destino)) {
+            while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+                // Busca el nodo origen y el nodo destino en el grafo
+                if (nodoVertAux.getElem().equals(origen)) {
+                    nodoOrigen = nodoVertAux;
+                }
+                
+                if (nodoVertAux.getElem().equals(destino)){
+                    nodoDestino = nodoVertAux;
+                }
+                
+                nodoVertAux = nodoVertAux.getSigVertice();
             }
             
-            if (nodoVertAux.getElem().equals(destino)){
-                nodoDestino = nodoVertAux;
+            if (nodoOrigen != null && nodoDestino != null) {
+                etiquetaModificada = modificarEtiquetaAux(nodoOrigen, destino, valor);
             }
-            
-            nodoVertAux = nodoVertAux.getSigVertice();
         }
-        
-        if (nodoOrigen != null && nodoDestino != null) {
-            etiquetaModificada = modificarEtiquetaAux(nodoOrigen, destino, valor);
-        }
-        
+
         return etiquetaModificada;
         
     }
@@ -316,23 +330,25 @@ public class Grafo {
         nodoDestino = null;
         nodoVertAux = this.inicio;
         
-        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
-            // Busca el nodo origen y el nodo destino en el grafo
-            if (nodoVertAux.getElem().equals(origen)) {
-                nodoOrigen = nodoVertAux;
+        if (!origen.equals(destino)) {
+            while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+                // Busca el nodo origen y el nodo destino en el grafo
+                if (nodoVertAux.getElem().equals(origen)) {
+                    nodoOrigen = nodoVertAux;
+                }
+                
+                if (nodoVertAux.getElem().equals(destino)){
+                    nodoDestino = nodoVertAux;
+                }
+                
+                nodoVertAux = nodoVertAux.getSigVertice();
             }
             
-            if (nodoVertAux.getElem().equals(destino)){
-                nodoDestino = nodoVertAux;
+            if (nodoOrigen != null && nodoDestino != null) {
+                // Si ambos nodos existen, verifica si existe un arco entre el nodo origen al nodo destino
+                arcoEncontrado = buscarArco(nodoOrigen, destino);
+                
             }
-            
-            nodoVertAux = nodoVertAux.getSigVertice();
-        }
-        
-        if (nodoOrigen != null && nodoDestino != null) {
-            // Si ambos nodos existen, verifica si existe un arco entre el nodo origen al nodo destino
-            arcoEncontrado = buscarArco(nodoOrigen, destino);
-            
         }
         
         return arcoEncontrado;
@@ -370,23 +386,25 @@ public class Grafo {
         nodoDestino = null;
         nodoVertAux = this.inicio;
         
-        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
-            // Busca el nodo origen y el nodo destino en el grafo
-            if (nodoVertAux.getElem().equals(origen)) {
-                nodoOrigen = nodoVertAux;
+        if (!origen.equals(destino)) {
+            while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+                // Busca el nodo origen y el nodo destino en el grafo
+                if (nodoVertAux.getElem().equals(origen)) {
+                    nodoOrigen = nodoVertAux;
+                }
+                
+                if (nodoVertAux.getElem().equals(destino)){
+                    nodoDestino = nodoVertAux;
+                }
+                
+                nodoVertAux = nodoVertAux.getSigVertice();
             }
             
-            if (nodoVertAux.getElem().equals(destino)){
-                nodoDestino = nodoVertAux;
+            if (nodoOrigen != null && nodoDestino != null) {
+                // Si ambos nodos existen, verifica si existe un camino entre ambos
+                lista = new Lista();
+                caminoEncontrado = buscarCamino(nodoOrigen, destino, lista);
             }
-            
-            nodoVertAux = nodoVertAux.getSigVertice();
-        }
-        
-        if (nodoOrigen != null && nodoDestino != null) {
-            // Si ambos nodos existen, verifica si existe un camino entre ambos
-            lista = new Lista();
-            caminoEncontrado = buscarCamino(nodoOrigen, destino, lista);
         }
         
         return caminoEncontrado;
@@ -434,25 +452,27 @@ public class Grafo {
         nodoDestino = null;
         nodoVertAux = this.inicio;
         
-        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
-            // Busca el nodo origen y el nodo destino en el grafo
-            if (nodoVertAux.getElem().equals(origen)) {
-                nodoOrigen = nodoVertAux;
+        if (!origen.equals(destino)) {
+            while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+                // Busca el nodo origen y el nodo destino en el grafo
+                if (nodoVertAux.getElem().equals(origen)) {
+                    nodoOrigen = nodoVertAux;
+                }
+                
+                if (nodoVertAux.getElem().equals(destino)){
+                    nodoDestino = nodoVertAux;
+                }
+                
+                nodoVertAux = nodoVertAux.getSigVertice();
             }
             
-            if (nodoVertAux.getElem().equals(destino)){
-                nodoDestino = nodoVertAux;
+            if (nodoOrigen != null && nodoDestino != null) {
+                // Si ambos nodos existen, verifica cual (si hay) es el camino más corto entre ambos
+                caminoMasCorto = buscarCaminoMasCorto(nodoOrigen, destino, caminoActual, caminoMasCorto);
+                
             }
-            
-            nodoVertAux = nodoVertAux.getSigVertice();
         }
-        
-        if (nodoOrigen != null && nodoDestino != null) {
-            // Si ambos nodos existen, verifica cual (si hay) es el camino más corto entre ambos
-            caminoMasCorto = buscarCaminoMasCorto(nodoOrigen, destino, caminoActual, caminoMasCorto);
-            
-        }
-        
+
         return caminoMasCorto;
         
     }
@@ -527,25 +547,27 @@ public class Grafo {
         nodoDestino = null;
         nodoVertAux = this.inicio;
         
-        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
-            // Busca el nodo origen y el nodo destino en el grafo
-            if (nodoVertAux.getElem().equals(origen)) {
-                nodoOrigen = nodoVertAux;
+        if (!origen.equals(destino)) {
+            while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+                // Busca el nodo origen y el nodo destino en el grafo
+                if (nodoVertAux.getElem().equals(origen)) {
+                    nodoOrigen = nodoVertAux;
+                }
+                
+                if (nodoVertAux.getElem().equals(destino)){
+                    nodoDestino = nodoVertAux;
+                }
+                
+                nodoVertAux = nodoVertAux.getSigVertice();
             }
             
-            if (nodoVertAux.getElem().equals(destino)){
-                nodoDestino = nodoVertAux;
+            if (nodoOrigen != null && nodoDestino != null) {
+                // Si ambos nodos existen, verifica cual (si hay) es el camino más largo entre ambos
+                caminoMasLargo = buscarCaminoMasLargo(nodoOrigen, destino, caminoActual, caminoMasLargo);
+                
             }
-            
-            nodoVertAux = nodoVertAux.getSigVertice();
         }
-        
-        if (nodoOrigen != null && nodoDestino != null) {
-            // Si ambos nodos existen, verifica cual (si hay) es el camino más largo entre ambos
-            caminoMasLargo = buscarCaminoMasLargo(nodoOrigen, destino, caminoActual, caminoMasLargo);
-            
-        }
-        
+
         return caminoMasLargo;
         
     }
@@ -685,7 +707,7 @@ public class Grafo {
         Lista caminoElegido, camino;
         NodoVert nodoOrigen, nodoDestino, nodoVertAux;
         int[] caudalMinimoElegido = new int[1];
-        int caudalMinimo = 0;
+        int caudalMinimo;
         
         camino = new Lista();
         caminoElegido = new Lista();
@@ -695,27 +717,29 @@ public class Grafo {
         caudalMinimoElegido[0] = 0; // Almacena el caudal pleno del camino elegido hasta ahora
         caudalMinimo = 0; // Almacena el caudal pleno actual de un posible camino a elegir
         
-        while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
-            // Busca el nodo origen y el nodo destino en el grafo
-            if (nodoVertAux.getElem().equals(origen)) {
-                nodoOrigen = nodoVertAux;
+        if (!origen.equals(destino)) {
+            while ((nodoOrigen == null || nodoDestino == null) && nodoVertAux != null) {
+                // Busca el nodo origen y el nodo destino en el grafo
+                if (nodoVertAux.getElem().equals(origen)) {
+                    nodoOrigen = nodoVertAux;
+                }
+                
+                if (nodoVertAux.getElem().equals(destino)){
+                    nodoDestino = nodoVertAux;
+                }
+                
+                nodoVertAux = nodoVertAux.getSigVertice();
             }
             
-            if (nodoVertAux.getElem().equals(destino)){
-                nodoDestino = nodoVertAux;
+            if (nodoOrigen != null && nodoDestino != null) {
+                // Si ambos nodos existen, busca el camino con el caudal pleno más pequeño entre todos los caminos posibles
+                // entre ambos nodos
+                caminoElegido = buscarCaminoCaudalPlenoMinimo(nodoOrigen, destino, camino, caminoElegido, caudalMinimoElegido,
+                        caudalMinimo);
+                
             }
-            
-            nodoVertAux = nodoVertAux.getSigVertice();
         }
-        
-        if (nodoOrigen != null && nodoDestino != null) {
-            // Si ambos nodos existen, busca el camino con el caudal pleno más pequeño entre todos los caminos posibles
-            // entre ambos nodos
-            caminoElegido = buscarCaminoCaudalPlenoMinimo(nodoOrigen, destino, camino, caminoElegido, caudalMinimoElegido,
-                    caudalMinimo);
-            
-        }
-        
+
         return caminoElegido;
         
     }
